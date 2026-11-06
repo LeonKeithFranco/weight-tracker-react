@@ -101,7 +101,7 @@ Display precision: weights to 1 decimal place, averages and rates to 2, percenta
 | Weekly change | Bar            | 7-day average % change                                                                            |
 | Projection    | Line with band | Recent weight, simulated median and range, target                                                 |
 
-- Range presets: 1M, 3M, 6M, YTD, 1Y and All. The default is YTD.
+- Range presets: 1M, 3M, 6M, YTD, 1Y and All. The default is YTD. Presets count back from the latest day in the data, not from today.
 - Presets only change what is shown. Running lows and averages always use the full history.
 - Each series can be toggled from the legend, which keeps the six-line chart readable on a phone.
 - Chart axes use compact date labels, such as `Nov 5`, regardless of the date format setting. Tooltips use the date format setting.

@@ -1,8 +1,8 @@
 # Progress
 
-**Current status:** Milestone 2 is merged. The repo is public at `LeonKeithFranco/weight-tracker-react`, with a placeholder app, ESLint, Prettier, Vitest and one smoke test. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
+**Current status:** Milestone 3 is merged. The repo is public at `LeonKeithFranco/weight-tracker-react`, with a placeholder app and tested calculation code in `src/lib/`. All 309 days of calculated figures matched the real spreadsheet. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
 
-**Next:** Start milestone 3, core calculations.
+**Next:** Start milestone 4, projections.
 
 **In progress:** Nothing.
 
@@ -15,7 +15,7 @@
 
 ### Phase 2: Logic
 
-- [ ] 3. Core calculations
+- [x] 3. Core calculations
 - [ ] 4. Projections
 - [ ] 5. CSV logic
 - [ ] 6. Storage and activity log
@@ -33,6 +33,12 @@
 ## Decision log
 
 Record changes to the spec or plan here, with the reason.
+
+### 2026-11-06
+
+- Chart range presets count back from the latest day in the data, not from today. Otherwise a break from logging would leave the charts empty.
+- Date arithmetic parses calendar dates as UTC, because UTC has no daylight saving. A local day can be 23 or 25 hours long.
+- The simulation follows the spec, not the Scratch sheet. The sheet's other details, such as its hardcoded floor on simulated weight, aren't carried over, because the user doesn't remember what they were for.
 
 ### 2026-11-05
 

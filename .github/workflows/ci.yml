@@ -16,10 +16,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Check out the code
-        uses: actions/checkout@v7.0
+        uses: actions/checkout@v7
 
       - name: Set up Node
-        uses: actions/setup-node@v7.1
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -38,3 +38,6 @@ jobs:
 
       - name: Run unit tests
         run: npm test
+
+      - name: Build
+        run: npm build

@@ -155,7 +155,7 @@ Display precision: weights to 1 decimal place, averages and rates to 2, percenta
 
 ```ts
 type LogEntry = {
-  id: number;        // Auto-incrementing.
+  id: number; // Auto-incrementing.
   timestamp: string; // UTC, because a log records an exact moment.
   type: "change" | "error";
   message: string;
@@ -189,7 +189,7 @@ The app is a single-page app, and each screen has its own URL. Navigation is a b
 
 ## Deployment
 
-- The source lives in a public GitHub repo named `weight-tracker`.
+- The source lives in a public GitHub repo named `weight-tracker-react`, under the MIT license.
 - GitHub Actions runs checks on every push and pull request.
 - Podman is the container tool, locally and on the homelab. The build file is a `Containerfile`.
 - A push to `main` that passes all checks builds a container image and publishes it to GitHub Container Registry (`ghcr.io`).

@@ -14,32 +14,34 @@ The spec is finished (`docs/SPEC.md`), and the repo has no app code yet. This pl
 
 ## Stack
 
-| Concern | Choice | Why |
-|---|---|---|
-| Build tool | Vite | The standard way to start a React app |
-| UI | React + TypeScript (strict) | Learning goals |
-| Routing | React Router | Four screens, and a widely used skill |
-| Storage | Dexie over IndexedDB | Simpler API, with React hooks for live data |
-| Dates | Day.js | Small, with `YYYY-MM-DD` style format tokens |
-| Charts | Recharts | Written for React; covers line, area and bar charts |
-| Styling | CSS Modules | Teaches responsive CSS directly |
-| PWA | vite-plugin-pwa | Generates the service worker and manifest |
-| Unit and component tests | Vitest + React Testing Library | Integrates with Vite |
-| End-to-end tests | Playwright | Builds on your Selenium experience |
-| Containers | Podman, Quadlet, `podman auto-update` | Your homelab setup; rootless |
-| Web server | Unprivileged nginx | Serves static files without root |
-| HTTPS | Caddy with its local certificate authority | No domain needed |
-| Local name | Avahi (mDNS) | Your router can't set custom DNS names |
-| CI/CD | GitHub Actions + `ghcr.io` | The planned deployment |
+| Concern                  | Choice                                     | Why                                                 |
+| ------------------------ | ------------------------------------------ | --------------------------------------------------- |
+| Build tool               | Vite                                       | The standard way to start a React app               |
+| UI                       | React + TypeScript (strict)                | Learning goals                                      |
+| Routing                  | React Router                               | Four screens, and a widely used skill               |
+| Storage                  | Dexie over IndexedDB                       | Simpler API, with React hooks for live data         |
+| Dates                    | Day.js                                     | Small, with `YYYY-MM-DD` style format tokens        |
+| Charts                   | Recharts                                   | Written for React; covers line, area and bar charts |
+| Styling                  | CSS Modules                                | Teaches responsive CSS directly                     |
+| PWA                      | vite-plugin-pwa                            | Generates the service worker and manifest           |
+| Unit and component tests | Vitest + React Testing Library             | Integrates with Vite                                |
+| End-to-end tests         | Playwright                                 | Builds on your Selenium experience                  |
+| Containers               | Podman, Quadlet, `podman auto-update`      | Your homelab setup; rootless                        |
+| Web server               | Unprivileged nginx                         | Serves static files without root                    |
+| HTTPS                    | Caddy with its local certificate authority | No domain needed                                    |
+| Local name               | Avahi (mDNS)                               | Your router can't set custom DNS names              |
+| CI/CD                    | GitHub Actions + `ghcr.io`                 | The planned deployment                              |
 
 ## Before milestone 1
 
 You:
+
 - Install `gh` and run `gh auth login`.
 
 Claude:
+
 - Fast-forward `main` to `docs/spec`, which holds the spec and the moved `CLAUDE` files.
-- Create the public `weight-tracker` repo and push, after checking with you.
+- Create the public `weight-tracker-react` repo and push, after checking with you.
 
 ## Milestones
 
@@ -69,11 +71,13 @@ The work runs in three phases:
 ### 3. Containers and deployment
 
 Image:
+
 - Add a multi-stage `Containerfile` and the nginx config, with the route fallback and caching rules
 - Build with Podman on pushes to `main`, only after checks pass, and publish to `ghcr.io` tagged `latest` and with the commit SHA
 - Make the image public
 
 Homelab:
+
 - Test `homelab.local` from your Android phone, using Avahi, and settle on the final address
 - Add the app's Quadlet file, then enable lingering and `podman-auto-update.timer`
 - Set up Caddy, allow rootless use of port 443, and install its root certificate on your devices
@@ -178,14 +182,14 @@ Every milestone here adds component tests and Playwright tests for its features.
 
 ## Risks
 
-| Risk | Mitigation |
-|---|---|
+| Risk                                           | Mitigation                                                                                         |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | The UI needs logic output in a different shape | Keep logic functions small, and adjust them in UI milestones; existing tests protect those changes |
-| `homelab.local` doesn't work on your phone | Test it first in milestone 3; fall back to HTTPS on the fixed IP |
-| The address changes after real data is entered | Settle the address in milestone 3, before real data goes in at milestone 9 |
-| A figure doesn't match the spreadsheet | Compare against the real spreadsheet in milestone 4 |
-| Browser data is lost | Export regularly, and keep the spreadsheet until milestone 13 |
-| The simulation is slow on your phone | Measure in milestone 5, and use a web worker in milestone 11 if needed |
+| `homelab.local` doesn't work on your phone     | Test it first in milestone 3; fall back to HTTPS on the fixed IP                                   |
+| The address changes after real data is entered | Settle the address in milestone 3, before real data goes in at milestone 9                         |
+| A figure doesn't match the spreadsheet         | Compare against the real spreadsheet in milestone 4                                                |
+| Browser data is lost                           | Export regularly, and keep the spreadsheet until milestone 13                                      |
+| The simulation is slow on your phone           | Measure in milestone 5, and use a web worker in milestone 11 if needed                             |
 
 ## Verification
 

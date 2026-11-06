@@ -15,15 +15,20 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "d3-random": "^3.0.2",
     "dayjs": "^1.11.23",
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "seedrandom": "^3.0.5",
+    "simple-statistics": "^8.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/d3-random": "^3.0.4",
     "@types/node": "^24.19.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@types/seedrandom": "^3.0.8",
     "@vitejs/plugin-react": "^6.1.2",
     "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.8",

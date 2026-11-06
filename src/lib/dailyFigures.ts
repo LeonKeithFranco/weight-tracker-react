@@ -1,3 +1,4 @@
+import { mean } from "simple-statistics";
 import type { DailyFigures, DailyPoint } from "./types";
 
 const SHORT_WINDOW_DAYS = 7;
@@ -10,8 +11,7 @@ function trailingMean(
   index: number,
   windowDays: number,
 ): number {
-  const window = values.slice(Math.max(0, index - windowDays + 1), index + 1);
-  return window.reduce((sum, value) => sum + value, 0) / window.length;
+  return mean(values.slice(Math.max(0, index - windowDays + 1), index + 1));
 }
 
 /** Calculates every daily figure. See the table in `docs/SPEC.md`. */

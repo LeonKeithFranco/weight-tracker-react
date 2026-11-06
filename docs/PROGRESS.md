@@ -1,10 +1,10 @@
 # Progress
 
-**Current status:** Milestone 3 is merged. The repo is public at `LeonKeithFranco/weight-tracker-react`, with a placeholder app and tested calculation code in `src/lib/`. All 309 days of calculated figures matched the real spreadsheet. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
+**Current status:** Milestone 4 is merged. The repo is public at `LeonKeithFranco/weight-tracker-react`, with a placeholder app and tested calculation and projection code in `src/lib/`. All 309 days of calculated figures matched the real spreadsheet. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
 
-**Next:** Start milestone 4, projections.
+**Next:** Start milestone 5, CSV logic.
 
-**In progress:** Milestone 4, on `feat/projections`.
+**In progress:** Nothing.
 
 ## Milestones
 
@@ -16,7 +16,7 @@
 ### Phase 2: Logic
 
 - [x] 3. Core calculations
-- [ ] 4. Projections
+- [x] 4. Projections
 - [ ] 5. CSV logic
 - [ ] 6. Storage and activity log
 
@@ -43,6 +43,13 @@ Record changes to the spec or plan here, with the reason.
 - Commits are small, with one logical change each, because milestone 3's single 15-file commit was hard to read. Claude commits as the work goes rather than once at the end.
 - PRs now rebase merge by default, so those small commits stay on `main`. This replaces choosing per PR, and squash is only for commits that aren't worth keeping.
 - Projections keep their 14-day minimum, which counts days in the daily series, including estimated days. The spec gave no reason for 14, so the reason is now recorded there. Two real entries 13 days apart therefore pass the minimum, which is accepted so the count matches every other figure.
+- Tried and tested libraries are preferred over hand-written general-purpose code, and each new one gets explained. JavaScript's built-in `Math` has no statistics and can't seed `Math.random`, so milestone 4 uses libraries for both.
+- `simple-statistics` provides the mean, standard deviation, regression and percentiles. `seedrandom` is the seeded generator, and `d3-random` shapes its output into a normal distribution. Each covers something the others don't.
+- Linear interpolation stays for missed days, after considering random values and linear regression. Random values add noise and need a guard rail that biases the figures. Regression can jump at gap edges and would no longer match the spreadsheet on those days.
+- The simulation uses the sample standard deviation, because the Scratch sheet uses `STDEV.S`.
+- A goal date slope shallower than 0.00001 kg a day counts as flat. Without this, a slope that's only slightly negative from rounding projects a date too far away for JavaScript to hold, and the app would show "Invalid Date".
+- The simulation's seed comes from the dates and weights in the 90-day window only, so changing the target doesn't redraw the chart.
+- One simulation run takes about 49 ms on the desktop under Vitest, so it doesn't need a web worker there. It still needs checking on the phone in milestone 11.
 
 ### 2026-11-05
 

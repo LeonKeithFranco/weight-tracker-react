@@ -123,6 +123,8 @@ Display precision: weights to 1 decimal place, averages and rates to 2, percenta
 
 **Why 90 days:** against the existing spreadsheet data, a 28-day window changed direction 8 times in a year, while a 90-day window changed direction twice and had the narrowest range of rates. The window is a single constant, so it is easy to change.
 
+**Why 14 days:** two full weeks stop one unusual weekend from setting the trend, the 7-day average has been using a full 7 days for a week by then, and the slope is far steadier than at 7 days. Early estimates are still rough, and they settle by about 28 days. The minimum counts days in the daily series, including estimated days, like every other figure. It is also a single constant, shared with the simulated projection.
+
 ### Simulated projection
 
 - Based on the Scratch sheet's random walk.

@@ -42,6 +42,7 @@ Record changes to the spec or plan here, with the reason.
 - Claude merges PRs when the user asks, once CI passes. The user reviews the code as it's written, so asking for the merge is their sign-off.
 - Commits are small, with one logical change each, because milestone 3's single 15-file commit was hard to read. Claude commits as the work goes rather than once at the end.
 - PRs now rebase merge by default, so those small commits stay on `main`. This replaces choosing per PR, and squash is only for commits that aren't worth keeping.
+- Projections keep their 14-day minimum, which counts days in the daily series, including estimated days. The spec gave no reason for 14, so the reason is now recorded there. Two real entries 13 days apart therefore pass the minimum, which is accepted so the count matches every other figure.
 
 ### 2026-11-05
 

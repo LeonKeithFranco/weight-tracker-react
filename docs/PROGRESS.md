@@ -1,17 +1,17 @@
 # Progress
 
-**Current status:** Milestone 1 is merged. The repo is public at `LeonKeithFranco/weight-tracker-react`, with a placeholder app, ESLint, Prettier, Vitest and one smoke test.
+**Current status:** Milestone 2 is merged. The repo is public at `LeonKeithFranco/weight-tracker-react`, with a placeholder app, ESLint, Prettier, Vitest and one smoke test. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
 
-**Next:** Finish milestone 2: add `.github/workflows/ci.yml`, open the PR, protect `main`, and prove a failing test can't merge. When protecting `main`, require passing checks but not approvals, because GitHub doesn't allow approving your own PR.
+**Next:** Start milestone 3, containers and deployment.
 
-**In progress:** Milestone 2, on `ci/add-github-actions-workflow`.
+**In progress:** Nothing.
 
 ## Milestones
 
 ### Phase 1: Pipeline
 
 - [x] 1. Project setup
-- [ ] 2. CI and branch protection
+- [x] 2. CI and branch protection
 - [ ] 3. Containers and deployment
 
 ### Phase 2: Logic
@@ -46,6 +46,8 @@ Record changes to the spec or plan here, with the reason.
 - Tests sit next to the code they test. Playwright tests will go in a top-level `e2e/` folder.
 - CI runs on pushes to `main` and on pull requests, not on every branch push as the plan said. Running on both would check each PR commit twice.
 - CI also checks Prettier formatting, which the plan didn't list, so unformatted code can't reach `main`.
+- `main` is protected with a ruleset rather than a classic branch protection rule, because GitHub recommends rulesets. It requires a PR and the `Checks` job, with 0 approvals because GitHub doesn't allow approving your own PR. Renaming that job would break the rule.
+- The user writes first-time config by hand, such as the CI workflow. Claude writes test files unless told otherwise.
 - Logic is built and unit tested before any UI, so components sit on tested code. Component and Playwright tests start with the UI.
 - There are no coverage targets. Tests exist to catch real regressions, and chasing coverage produces brittle tests.
 - Linear interpolation stays for missed days. It had the lowest error of the four methods tested against real data.

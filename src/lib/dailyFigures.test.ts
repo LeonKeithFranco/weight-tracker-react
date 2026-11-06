@@ -1,16 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { calculateDailyFigures } from "./dailyFigures";
-import { addDays } from "./dates";
+import { seriesOf } from "./testSeries";
 import type { DailyPoint } from "./types";
-
-/** Builds consecutive days of synthetic weights, starting on 2026-01-01. */
-function seriesOf(weights: number[]): DailyPoint[] {
-  return weights.map((weightKg, index) => ({
-    date: addDays("2026-01-01", index),
-    weightKg,
-    isEstimated: false,
-  }));
-}
 
 // Falls to 94 on day 7, then rises, so the lows and the weights differ.
 const DIP = [100, 99, 98, 97, 96, 95, 94, 95, 96, 97];

@@ -4,7 +4,7 @@
 
 **Next:** Start milestone 4, projections.
 
-**In progress:** Nothing.
+**In progress:** Milestone 4, on the `feat/projections` branch.
 
 ## Milestones
 
@@ -39,6 +39,9 @@ Record changes to the spec or plan here, with the reason.
 - Chart range presets count back from the latest day in the data, not from today. Otherwise a break from logging would leave the charts empty.
 - Date arithmetic parses calendar dates as UTC, because UTC has no daylight saving. A local day can be 23 or 25 hours long.
 - The simulation follows the spec, not the Scratch sheet. The sheet's other details, such as its hardcoded floor on simulated weight, aren't carried over, because the user doesn't remember what they were for.
+- Claude merges PRs when the user asks, once CI passes. The user reviews the code as it's written, so asking for the merge is their sign-off.
+- Commits are small, with one logical change each, because milestone 3's single 15-file commit was hard to read. Claude commits as the work goes rather than once at the end.
+- PRs now rebase merge by default, so those small commits stay on `main`. This replaces choosing per PR, and squash is only for commits that aren't worth keeping.
 
 ### 2026-11-05
 

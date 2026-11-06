@@ -13,7 +13,9 @@ Current status: @docs/PROGRESS.md
 ## Working style
 
 - Build each milestone on its own branch, then walk through the concepts listed for it in `docs/PLAN.md`.
-- Merge through a pull request once CI passes. The user reviews and merges.
+- Commit in small steps as the work goes. Each commit is one logical change that passes the checks by itself, such as one module with its tests.
+- Merge through a pull request once CI passes. The user reviews the code as it's written and asks Claude to merge. Never merge without being asked.
+- Rebase merge by default, so the small commits stay on `main`. Squash only when the commits aren't worth keeping.
 - Teaching is a core goal. Explain what each command and piece of code does and why, without being asked, and break every command down part by part. Python, Java, C# and Selenium make good comparisons.
 - For first-time setup and unfamiliar tooling, give the user the steps to run instead of running them.
 - Prefer the conventional, idiomatic approach for each language and framework, and point out where it differs from Python, Java or C# habits.

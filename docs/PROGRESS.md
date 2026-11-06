@@ -2,7 +2,7 @@
 
 **Current status:** Milestone 2 is merged. The repo is public at `LeonKeithFranco/weight-tracker-react`, with a placeholder app, ESLint, Prettier, Vitest and one smoke test. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
 
-**Next:** Start milestone 3, containers and deployment.
+**Next:** Start milestone 3, core calculations.
 
 **In progress:** Nothing.
 
@@ -12,18 +12,18 @@
 
 - [x] 1. Project setup
 - [x] 2. CI and branch protection
-- [ ] 3. Containers and deployment
 
 ### Phase 2: Logic
 
-- [ ] 4. Core calculations
-- [ ] 5. Projections
-- [ ] 6. CSV logic
-- [ ] 7. Storage and activity log
+- [ ] 3. Core calculations
+- [ ] 4. Projections
+- [ ] 5. CSV logic
+- [ ] 6. Storage and activity log
 
 ### Phase 3: UI
 
-- [ ] 8. App shell, logging and settings
+- [ ] 7. App shell, logging and settings
+- [ ] 8. Containers and deployment
 - [ ] 9. CSV screens and log page
 - [ ] 10. Data table
 - [ ] 11. Charts
@@ -47,6 +47,7 @@ Record changes to the spec or plan here, with the reason.
 - CI runs on pushes to `main` and on pull requests, not on every branch push as the plan said. Running on both would check each PR commit twice.
 - CI also checks Prettier formatting, which the plan didn't list, so unformatted code can't reach `main`.
 - `main` is protected with a ruleset rather than a classic branch protection rule, because GitHub recommends rulesets. It requires a PR and the `Checks` job, with 0 approvals because GitHub doesn't allow approving your own PR. Renaming that job would break the rule.
+- Containers and deployment moved from milestone 3 to milestone 8, right after the app shell, and the milestones between were renumbered. Deploying a placeholder has little value for a solo project, and nothing needs deployment until real data goes in at milestone 9, when the address must be settled.
 - The user writes first-time config by hand, such as the CI workflow. Claude writes test files unless told otherwise.
 - Logic is built and unit tested before any UI, so components sit on tested code. Component and Playwright tests start with the UI.
 - There are no coverage targets. Tests exist to catch real regressions, and chasing coverage produces brittle tests.

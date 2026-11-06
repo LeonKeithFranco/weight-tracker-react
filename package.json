@@ -12,7 +12,8 @@
     "test:watch": "vitest",
     "typecheck": "tsc -b",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "bench": "vitest bench --run --reporter=verbose"
   },
   "dependencies": {
     "dayjs": "^1.11.23",

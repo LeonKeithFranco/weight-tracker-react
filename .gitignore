@@ -25,3 +25,4 @@ dist-ssr
 
 CLAUDE.local.md
 example-weight-tracker.fods
+.claude/settings.local.json

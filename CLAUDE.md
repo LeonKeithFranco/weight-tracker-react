@@ -14,7 +14,11 @@ Current status: @docs/PROGRESS.md
 
 - Build each milestone on its own branch, then walk through the concepts listed for it in `docs/PLAN.md`.
 - Merge through a pull request once CI passes. The user reviews and merges.
-- Explain concepts as they come up. Python, Java, C# and Selenium make good comparisons.
+- Teaching is a core goal. Explain what each command and piece of code does and why, without being asked, and break every command down part by part. Python, Java, C# and Selenium make good comparisons.
+- For first-time setup and unfamiliar tooling, give the user the steps to run instead of running them.
+- Prefer the conventional, idiomatic approach for each language and framework, and point out where it differs from Python, Java or C# habits.
+- Name branches `type/short-description`, describing the work, such as `feat/chart-range-presets`. Never use milestone numbers.
+- Use Conventional Commits for commit messages and PR titles, such as `feat(charts): add range presets`.
 - Write tests alongside or after the code to guard against regressions. Don't use test-driven development, and don't chase coverage numbers.
 - Give the user the commands to run on the homelab, and explain each one.
 

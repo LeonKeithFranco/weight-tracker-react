@@ -1,10 +1,10 @@
 # Progress
 
-**Current status:** Milestone 3 is merged. The repo is public at `LeonKeithFranco/weight-tracker-react`, with a placeholder app and tested calculation code in `src/lib/`. All 309 days of calculated figures matched the real spreadsheet. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
+**Current status:** Milestone 4 is merged. The repo is public at `LeonKeithFranco/weight-tracker-react`, with a placeholder app and tested calculation and projection code in `src/lib/`. All 309 days of calculated figures matched the real spreadsheet. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
 
-**Next:** Start milestone 4, projections.
+**Next:** Start milestone 5, CSV logic.
 
-**In progress:** Milestone 4, on the `feat/projections` branch.
+**In progress:** Nothing.
 
 ## Milestones
 
@@ -16,7 +16,7 @@
 ### Phase 2: Logic
 
 - [x] 3. Core calculations
-- [ ] 4. Projections
+- [x] 4. Projections
 - [ ] 5. CSV logic
 - [ ] 6. Storage and activity log
 
@@ -42,6 +42,10 @@ Record changes to the spec or plan here, with the reason.
 - Claude merges PRs when the user asks, once CI passes. The user reviews the code as it's written, so asking for the merge is their sign-off.
 - Commits are small, with one logical change each, because milestone 3's single 15-file commit was hard to read. Claude commits as the work goes rather than once at the end.
 - PRs now rebase merge by default, so those small commits stay on `main`. This replaces choosing per PR, and squash is only for commits that aren't worth keeping.
+- The simulation uses the sample standard deviation, because the Scratch sheet uses `STDEV.S`.
+- A goal date slope shallower than 0.00001 kg a day counts as flat. Without this, a slope that's only slightly negative from rounding projects a date too far away for JavaScript to hold, and the app would show "Invalid Date".
+- The simulation's seed comes from the dates and weights in the 90-day window only, so changing the target doesn't redraw the chart.
+- One simulation run takes about 28 ms on the desktop under Vitest, including some overhead from the test runner. That's well short of needing a web worker, but it still needs checking on the phone in milestone 11.
 
 ### 2026-11-05
 

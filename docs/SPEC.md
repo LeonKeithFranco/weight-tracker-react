@@ -112,6 +112,8 @@ Display precision: weights to 1 decimal place, averages and rates to 2, percenta
 - Fit a straight line (linear regression) to the last 90 days of the daily series.
 - Project from the latest 7-day average to the target, using that line's slope.
 - Use all available days if there are fewer than 90.
+- Count from the latest day in the data, and round up to the first whole day the line reaches the target.
+- A slope shallower than 0.00001 kg a day counts as flat.
 
 | Situation                               | Display            |
 | --------------------------------------- | ------------------ |
@@ -126,7 +128,7 @@ Display precision: weights to 1 decimal place, averages and rates to 2, percenta
 ### Simulated projection
 
 - Based on the Scratch sheet's random walk.
-- Take the day-to-day changes from the last 90 days of the daily series, then calculate their mean and standard deviation.
+- Take the day-to-day changes from the last 90 days of the daily series, then calculate their mean and sample standard deviation.
 - Run 1,000 simulated paths for 180 days, starting from the latest weight. Each day's change is drawn from a normal distribution with that mean and standard deviation.
 - Chart the median path and the 10th to 90th percentile band.
 - Requires at least 14 days of data.

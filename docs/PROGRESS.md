@@ -1,8 +1,8 @@
 # Progress
 
-**Current status:** Milestone 4 is merged. The repo is public at `LeonKeithFranco/weight-tracker-react`, with a placeholder app and tested calculation and projection code in `src/lib/`. All 309 days of calculated figures matched the real spreadsheet. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
+**Current status:** Milestone 5 is merged. The repo is public at `LeonKeithFranco/weight-tracker-react`, with a placeholder app and tested calculation, projection and CSV code in `src/lib/`. All 309 days of calculated figures matched the real spreadsheet. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
 
-**Next:** Start milestone 5, CSV logic.
+**Next:** Start milestone 6, storage and activity log.
 
 **In progress:** Nothing.
 
@@ -17,7 +17,7 @@
 
 - [x] 3. Core calculations
 - [x] 4. Projections
-- [ ] 5. CSV logic
+- [x] 5. CSV logic
 - [ ] 6. Storage and activity log
 
 ### Phase 3: UI
@@ -50,6 +50,13 @@ Record changes to the spec or plan here, with the reason.
 - A goal date slope shallower than 0.00001 kg a day counts as flat. Without this, a slope that's only slightly negative from rounding projects a date too far away for JavaScript to hold, and the app would show "Invalid Date".
 - The simulation's seed comes from the dates and weights in the 90-day window only, so changing the target doesn't redraw the chart.
 - One simulation run takes about 49 ms on the desktop under Vitest, so it doesn't need a web worker there. It still needs checking on the phone in milestone 11.
+- Weight only has to be above 0, replacing the 20 to 500 kg limit. The range only caught slips of about 10 times, missed likelier typos such as `230.8` for `203.8`, and those slips are obvious on a chart and easy to edit.
+- Imports follow the logging rules, which the spec didn't say. A future date would stretch the daily series past today.
+- PapaParse reads and writes CSV, because quoting, line endings and byte order marks are general problems. The app's own code only applies its rules to the rows.
+- When a file repeats a date, the first row is kept and later ones are listed as invalid. Nothing shows which row is right, so the duplicate is made visible rather than quietly replaced.
+- An unclosed quote rejects the whole file, because it swallows every row after it into one field.
+- The delimiter is fixed as a comma rather than detected, so a file with semicolons is rejected with a clear reason.
+- A one-off dry run of the parser on the real spreadsheet read all 309 days with no invalid rows. The file stayed out of the repo.
 
 ### 2026-11-05
 

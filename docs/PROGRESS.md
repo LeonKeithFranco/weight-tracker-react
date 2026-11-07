@@ -1,8 +1,8 @@
 # Progress
 
-**Current status:** Milestone 5 is merged. The repo is public at `LeonKeithFranco/weight-tracker-react`, with a placeholder app and tested calculation, projection and CSV code in `src/lib/`. All 309 days of calculated figures matched the real spreadsheet. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
+**Current status:** Milestone 6 is merged, which finishes Phase 2. The repo is public at `LeonKeithFranco/weight-tracker-react`, with a placeholder app, tested calculation, projection and CSV code in `src/lib/`, and tested storage and activity log code in `src/storage/`. All 309 days of calculated figures matched the real spreadsheet. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
 
-**Next:** Start milestone 6, storage and activity log.
+**Next:** Start milestone 7, app shell, logging and settings. Decide how the UI gets live updates, because Dexie's `useLiveQuery` hook would go around the storage interface.
 
 **In progress:** Nothing.
 
@@ -18,7 +18,7 @@
 - [x] 3. Core calculations
 - [x] 4. Projections
 - [x] 5. CSV logic
-- [ ] 6. Storage and activity log
+- [x] 6. Storage and activity log
 
 ### Phase 3: UI
 
@@ -58,9 +58,16 @@ Record changes to the spec or plan here, with the reason.
 - The delimiter is fixed as a comma rather than detected, so a file with semicolons is rejected with a clear reason.
 - A one-off dry run of the parser on the real spreadsheet read all 309 days with no invalid rows. The file stayed out of the repo.
 - Milestones are built in small rounds, with an explanation and a pause for questions after each, replacing one walkthrough at the end. The user's question partway through milestone 5 changed the weight rule, so reviewing as the work goes catches decisions early.
-- Claude runs commands and setup steps, including first-time tooling and config, and only hands a step over if the user asks or Claude can't run it. This replaces the user doing first-time setup by hand, because handing over installs slowed the work without adding to it.
+- Claude runs commands and setup steps, including first-time tooling and config, and only hands a step over if the user asks or Claude can't run it. This replaces the user doing first-time setup by hand, at the user's request.
 - Claude uses the file tools rather than shell commands to write code, so the user sees each diff, and runs the formatter for mechanical fixes rather than making them by hand.
 - Concepts that have already been taught aren't explained again in full. The list of them stays in Claude's memory, not the repo.
+- Storage has two layers. `AppStorage` implements `WeightStorage` and holds the rules, and a `StorageBackend` only reads and writes. The plan had each implementation stand alone, but that would copy the logging rules into both and leave the real rules untested by tests using the in-memory one.
+- Classes are used only where something holds state, which so far means storage. Calculations stay as pure functions.
+- `fake-indexeddb` was added, which the plan didn't list, because Node has no IndexedDB. Both backends run the same test suite, so the in-memory one can be trusted to match Dexie.
+- Settings changes aren't recorded in the activity log. They don't touch weight data, and the current values are always visible in Settings.
+- Saving the same weight again is recorded as an edit, matching how the import preview counts an overwrite.
+- The display unit defaults to lb, which the spec didn't say, because that's what the user logs in.
+- SQLite in the browser was considered and rejected. It would add a WebAssembly download and a web worker, and three simple tables gain nothing from SQL.
 
 ### 2026-11-05
 

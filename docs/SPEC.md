@@ -39,7 +39,7 @@ type WeightEntry = {
 };
 
 type Settings = {
-  displayUnit: "kg" | "lb";
+  displayUnit: "kg" | "lb"; // Defaults to "lb".
   targetWeightKg: number | null;
   dateFormat: string; // Day.js format string. Defaults to "YYYY-MM-DD".
 };

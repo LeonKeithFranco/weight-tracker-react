@@ -72,4 +72,8 @@ export class DexieBackend implements StorageBackend {
   async addLogEntry(entry: NewLogEntry): Promise<void> {
     await this.db.log.add(entry);
   }
+
+  async trimLog(maxEntries: number): Promise<void> {
+    await this.db.log.orderBy("id").reverse().offset(maxEntries).delete();
+  }
 }

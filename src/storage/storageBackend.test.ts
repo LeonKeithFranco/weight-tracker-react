@@ -130,5 +130,32 @@ describe.each([
         { id: 1, timestamp, type: "change", message: "One" },
       ]);
     });
+
+    it("trims the oldest records and keeps counting ids", async () => {
+      const timestamp = "2026-01-01T12:00:00.000Z";
+      await backend.addLogEntry({ timestamp, type: "change", message: "One" });
+      await backend.addLogEntry({ timestamp, type: "change", message: "Two" });
+      await backend.addLogEntry({
+        timestamp,
+        type: "change",
+        message: "Three",
+      });
+
+      await backend.trimLog(2);
+      await backend.addLogEntry({ timestamp, type: "change", message: "Four" });
+
+      const log = await backend.getLogEntries();
+
+      expect(log.map((record) => record.id)).toEqual([4, 3, 2]);
+    });
+
+    it("trims nothing when the log is under the limit", async () => {
+      const timestamp = "2026-01-01T12:00:00.000Z";
+      await backend.addLogEntry({ timestamp, type: "change", message: "One" });
+
+      await backend.trimLog(2);
+
+      expect(await backend.getLogEntries()).toHaveLength(1);
+    });
   });
 });

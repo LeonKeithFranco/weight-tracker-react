@@ -1,6 +1,9 @@
+import "fake-indexeddb/auto";
 import { beforeEach, describe, expect, it } from "vitest";
 import type { Settings } from "../lib/types";
+import { DexieBackend } from "./dexieBackend";
 import { InMemoryBackend } from "./inMemoryBackend";
+import type { StorageBackend } from "./storageBackend";
 
 const settings: Settings = {
   displayUnit: "lb",
@@ -8,11 +11,20 @@ const settings: Settings = {
   dateFormat: "DD/MM/YYYY",
 };
 
-describe("InMemoryBackend", () => {
-  let backend: InMemoryBackend;
+// Every backend must pass the same tests, so tests that use the in-memory one
+// can be trusted to behave like the real app.
+describe.each([
+  { name: "InMemoryBackend", create: () => new InMemoryBackend() },
+  {
+    name: "DexieBackend",
+    // A new database for each test, so no test sees another's data.
+    create: () => new DexieBackend(crypto.randomUUID()),
+  },
+])("$name", ({ create }) => {
+  let backend: StorageBackend;
 
   beforeEach(() => {
-    backend = new InMemoryBackend();
+    backend = create();
   });
 
   describe("entries", () => {
@@ -94,6 +106,16 @@ describe("InMemoryBackend", () => {
       await backend.putSettings(settings);
 
       expect(await backend.getSettings()).toEqual(settings);
+    });
+
+    it("replaces settings saved earlier", async () => {
+      await backend.putSettings(settings);
+      await backend.putSettings({ ...settings, displayUnit: "kg" });
+
+      expect(await backend.getSettings()).toEqual({
+        ...settings,
+        displayUnit: "kg",
+      });
     });
   });
 

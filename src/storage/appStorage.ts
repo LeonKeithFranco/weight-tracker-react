@@ -10,6 +10,8 @@ import type {
 import type { StorageBackend } from "./storageBackend";
 import type { WeightStorage } from "./weightStorage";
 
+export const MAX_LOG_ENTRIES = 5000;
+
 export const DEFAULT_SETTINGS: Settings = {
   displayUnit: "lb",
   targetWeightKg: null,
@@ -99,6 +101,7 @@ export class AppStorage implements WeightStorage {
         message,
         details,
       });
+      await this.backend.trimLog(MAX_LOG_ENTRIES);
     } catch (error) {
       console.error("Couldn't write to the activity log", error);
     }

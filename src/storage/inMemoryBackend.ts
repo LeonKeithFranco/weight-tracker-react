@@ -58,4 +58,9 @@ export class InMemoryBackend implements StorageBackend {
     this.logEntries.push({ ...structuredClone(entry), id: this.nextLogId });
     this.nextLogId += 1;
   }
+
+  async trimLog(maxEntries: number): Promise<void> {
+    const excess = Math.max(0, this.logEntries.length - maxEntries);
+    this.logEntries = this.logEntries.slice(excess);
+  }
 }

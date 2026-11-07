@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { InvalidRow } from "../lib/csvImport";
 import type { Settings } from "../lib/types";
-import { AppStorage, DEFAULT_SETTINGS } from "./appStorage";
+import { AppStorage, DEFAULT_SETTINGS, MAX_LOG_ENTRIES } from "./appStorage";
 import { InMemoryBackend } from "./inMemoryBackend";
 
 const invalidRow: InvalidRow = {
@@ -145,6 +145,33 @@ describe("AppStorage", () => {
         storage.logError("Something broke"),
       ).resolves.toBeUndefined();
     });
+  });
+
+  it("still saves the entry when the log can't be trimmed", async () => {
+    vi.spyOn(backend, "trimLog").mockRejectedValue(new Error("Trim failed"));
+    vi.spyOn(console, "error").mockImplementation(() => {});
+
+    await storage.saveEntry({ date: "2026-01-01", weightKg: 90 });
+
+    expect(await storage.getEntries()).toHaveLength(1);
+  });
+
+  it("keeps only the newest records once the log is full", async () => {
+    for (let i = 1; i <= MAX_LOG_ENTRIES; i += 1) {
+      await backend.addLogEntry({
+        timestamp: "2026-01-01T12:00:00.000Z",
+        type: "change",
+        message: `Record ${i}`,
+      });
+    }
+
+    await storage.saveEntry({ date: "2026-01-01", weightKg: 90 });
+
+    const log = await storage.getLogEntries();
+
+    expect(log).toHaveLength(MAX_LOG_ENTRIES);
+    expect(log[0].message).toBe("Added an entry for 2026-01-01");
+    expect(log.at(-1)?.message).toBe("Record 2");
   });
 
   it("records errors with their details", async () => {

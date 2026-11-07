@@ -37,4 +37,7 @@ export interface StorageBackend {
   getLogEntries(): Promise<LogEntry[]>;
 
   addLogEntry(entry: NewLogEntry): Promise<void>;
+
+  /** Deletes the oldest log records, keeping only the newest `maxEntries`. */
+  trimLog(maxEntries: number): Promise<void>;
 }

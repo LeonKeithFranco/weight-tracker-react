@@ -24,6 +24,7 @@ The spec is finished (`docs/SPEC.md`), and the repo has no app code yet. This pl
 | Dates                    | Day.js                                     | Small, with `YYYY-MM-DD` style format tokens        |
 | Statistics               | simple-statistics                          | Regression, percentiles and standard deviation      |
 | Seeded randomness        | seedrandom and d3-random                   | Repeatable generator and normal distribution draws  |
+| CSV                      | PapaParse                                  | Handles quoting, line endings and byte order marks  |
 | Charts                   | Recharts                                   | Written for React; covers line, area and bar charts |
 | Styling                  | CSS Modules                                | Teaches responsive CSS directly                     |
 | PWA                      | vite-plugin-pwa                            | Generates the service worker and manifest           |

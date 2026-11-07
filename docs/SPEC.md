@@ -56,7 +56,7 @@ type Settings = {
 
 - One entry per date. Logging a date that already has an entry replaces it.
 - The form defaults to today, and past dates can be logged. Future dates are rejected.
-- Weight must be between 20 and 500 kg (or the equivalent in lb).
+- Weight must be above 0.
 - Entries can be edited or deleted. Deleting requires confirmation.
 
 ### Missed days
@@ -144,7 +144,10 @@ Display precision: weights to 1 decimal place, averages and rates to 2, percenta
 - **Import formats:** the app's own export, or a spreadsheet CSV with `Date` and `Weight (lbs)` columns. Extra columns are ignored.
 - **Dates:** accepts `YYYY-MM-DD` and `DD-MM-YYYY`.
 - Rows with no weight are skipped, which covers the spreadsheet's unfilled future dates.
-- A preview shows how many rows are new, how many would overwrite existing entries and how many are invalid. Nothing is written until confirmed.
+- A row is invalid if its date isn't valid or is in the future, or if its weight isn't a plain decimal number above 0.
+- If a date appears more than once in a file, the first row is kept and the later ones are invalid.
+- A file is rejected whole if it has neither pair of columns, or has an unclosed quote.
+- A preview shows how many rows are new, how many would overwrite existing entries and how many are invalid. A row counts as an overwrite whenever its date already has an entry, even if the weight is the same. Nothing is written until confirmed.
 - Imported rows overwrite existing entries for the same date. Invalid rows are skipped and listed.
 
 ### Settings

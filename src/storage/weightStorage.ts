@@ -1,3 +1,4 @@
+import type { ParsedCsv } from "../lib/csvImport";
 import type {
   CalendarDate,
   LogEntry,
@@ -23,11 +24,10 @@ export interface WeightStorage {
   deleteEntry(date: CalendarDate): Promise<void>;
 
   /**
-   * Saves every entry in one step, overwriting any on the same dates. Either
-   * all of them are saved or none are. `invalidCount` is only recorded in the
-   * activity log, so the log shows how many rows the file lost.
+   * Saves a file's valid entries in one step, overwriting any on the same
+   * dates. Either all of them are saved or none are.
    */
-  importEntries(entries: WeightEntry[], invalidCount: number): Promise<void>;
+  importEntries(parsed: ParsedCsv): Promise<void>;
 
   /** Returns the saved settings, or the defaults if none have been saved. */
   getSettings(): Promise<Settings>;

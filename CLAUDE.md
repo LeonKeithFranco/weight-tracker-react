@@ -12,7 +12,7 @@ Current status: @docs/PROGRESS.md
 
 ## Working style
 
-- Build each milestone on its own branch, then walk through the concepts listed for it in `docs/PLAN.md`.
+- Build each milestone on its own branch, in small rounds of about one commit. Each round makes a small set of changes, explains them and the related concepts listed in `docs/PLAN.md`, then stops for the user's questions before continuing.
 - Commit in small steps as the work goes. Each commit is one logical change that passes the checks by itself, such as one module with its tests.
 - Merge through a pull request once CI passes. The user reviews the code as it's written and asks Claude to merge. Never merge without being asked.
 - Rebase merge by default, so the small commits stay on `main`. Squash only when the commits aren't worth keeping.

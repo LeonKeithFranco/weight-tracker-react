@@ -6,10 +6,10 @@ The spec is finished (`docs/SPEC.md`), and the repo has no app code yet. This pl
 
 ## How we work
 
-- Claude builds each milestone on its own branch, then explains it.
+- Claude builds each milestone on its own branch, in small rounds of about one commit. Each round makes a small set of changes, explains them, then stops for your questions before continuing.
 - Claude commits in small steps as the work goes, with each commit being one logical change that passes the checks by itself.
 - Each milestone is merged through a pull request once CI passes. You review the code as it's written, and Claude merges when you ask.
-- A milestone is done when CI passes, the walkthrough of its concepts is finished, `docs/PROGRESS.md` is updated, and the PR is merged.
+- A milestone is done when CI passes, its concepts have been covered, `docs/PROGRESS.md` is updated, and the PR is merged.
 - Tests are written alongside or after the code to guard against regressions, not test-first. There are no coverage targets.
 - Commands on the homelab are yours to run. Claude provides each step and explains it.
 

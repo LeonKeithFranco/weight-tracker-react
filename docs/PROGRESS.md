@@ -57,6 +57,7 @@ Record changes to the spec or plan here, with the reason.
 - An unclosed quote rejects the whole file, because it swallows every row after it into one field.
 - The delimiter is fixed as a comma rather than detected, so a file with semicolons is rejected with a clear reason.
 - A one-off dry run of the parser on the real spreadsheet read all 309 days with no invalid rows. The file stayed out of the repo.
+- Milestones are built in small rounds, with an explanation and a pause for questions after each, replacing one walkthrough at the end. The user's question partway through milestone 5 changed the weight rule, so reviewing as the work goes catches decisions early.
 
 ### 2026-11-05
 

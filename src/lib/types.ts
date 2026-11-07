@@ -27,3 +27,21 @@ export type DailyFigures = DailyPoint & {
   weightLossSinceStartKg: number;
   weightLossPerWeekKg: number;
 };
+
+export type Settings = {
+  displayUnit: WeightUnit;
+  /** `null` when no target is set. */
+  targetWeightKg: number | null;
+  /** A Day.js format string. */
+  dateFormat: string;
+};
+
+/** One record in the activity log, which is separate from weight entries. */
+export type LogEntry = {
+  id: number;
+  /** A UTC timestamp, because a log records an exact moment. */
+  timestamp: string;
+  type: "change" | "error";
+  message: string;
+  details?: Record<string, unknown>;
+};

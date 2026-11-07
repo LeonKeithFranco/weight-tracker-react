@@ -58,6 +58,9 @@ Record changes to the spec or plan here, with the reason.
 - The delimiter is fixed as a comma rather than detected, so a file with semicolons is rejected with a clear reason.
 - A one-off dry run of the parser on the real spreadsheet read all 309 days with no invalid rows. The file stayed out of the repo.
 - Milestones are built in small rounds, with an explanation and a pause for questions after each, replacing one walkthrough at the end. The user's question partway through milestone 5 changed the weight rule, so reviewing as the work goes catches decisions early.
+- Claude runs commands and setup steps, including first-time tooling and config, and only hands a step over if the user asks or Claude can't run it. This replaces the user doing first-time setup by hand, because handing over installs slowed the work without adding to it.
+- Claude uses the file tools rather than shell commands to write code, so the user sees each diff, and runs the formatter for mechanical fixes rather than making them by hand.
+- Concepts that have already been taught aren't explained again in full. The list of them stays in Claude's memory, not the repo.
 
 ### 2026-11-05
 

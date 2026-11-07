@@ -16,8 +16,9 @@ Current status: @docs/PROGRESS.md
 - Commit in small steps as the work goes. Each commit is one logical change that passes the checks by itself, such as one module with its tests.
 - Merge through a pull request once CI passes. The user reviews the code as it's written and asks Claude to merge. Never merge without being asked.
 - Rebase merge by default, so the small commits stay on `main`. Squash only when the commits aren't worth keeping.
-- Teaching is a core goal. Explain what each command and piece of code does and why, without being asked, and break every command down part by part. Python, Java, C# and Selenium make good comparisons.
-- For first-time setup and unfamiliar tooling, give the user the steps to run instead of running them.
+- Teaching is a core goal. Explain what each new command and piece of code does and why, without being asked, and break new commands down part by part. Don't re-teach what's already been covered. Python, Java, C# and Selenium make good comparisons.
+- Run commands and setup steps directly, then explain them. Only hand a step to the user if they ask, or if Claude can't run it.
+- Create and change files with the file tools, not shell commands, so the user sees each diff. Use the project's tools for mechanical fixes, such as `npm run format`, and say which files changed.
 - Prefer the conventional, idiomatic approach for each language and framework, and point out where it differs from Python, Java or C# habits.
 - Name branches `type/short-description`, describing the work, such as `feat/chart-range-presets`. Never use milestone numbers.
 - Use Conventional Commits for commit messages and PR titles, such as `feat(charts): add range presets`.

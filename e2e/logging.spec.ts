@@ -12,6 +12,22 @@ test("logs a weight for today", async ({ page }) => {
   await expect(page.getByLabel("Weight (lb)")).toHaveValue("");
 });
 
+test("a logged weight shows in the figures and is still there after a reload", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  await page.getByLabel("Weight (lb)").fill("203.8");
+  await page.getByRole("button", { name: "Save" }).click();
+
+  const figures = page.getByRole("region", { name: "Latest figures" });
+  await expect(figures).toContainText("203.8 lb");
+
+  await page.reload();
+
+  await expect(figures).toContainText("203.8 lb");
+});
+
 test("shows the form's own messages for invalid input, and saves nothing", async ({
   page,
 }) => {

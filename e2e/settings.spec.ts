@@ -34,6 +34,31 @@ test("changing the unit applies to logging and survives a reload", async ({
   await expect(weightField(page, "kg")).toBeVisible();
 });
 
+test("switching units converts a logged weight, and switching back shows it unchanged", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await weightField(page, "lb").fill("203.8");
+  await page.getByRole("button", { name: "Save" }).click();
+  const figures = page.getByRole("region", { name: "Latest figures" });
+  await expect(figures).toContainText("203.8 lb");
+
+  await page.goto("/settings");
+  await page.getByLabel("Kilograms (kg)").check();
+  await openHome(page);
+
+  // 203.8 lb is 92.44 kg.
+  await expect(figures).toContainText("92.4 kg");
+  await expect(figures).not.toContainText("lb");
+
+  await page.goto("/settings");
+  await page.getByLabel("Pounds (lb)").check();
+  await openHome(page);
+
+  // The weight is stored in kg at full precision, so it doesn't drift.
+  await expect(figures).toContainText("203.8 lb");
+});
+
 test("the date format applies to logging and survives a reload", async ({
   page,
 }) => {

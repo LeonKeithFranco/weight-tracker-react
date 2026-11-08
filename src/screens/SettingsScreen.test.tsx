@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DataProvider } from "../data/DataProvider";
@@ -36,8 +36,16 @@ describe("SettingsScreen", () => {
     return screen.getByLabelText(`Target weight (${unit})`);
   }
 
+  /** The Save button inside the form with this name. */
+  function saveButton(formName: string) {
+    return within(screen.getByRole("form", { name: formName })).getByRole(
+      "button",
+      { name: "Save" },
+    );
+  }
+
   function saveTarget() {
-    return screen.getByRole("button", { name: "Save" });
+    return saveButton("Target");
   }
 
   describe("display unit", () => {
@@ -132,6 +140,75 @@ describe("SettingsScreen", () => {
       expect(await screen.findByLabelText("Target weight (kg)")).toHaveValue(
         "82.0",
       );
+    });
+  });
+
+  describe("date format", () => {
+    beforeEach(() => {
+      // Fakes only the date, so user-event's and Testing Library's timers
+      // still run normally.
+      vi.useFakeTimers({ toFake: ["Date"] });
+      vi.setSystemTime(new Date(2026, 10, 7, 12, 0));
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    function formatField() {
+      return screen.getByLabelText("Date format");
+    }
+
+    it("shows the saved format with a preview of today", async () => {
+      await renderSettings({ dateFormat: "DD/MM/YYYY" });
+
+      expect(formatField()).toHaveValue("DD/MM/YYYY");
+      expect(formatField()).toHaveAccessibleDescription(
+        /Today shows as: 07\/11\/2026/,
+      );
+    });
+
+    it("updates the preview as you type", async () => {
+      const user = await renderSettings();
+
+      await user.clear(formatField());
+      await user.type(formatField(), "D MMM YYYY");
+
+      expect(screen.getByText("Today shows as: 7 Nov 2026")).toBeVisible();
+    });
+
+    it("saves the format without spaces around it", async () => {
+      const user = await renderSettings();
+
+      await user.clear(formatField());
+      await user.type(formatField(), " D MMM YYYY ");
+      await user.click(saveButton("Dates"));
+
+      expect(await screen.findByText("Date format saved.")).toBeVisible();
+      expect((await storage.getSettings()).dateFormat).toBe("D MMM YYYY");
+    });
+
+    it("previews and saves the default when the field is empty", async () => {
+      const user = await renderSettings({ dateFormat: "DD/MM/YYYY" });
+
+      await user.clear(formatField());
+      expect(screen.getByText("Today shows as: 2026-11-07")).toBeVisible();
+      await user.click(saveButton("Dates"));
+
+      await screen.findByText("Date format saved.");
+      expect((await storage.getSettings()).dateFormat).toBe("YYYY-MM-DD");
+      expect(formatField()).toHaveValue("YYYY-MM-DD");
+    });
+
+    it("says so if saving fails", async () => {
+      const user = await renderSettings();
+      vi.spyOn(storage, "saveSettings").mockRejectedValue(new Error("full"));
+
+      await user.click(saveButton("Dates"));
+
+      expect(
+        await screen.findByText("Couldn't save the date format. Try again."),
+      ).toBeVisible();
     });
   });
 });

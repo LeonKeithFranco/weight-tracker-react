@@ -4,6 +4,7 @@ import {
   daysBetween,
   formatChartLabel,
   formatDate,
+  formatTimestamp,
   localToday,
   normalizeDateFormat,
   parseImportDate,
@@ -100,6 +101,31 @@ describe("normalizeDateFormat", () => {
   it("falls back to YYYY-MM-DD when empty or only spaces", () => {
     expect(normalizeDateFormat("")).toBe("YYYY-MM-DD");
     expect(normalizeDateFormat("   ")).toBe("YYYY-MM-DD");
+  });
+});
+
+describe("formatTimestamp", () => {
+  const originalTimeZone = process.env.TZ;
+
+  afterEach(() => {
+    process.env.TZ = originalTimeZone;
+  });
+
+  it("shows the moment in local time, with the date in the given format", () => {
+    process.env.TZ = "America/Toronto";
+
+    // 2:30 am in UTC is still the evening before in Toronto.
+    expect(formatTimestamp("2026-11-08T02:30:05.000Z", "DD/MM/YYYY")).toBe(
+      "07/11/2026 21:30:05",
+    );
+  });
+
+  it("falls back to YYYY-MM-DD for an empty format", () => {
+    process.env.TZ = "UTC";
+
+    expect(formatTimestamp("2026-11-08T02:30:05.000Z", "")).toBe(
+      "2026-11-08 02:30:05",
+    );
   });
 });
 

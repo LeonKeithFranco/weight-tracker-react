@@ -2,8 +2,7 @@ import Papa from "papaparse";
 import { DATE_COLUMN, WEIGHT_KG_COLUMN } from "./csvExport";
 import { parseImportDate } from "./dates";
 import type { CalendarDate, WeightEntry, WeightUnit } from "./types";
-import { toKg } from "./units";
-import { isAllowedWeight, isFutureDate } from "./validation";
+import { isFutureDate, parseWeight } from "./validation";
 
 type CsvFormat = {
   dateColumn: string;
@@ -15,9 +14,6 @@ const CSV_FORMATS: CsvFormat[] = [
   { dateColumn: DATE_COLUMN, weightColumn: WEIGHT_KG_COLUMN, unit: "kg" },
   { dateColumn: "Date", weightColumn: "Weight (lbs)", unit: "lb" },
 ];
-
-/** Plain digits only, because `Number()` also accepts `0x10` and `1e3`. */
-const WEIGHT_PATTERN = /^\d+(\.\d+)?$/;
 
 export type InvalidReason =
   "invalid-date" | "future-date" | "invalid-weight" | "duplicate-date";
@@ -59,9 +55,9 @@ function parseRow(
     return { ok: false, reason: "future-date" };
   }
 
-  const weightKg = toKg(Number(weightText), unit);
+  const weightKg = parseWeight(weightText, unit);
 
-  if (!WEIGHT_PATTERN.test(weightText) || !isAllowedWeight(weightKg)) {
+  if (weightKg === null) {
     return { ok: false, reason: "invalid-weight" };
   }
 

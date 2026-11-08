@@ -68,6 +68,15 @@ export function formatDate(date: CalendarDate, format: string): string {
   return parseDate(date).format(normalizeDateFormat(format));
 }
 
+/**
+ * Shows a UTC timestamp, such as a log entry's, in local time: the date in the
+ * date format setting, then the time on a 24-hour clock.
+ */
+export function formatTimestamp(timestamp: string, dateFormat: string): string {
+  // Plain `dayjs`, not `dayjs.utc`, so the moment is shown in local time.
+  return dayjs(timestamp).format(`${normalizeDateFormat(dateFormat)} HH:mm:ss`);
+}
+
 /** Compact axis label such as "Nov 5", whatever the date format setting is. */
 export function formatChartLabel(date: CalendarDate): string {
   return parseDate(date).format(CHART_LABEL_FORMAT);

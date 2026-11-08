@@ -1,0 +1,44 @@
+.back {
+  margin: 0 0 0.5rem;
+}
+
+.entries {
+  /* Drops the numbers, which would count from the newest entry. */
+  list-style: none;
+  max-width: 40rem;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+
+.entry {
+  padding: 0.75rem 0;
+  border-top: 1px solid GrayText;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0;
+  color: GrayText;
+  font-size: 0.875rem;
+}
+
+.errorType {
+  color: var(--color-error);
+  font-weight: 600;
+}
+
+.message {
+  margin: 0.25rem 0;
+}
+
+.details {
+  margin: 0.5rem 0 0;
+  padding: 0.5rem;
+  /* Wraps long lines, such as stack traces, instead of widening the page. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.875rem;
+  border: 1px solid GrayText;
+}

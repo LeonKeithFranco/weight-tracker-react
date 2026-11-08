@@ -2,9 +2,9 @@
 
 **Current status:** Milestone 6 is merged, which finishes Phase 2. The repo is public at `LeonKeithFranco/weight-tracker-react`, with a placeholder app, tested calculation, projection and CSV code in `src/lib/`, and tested storage and activity log code in `src/storage/`. All 309 days of calculated figures matched the real spreadsheet. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
 
-**Next:** Start milestone 7, app shell, logging and settings. Decide how the UI gets live updates, because Dexie's `useLiveQuery` hook would go around the storage interface.
+**Next:** Build the app shell, four screens and navigation.
 
-**In progress:** Nothing.
+**In progress:** Milestone 7, on `feat/app-shell-logging-settings` (draft PR #11). Playwright runs in CI at desktop and phone sizes.
 
 ## Milestones
 
@@ -33,6 +33,10 @@
 ## Decision log
 
 Record changes to the spec or plan here, with the reason.
+
+### 2026-11-07
+
+- Screens get their data from a `DataProvider` that loads it through `WeightStorage` into React state and shares it through context. Its save and delete functions call storage and then reload. Dexie's `useLiveQuery` was rejected because it reads the database directly, around the storage interface. A `subscribe` method on the interface and TanStack Query were also considered. The first changes the interface and needs a harder hook, and the second mostly helps with server data. Changes made in another tab only show after a refresh, which is fine for one person.
 
 ### 2026-11-06
 

@@ -206,7 +206,7 @@ Every milestone must pass lint, type checks, tests and the build in CI, with Pla
 
 - **Milestone 2:** a PR with a deliberately failing test can't be merged.
 - **Milestone 3:** every calculated figure matches the real spreadsheet.
-- **Milestone 8:** all 309 of your days import, and the figures still match.
+- **Milestone 8:** all of your real weigh-ins from 2025 and 2026 import, which was 523 on 2026-11-08, and the figures match the spreadsheet except near the days it estimated with random values.
 - **Milestone 11:** the installed app opens and logs an entry in airplane mode.
 - **Milestone 12:** a merged change appears on your phone over HTTPS with no manual steps, and your data moves over intact.
 - **Milestone 13:** a fresh setup following only the README works.

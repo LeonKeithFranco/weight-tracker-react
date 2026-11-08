@@ -1,5 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DataProvider } from "../data/DataProvider";
 import type { Settings } from "../lib/types";
@@ -24,9 +25,12 @@ describe("SettingsScreen", () => {
     await storage.saveSettings({ ...DEFAULT_SETTINGS, ...settings });
     const user = userEvent.setup();
     render(
-      <DataProvider storage={storage}>
-        <SettingsScreen />
-      </DataProvider>,
+      // The link to the activity log needs a router above it.
+      <MemoryRouter>
+        <DataProvider storage={storage}>
+          <SettingsScreen />
+        </DataProvider>
+      </MemoryRouter>,
     );
     await screen.findByRole("heading", { name: "Settings" });
     return user;

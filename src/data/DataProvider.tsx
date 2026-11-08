@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import type { Settings, WeightEntry } from "../lib/types";
 import type { WeightStorage } from "../storage/weightStorage";
 import { DataContext, type DataContextValue } from "./dataContext";
@@ -17,6 +17,16 @@ export function DataProvider({ storage, children }: DataProviderProps) {
   const [entries, setEntries] = useState<WeightEntry[] | null>(null);
   const [settings, setSettings] = useState<Settings | null>(null);
   const [loadFailed, setLoadFailed] = useState(false);
+
+  // Without `useCallback`, every render would make a new function, and an
+  // effect that depends on it would run again each time. Hooks can't come
+  // after the early returns below, so this is up here.
+  const getLogEntries = useCallback(() => storage.getLogEntries(), [storage]);
+  const logError = useCallback(
+    (message: string, details?: Record<string, unknown>) =>
+      storage.logError(message, details),
+    [storage],
+  );
 
   useEffect(() => {
     // Set if React discards this effect before loading finishes, so a late
@@ -74,9 +84,8 @@ export function DataProvider({ storage, children }: DataProviderProps) {
       await storage.saveSettings(newSettings);
       setSettings(await storage.getSettings());
     },
-    logError(message, details) {
-      return storage.logError(message, details);
-    },
+    getLogEntries,
+    logError,
   };
 
   return <DataContext value={value}>{children}</DataContext>;

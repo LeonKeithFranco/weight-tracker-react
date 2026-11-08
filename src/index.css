@@ -1,6 +1,7 @@
 :root {
   color-scheme: light dark;
   font-family: system-ui, sans-serif;
+  --color-error: light-dark(#b3261e, #f2b8b5);
 }
 
 body {

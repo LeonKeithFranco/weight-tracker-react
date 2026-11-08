@@ -1,3 +1,4 @@
+import { CsvExport } from "../components/CsvExport";
 import { DateFormatForm } from "../components/DateFormatForm";
 import { TargetWeightForm } from "../components/TargetWeightForm";
 import { UnitSetting } from "../components/UnitSetting";
@@ -15,6 +16,7 @@ export function SettingsScreen() {
         {/* A new key gives a fresh form, so the field shows the target in the new unit. */}
         <TargetWeightForm key={settings.displayUnit} />
         <DateFormatForm />
+        <CsvExport />
       </div>
     </>
   );

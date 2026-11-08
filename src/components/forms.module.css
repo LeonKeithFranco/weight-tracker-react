@@ -1,13 +1,27 @@
+/* Stacks a screen's forms with space between them. */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
 .form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   max-width: 20rem;
+  /* Removes a fieldset's default border and spacing. */
+  margin: 0;
+  padding: 0;
+  border: none;
 }
 
-.form h2 {
+.form h2,
+.form legend {
   margin: 0;
+  padding: 0;
   font-size: 1.25rem;
+  font-weight: bold;
 }
 
 .field {
@@ -16,8 +30,9 @@
   gap: 0.25rem;
 }
 
-/* Inputs and the button use the page's font, and are big enough to tap. */
-.form input,
+/* Inputs and buttons use the page's font, and are big enough to tap. */
+.form input[type="text"],
+.form input[type="date"],
 .form button {
   min-height: 3rem;
   padding: 0 0.75rem;
@@ -26,6 +41,25 @@
 
 .form input[aria-invalid="true"] {
   outline: 2px solid var(--color-error);
+}
+
+/* A radio button and its label, as one row that's easy to tap. */
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3rem;
+}
+
+.choice input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+}
+
+.hint {
+  margin: 0;
+  color: GrayText;
 }
 
 .error {

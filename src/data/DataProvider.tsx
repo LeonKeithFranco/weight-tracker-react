@@ -74,6 +74,9 @@ export function DataProvider({ storage, children }: DataProviderProps) {
       await storage.saveSettings(newSettings);
       setSettings(await storage.getSettings());
     },
+    logError(message, details) {
+      return storage.logError(message, details);
+    },
   };
 
   return <DataContext value={value}>{children}</DataContext>;

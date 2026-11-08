@@ -94,6 +94,19 @@ describe("DataProvider", () => {
     expect(result.current.settings.targetWeightKg).toBe(80);
   });
 
+  it("passes errors on to the activity log", async () => {
+    const result = await renderLoaded();
+
+    await act(() => result.current.logError("Something failed", { code: 7 }));
+
+    const [record] = await storage.getLogEntries();
+    expect(record).toMatchObject({
+      type: "error",
+      message: "Something failed",
+      details: { code: 7 },
+    });
+  });
+
   it("shows an error instead of the app, and logs it, if loading fails", async () => {
     vi.spyOn(storage, "getEntries").mockRejectedValue(new Error("disk full"));
 

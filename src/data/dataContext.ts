@@ -10,6 +10,8 @@ export type DataContextValue = {
   deleteEntry(date: CalendarDate): Promise<void>;
   importEntries(parsed: ParsedCsv): Promise<void>;
   saveSettings(settings: Settings): Promise<void>;
+  /** Records an error in the activity log. Never rejects. */
+  logError(message: string, details?: Record<string, unknown>): Promise<void>;
 };
 
 /** `null` means there's no `DataProvider` above the component. */

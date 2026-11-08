@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from "react-router";
 import styles from "./AppShell.module.css";
+import { ScreenErrorBoundary } from "./ScreenErrorBoundary";
 
 const screens = [
   { path: "/", label: "Home" },
@@ -29,7 +30,9 @@ export function AppShell() {
         </nav>
       </header>
       <main className={styles.main}>
-        <Outlet />
+        <ScreenErrorBoundary>
+          <Outlet />
+        </ScreenErrorBoundary>
       </main>
     </>
   );

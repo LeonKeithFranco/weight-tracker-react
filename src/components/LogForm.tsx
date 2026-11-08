@@ -8,7 +8,7 @@ import {
 } from "../lib/logForm";
 import type { WeightEntry } from "../lib/types";
 import { formatWeight } from "../lib/units";
-import styles from "./LogForm.module.css";
+import styles from "./forms.module.css";
 
 const DATE_MESSAGES: Record<NonNullable<LogFormErrors["date"]>, string> = {
   missing: "Enter a date.",

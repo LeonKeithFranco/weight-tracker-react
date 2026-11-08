@@ -1,11 +1,30 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   addDays,
   daysBetween,
   formatChartLabel,
   formatDate,
+  localToday,
   parseImportDate,
 } from "./dates";
+
+describe("localToday", () => {
+  const originalTimeZone = process.env.TZ;
+
+  afterEach(() => {
+    vi.useRealTimers();
+    process.env.TZ = originalTimeZone;
+  });
+
+  it("uses the local date, even when it's already tomorrow in UTC", () => {
+    process.env.TZ = "America/Toronto";
+    vi.useFakeTimers();
+    // 9 pm in Toronto, which is 2 am the next day in UTC.
+    vi.setSystemTime(new Date("2026-11-07T02:00:00Z"));
+
+    expect(localToday()).toBe("2026-11-06");
+  });
+});
 
 describe("parseImportDate", () => {
   it("accepts both import formats", () => {

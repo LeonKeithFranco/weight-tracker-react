@@ -5,6 +5,7 @@ import {
   formatChartLabel,
   formatDate,
   localToday,
+  normalizeDateFormat,
   parseImportDate,
 } from "./dates";
 
@@ -87,6 +88,18 @@ describe("formatDate", () => {
 
   it("falls back to YYYY-MM-DD for an empty format", () => {
     expect(formatDate("2026-11-05", "")).toBe("2026-11-05");
+    expect(formatDate("2026-11-05", "   ")).toBe("2026-11-05");
+  });
+});
+
+describe("normalizeDateFormat", () => {
+  it("trims the format", () => {
+    expect(normalizeDateFormat("  D MMM YYYY ")).toBe("D MMM YYYY");
+  });
+
+  it("falls back to YYYY-MM-DD when empty or only spaces", () => {
+    expect(normalizeDateFormat("")).toBe("YYYY-MM-DD");
+    expect(normalizeDateFormat("   ")).toBe("YYYY-MM-DD");
   });
 });
 

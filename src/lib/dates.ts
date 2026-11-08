@@ -55,9 +55,17 @@ export function daysBetween(start: CalendarDate, end: CalendarDate): number {
   return parseDate(end).diff(parseDate(start), "day");
 }
 
+/**
+ * Trims a date format setting. An empty one, or one that's only spaces, falls
+ * back to the default.
+ */
+export function normalizeDateFormat(format: string): string {
+  return format.trim() || DEFAULT_DATE_FORMAT;
+}
+
 /** Formats with a Day.js format string. An empty format uses the default. */
 export function formatDate(date: CalendarDate, format: string): string {
-  return parseDate(date).format(format || DEFAULT_DATE_FORMAT);
+  return parseDate(date).format(normalizeDateFormat(format));
 }
 
 /** Compact axis label such as "Nov 5", whatever the date format setting is. */

@@ -23,6 +23,14 @@ export function toCalendarDate(date: Dayjs): CalendarDate {
 }
 
 /**
+ * Today's date where the user is. This one is local, not UTC, because in the
+ * evening west of UTC it's already tomorrow in UTC.
+ */
+export function localToday(): CalendarDate {
+  return dayjs().format(DEFAULT_DATE_FORMAT);
+}
+
+/**
  * Reads a date from an imported file, or returns `null` if it isn't one. Strict
  * parsing rejects dates that don't exist, such as `2026-02-30`, which Day.js
  * would otherwise roll forward into March.

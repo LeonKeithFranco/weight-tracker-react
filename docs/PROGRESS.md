@@ -1,8 +1,8 @@
 # Progress
 
-**Current status:** Milestone 7 is finished, in PR #11. The app has an app shell with four screens and responsive navigation, a logging form, settings for the unit, target and date format, the latest figures and goal date on Home, and error handling that records to the activity log. Charts and Data are still placeholders. Unit and component tests run in Vitest, and Playwright runs in CI at desktop and phone sizes, saving a report and traces when a test fails. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
+**Current status:** Milestone 7 is merged. The app has an app shell with four screens and responsive navigation, a logging form, settings for the unit, target and date format, the latest figures and goal date on Home, and error handling that records to the activity log. Charts and Data are still placeholders. Unit and component tests run in Vitest, and Playwright runs in CI at desktop and phone sizes, saving a report and traces when a test fails. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
 
-**Next:** Start milestone 8, containers and deployment. In milestone 9, add a Playwright test that an uncaught error in the browser shows up on the new Log page. The global handler only has unit tests until something on screen shows the log.
+**Next:** Start milestone 8, CSV screens and log page. It includes a Playwright test that an uncaught error in the browser shows up on the new Log page, because the global handler only has unit tests until something on screen shows the log.
 
 **In progress:** Nothing.
 
@@ -23,16 +23,22 @@
 ### Phase 3: UI
 
 - [x] 7. App shell, logging and settings
-- [ ] 8. Containers and deployment
-- [ ] 9. CSV screens and log page
-- [ ] 10. Data table
-- [ ] 11. Charts
-- [ ] 12. PWA
+- [ ] 8. CSV screens and log page
+- [ ] 9. Data table
+- [ ] 10. Charts
+- [ ] 11. PWA
+- [ ] 12. Containers and deployment
 - [ ] 13. Release
 
 ## Decision log
 
 Record changes to the spec or plan here, with the reason.
+
+### 2026-11-08
+
+- Containers and deployment moved from milestone 8 to milestone 12, after the PWA and before the release, and the milestones between were renumbered: CSV screens and log page is now 8, Data table 9, Charts 10 and PWA 11. The user wants to use and test the finished app before deploying it. Entries before this one use the old numbers.
+- Until deployment, the app runs from the dev server on the desktop, and the phone opens it over Wi-Fi. Real history is imported into that local copy in milestone 8, and the spreadsheet stays in use until milestone 12 moves the data to the deployed copy by CSV export and import. Browser data is tied to the exact address, so it moves once, after the address is settled.
+- The PWA is tested on the phone through Chrome's USB port forwarding, which makes the dev server count as `localhost`. Service workers need HTTPS or `localhost`, and HTTPS only arrives with deployment.
 
 ### 2026-11-07
 

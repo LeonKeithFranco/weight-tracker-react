@@ -32,18 +32,21 @@ export function UnitSetting() {
   return (
     <fieldset className={styles.form}>
       <legend>Display unit</legend>
-      {UNITS.map(({ unit, label }) => (
-        <label key={unit} className={styles.choice}>
-          <input
-            type="radio"
-            // Radio buttons with the same name form one group.
-            name={groupName}
-            checked={shownUnit === unit}
-            onChange={() => changeUnit(unit)}
-          />
-          {label}
-        </label>
-      ))}
+      {/* One item in the form's layout, so the rows sit without a gap. */}
+      <div>
+        {UNITS.map(({ unit, label }) => (
+          <label key={unit} className={styles.choice}>
+            <input
+              type="radio"
+              // Radio buttons with the same name form one group.
+              name={groupName}
+              checked={shownUnit === unit}
+              onChange={() => changeUnit(unit)}
+            />
+            {label}
+          </label>
+        ))}
+      </div>
       {saveFailed && (
         <p role="alert" className={styles.error}>
           Couldn't save the unit. Try again.

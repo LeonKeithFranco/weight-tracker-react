@@ -57,8 +57,14 @@ export function TargetWeightForm() {
   const errorId = `${id}-error`;
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit} noValidate>
-      <h2>Target</h2>
+    <form
+      className={styles.form}
+      onSubmit={handleSubmit}
+      noValidate
+      // Names the form after its heading, so it can be told apart from others.
+      aria-labelledby={`${id}-heading`}
+    >
+      <h2 id={`${id}-heading`}>Target</h2>
 
       <div className={styles.field}>
         <label htmlFor={`${id}-target`}>Target weight ({unit})</label>

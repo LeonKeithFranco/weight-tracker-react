@@ -72,8 +72,13 @@ export function LogForm() {
   return (
     // `noValidate` turns off the browser's own error bubbles, so the form's
     // messages are the only ones and look the same everywhere.
-    <form className={styles.form} onSubmit={handleSubmit} noValidate>
-      <h2>Log your weight</h2>
+    <form
+      className={styles.form}
+      onSubmit={handleSubmit}
+      noValidate
+      aria-labelledby={`${id}-heading`}
+    >
+      <h2 id={`${id}-heading`}>Log your weight</h2>
 
       <div className={styles.field}>
         <label htmlFor={`${id}-date`}>Date</label>

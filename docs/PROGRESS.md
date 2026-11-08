@@ -1,10 +1,10 @@
 # Progress
 
-**Current status:** Milestone 6 is merged, which finishes Phase 2. The repo is public at `LeonKeithFranco/weight-tracker-react`, with a placeholder app, tested calculation, projection and CSV code in `src/lib/`, and tested storage and activity log code in `src/storage/`. All 309 days of calculated figures matched the real spreadsheet. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
+**Current status:** Milestone 7 is finished, in PR #11. The app has an app shell with four screens and responsive navigation, a logging form, settings for the unit, target and date format, the latest figures and goal date on Home, and error handling that records to the activity log. Charts and Data are still placeholders. Unit and component tests run in Vitest, and Playwright runs in CI at desktop and phone sizes, saving a report and traces when a test fails. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
 
-**Next:** Build the app shell, four screens and navigation.
+**Next:** Start milestone 8, containers and deployment. In milestone 9, add a Playwright test that an uncaught error in the browser shows up on the new Log page. The global handler only has unit tests until something on screen shows the log.
 
-**In progress:** Milestone 7, on `feat/app-shell-logging-settings` (draft PR #11). Playwright runs in CI at desktop and phone sizes.
+**In progress:** Nothing.
 
 ## Milestones
 
@@ -22,7 +22,7 @@
 
 ### Phase 3: UI
 
-- [ ] 7. App shell, logging and settings
+- [x] 7. App shell, logging and settings
 - [ ] 8. Containers and deployment
 - [ ] 9. CSV screens and log page
 - [ ] 10. Data table
@@ -40,6 +40,12 @@ Record changes to the spec or plan here, with the reason.
 - Playwright and component tests find elements by role and label first, and use `data-testid` only where nothing a user sees identifies the element, such as a chart. A role locator also fails when an element stops working for keyboard or screen reader users, which a test id can't catch. The usual case for test ids is weak here, because the app isn't translated and its wording rarely changes.
 - Zod was considered for checking user input and not adopted. The app's untrusted inputs are small and flat, and the rules that matter are its own: the plain decimal rule, no future dates and unit conversion. A schema would be about as long as the hand-written checks, and Zod's number parsing accepts `1e3`, so the regex would stay anyway. It's the first choice if a larger untrusted input turns up, such as importing JSON.
 - Tests follow the testing trophy rather than a strict test pyramid. Component tests render the real `DataProvider` and storage rules and fake only IndexedDB. Playwright covers each main journey, plus any unhappy path that needs a real browser or several parts working together, such as validation showing in Chromium, IndexedDB being unavailable or data surviving a reload. Every input variation of a rule stays in unit tests. Parts working together can fail in ways no single part shows, as the settings radio did, and only Playwright caught it. The Playwright suite runs in seconds, so the pyramid's cost argument barely applies. Exploratory testing was considered and left out.
+- Vitest runs two projects: `.test.ts` files in plain Node and `.test.tsx` files in jsdom, with React Testing Library and StrictMode. jsdom for every file would slow down the logic tests, which never render anything.
+- Weight fields are text inputs with `inputMode="decimal"`, not `type="number"`. A number input reports invalid text as empty, accepts `1e3` and changes when scrolled, and React keeps half-typed values as strings anyway. The phone still shows the number keypad.
+- The display unit saves as soon as it's chosen. The target weight and date format have Save buttons, because typed text needs checking first.
+- Saving the target unchanged keeps the stored value. The field shows the target rounded in the display unit, and converting that rounded text back would shift the target a little on every save.
+- Home shows 8 of the 10 daily figures and leaves out the two lowest averages, to stay short on a phone. The Data table will show all of them.
+- `react-error-boundary` was added, which the plan didn't list. React's own docs point to it, and it saves writing the class component an error boundary needs. A boundary around each screen keeps the navigation working after a crash, and one around the whole app catches the rest.
 
 ### 2026-11-06
 

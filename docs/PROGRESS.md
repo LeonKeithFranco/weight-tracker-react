@@ -37,6 +37,7 @@ Record changes to the spec or plan here, with the reason.
 ### 2026-11-07
 
 - Screens get their data from a `DataProvider` that loads it through `WeightStorage` into React state and shares it through context. Its save and delete functions call storage and then reload. Dexie's `useLiveQuery` was rejected because it reads the database directly, around the storage interface. A `subscribe` method on the interface and TanStack Query were also considered. The first changes the interface and needs a harder hook, and the second mostly helps with server data. Changes made in another tab only show after a refresh, which is fine for one person.
+- Playwright and component tests find elements by role and label first, and use `data-testid` only where nothing a user sees identifies the element, such as a chart. A role locator also fails when an element stops working for keyboard or screen reader users, which a test id can't catch. The usual case for test ids is weak here, because the app isn't translated and its wording rarely changes.
 
 ### 2026-11-06
 

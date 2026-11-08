@@ -53,7 +53,7 @@ The work runs in three phases:
 
 1. **Pipeline:** CI and branch protection come first, so everything after them is checked automatically.
 2. **Logic:** all calculations, parsing and storage are built and unit tested, with no UI.
-3. **UI:** components are built on the tested logic, with component and Playwright tests alongside them. Deployment comes once there's a usable app, before real data goes in.
+3. **UI:** components are built on the tested logic, with component and Playwright tests alongside them. Deployment comes last, after you've used and tested the finished app locally.
 
 ## Phase 1: Pipeline
 
@@ -127,7 +127,42 @@ Every milestone here that builds UI adds component tests and Playwright tests fo
 
 **Learn:** props, state, controlled forms, hooks, `useMemo`, context, routing, error boundaries, component tests, Playwright compared to Selenium, CI artifacts
 
-### 8. Containers and deployment
+Until milestone 12, the app runs from the dev server on your desktop. Your phone can open it over your Wi-Fi with `npm run dev -- --host`.
+
+### 8. CSV screens and log page
+
+- Build export, and the import preview and confirmation
+- Build the Log page and its JSON export
+- Add a Playwright test that an uncaught error in the browser shows up on the Log page
+- Import your real history into the local copy, and keep logging in the spreadsheet until the deployed copy is set up
+
+**Learn:** file handling in the browser, showing success and failure states
+
+### 9. Data table
+
+- Build the desktop table and the expandable phone rows
+- Add edit and delete, with confirmation
+- Mark estimated days
+
+**Learn:** rendering lists and keys, derived state, responsive CSS, accessible expanding rows
+
+### 10. Charts
+
+- Build the four spreadsheet charts and the Projection chart, marking estimated days
+- Add range presets, legend toggles, compact axis labels and formatted tooltips
+- Check the simulation's speed on your phone
+
+**Learn:** composing third-party components, reusable components, shaping data for display, keeping heavy work from slowing the UI
+
+### 11. PWA
+
+- Add the manifest, icons and service worker
+- Add the reload prompt for new versions
+- Test install, offline use and updating on your desktop, and on your phone through Chrome's USB port forwarding, which counts as `localhost`, so no HTTPS is needed yet
+
+**Learn:** service workers, caching, the app update lifecycle, why HTTPS is required, USB port forwarding
+
+### 12. Containers and deployment
 
 Image:
 
@@ -142,39 +177,9 @@ Homelab:
 - Set up Caddy, allow rootless use of port 443, and install its root certificate on your devices
 - Stop the laptop from suspending when the lid closes
 - Confirm the app loads over HTTPS on your phone and desktop, and that a merged change deploys by itself
+- Move your data to the deployed copy with CSV export and import, then log there instead of in the spreadsheet
 
 **Learn:** images and containers, rootless containers, multi-stage builds, registries and tags, workflow permissions, CI compared to CD, Quadlet and systemd, auto-update and rollback, nginx config, HTTPS, certificates and certificate authorities, DNS compared to mDNS
-
-### 9. CSV screens and log page
-
-- Build export, and the import preview and confirmation
-- Build the Log page and its JSON export
-- Import your real history
-
-**Learn:** file handling in the browser, showing success and failure states
-
-### 10. Data table
-
-- Build the desktop table and the expandable phone rows
-- Add edit and delete, with confirmation
-- Mark estimated days
-
-**Learn:** rendering lists and keys, derived state, responsive CSS, accessible expanding rows
-
-### 11. Charts
-
-- Build the four spreadsheet charts and the Projection chart, marking estimated days
-- Add range presets, legend toggles, compact axis labels and formatted tooltips
-
-**Learn:** composing third-party components, reusable components, shaping data for display, keeping heavy work from slowing the UI
-
-### 12. PWA
-
-- Add the manifest, icons and service worker
-- Add the reload prompt for new versions
-- Test install, offline use and updating on your phone and desktop
-
-**Learn:** service workers, caching, the app update lifecycle, why HTTPS is required
 
 ### 13. Release
 
@@ -189,11 +194,11 @@ Homelab:
 | Risk                                           | Mitigation                                                                                         |
 | ---------------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | The UI needs logic output in a different shape | Keep logic functions small, and adjust them in UI milestones; existing tests protect those changes |
-| `homelab.local` doesn't work on your phone     | Test it first in milestone 8; fall back to HTTPS on the fixed IP                                   |
-| The address changes after real data is entered | Settle the address in milestone 8, before real data goes in at milestone 9                         |
+| `homelab.local` doesn't work on your phone     | Test it first in milestone 12; fall back to HTTPS on the fixed IP                                  |
+| The address changes after real data is entered | Data stays at the local address until milestone 12, then moves once by CSV export and import       |
 | A figure doesn't match the spreadsheet         | Compare against the real spreadsheet in milestone 3                                                |
 | Browser data is lost                           | Export regularly, and keep the spreadsheet until milestone 13                                      |
-| The simulation is slow on your phone           | Measure in milestone 4, and use a web worker in milestone 11 if needed                             |
+| The simulation is slow on your phone           | Measure in milestone 4, and use a web worker in milestone 10 if needed                             |
 
 ## Verification
 
@@ -201,7 +206,7 @@ Every milestone must pass lint, type checks, tests and the build in CI, with Pla
 
 - **Milestone 2:** a PR with a deliberately failing test can't be merged.
 - **Milestone 3:** every calculated figure matches the real spreadsheet.
-- **Milestone 8:** a merged change appears on your phone over HTTPS with no manual steps.
-- **Milestone 9:** all 309 of your days import, and the figures still match.
-- **Milestone 12:** the installed app opens and logs an entry in airplane mode.
+- **Milestone 8:** all 309 of your days import, and the figures still match.
+- **Milestone 11:** the installed app opens and logs an entry in airplane mode.
+- **Milestone 12:** a merged change appears on your phone over HTTPS with no manual steps, and your data moves over intact.
 - **Milestone 13:** a fresh setup following only the README works.

@@ -99,7 +99,7 @@ Display precision: weights to 1 decimal place, averages and rates to 2, percenta
 | Progress      | Stacked area   | Weight loss since start, with weight to lose until target stacked on top                          |
 | Loss rate     | Line           | Weight loss per week                                                                              |
 | Weekly change | Bar            | 7-day average % change                                                                            |
-| Projection    | Line with band | Recent weight, simulated median and range, target                                                 |
+| Projection    | Line with band | Recent weight, projected trend and range, target                                                  |
 
 - Range presets: 1M, 3M, 6M, YTD, 1Y and All. The default is YTD. Presets count back from the latest day in the data, not from today.
 - Presets only change what is shown. Running lows and averages always use the full history.
@@ -126,16 +126,17 @@ Display precision: weights to 1 decimal place, averages and rates to 2, percenta
 
 **Why 90 days:** against the existing spreadsheet data, a 28-day window changed direction 8 times in a year, while a 90-day window changed direction twice and had the narrowest range of rates. The window is a single constant, so it is easy to change.
 
-**Why 14 days:** two full weeks stop one unusual weekend from setting the trend, the 7-day average has been using a full 7 days for a week by then, and the slope is far steadier than at 7 days. Early estimates are still rough, and they settle by about 28 days. The minimum counts days in the daily series, including estimated days, like every other figure. It is also a single constant, shared with the simulated projection.
+**Why 14 days:** two full weeks stop one unusual weekend from setting the trend, the 7-day average has been using a full 7 days for a week by then, and the slope is far steadier than at 7 days. Early estimates are still rough, and they settle by about 28 days. The minimum counts days in the daily series, including estimated days, like every other figure. It is also a single constant, shared with the projected range.
 
-### Simulated projection
+### Projected range
 
-- Based on the Scratch sheet's random walk.
+- Uses the same model as the Scratch sheet's random walk, where each day's change is drawn from a normal distribution, but calculates the result directly instead of simulating random paths.
 - Take the day-to-day changes from the last 90 days of the daily series, then calculate their mean and sample standard deviation.
-- Run 1,000 simulated paths for 180 days, starting from the latest weight. Each day's change is drawn from a normal distribution with that mean and standard deviation.
-- Chart the median path and the 10th to 90th percentile band.
+- Project 180 days from the latest weight. After `n` days, the trend is the latest weight plus `n` times the mean change.
+- The range is the trend plus or minus 2 standard deviations of the daily change times the square root of `n`, which covers about 95% of likely outcomes.
+- Chart the recent weight from the same 90-day window, then the trend and range. The chart ignores the range presets, which only cover the past.
 - Requires at least 14 days of data.
-- Uses a seeded random number generator, with the seed derived from the data. The chart stays the same between renders, and tests get repeatable results.
+- No randomness is involved, so the chart stays the same between renders and tests are exact.
 
 **Known limitation:** normal scale noise counts as real change, so the band will look wider than the true uncertainty.
 
@@ -249,7 +250,7 @@ These follow from browser-only storage and should appear in the README:
 
 Tests guard against regressions and are written alongside or after the code, not test-first.
 
-- **Unit:** units, dates, interpolation, every daily figure, goal date, simulation, CSV parsing
+- **Unit:** units, dates, interpolation, every daily figure, goal date, projected range, CSV parsing
 - **Component:** the form, table and settings behavior
 - **End to end (Playwright):** log an entry, change units, import and export, reload and confirm data persists; run at desktop and phone sizes
 - Test data must be synthetic. `example-weight-tracker.fods` holds real personal data and stays out of the repo.

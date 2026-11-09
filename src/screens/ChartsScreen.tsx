@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Card } from "../components/Card";
 import { LossRateChart } from "../components/LossRateChart";
 import { ProgressChart } from "../components/ProgressChart";
 import { ProjectionChart } from "../components/ProjectionChart";
@@ -10,6 +11,7 @@ import { useDailyFigures } from "../data/useDailyFigures";
 import { useProjection } from "../data/useProjection";
 import { DEFAULT_RANGE_PRESET, filterByRange } from "../lib/chartRange";
 import { toChartRows } from "../lib/chartRows";
+import styles from "./ChartsScreen.module.css";
 
 export function ChartsScreen() {
   const figures = useDailyFigures();
@@ -29,22 +31,36 @@ export function ChartsScreen() {
       {rows.length === 0 ? (
         <p>No entries yet. Log your first weight on Home.</p>
       ) : (
-        <>
+        <div className={styles.layout}>
+          {/* Outside the cards, because it changes every chart below it. */}
           <RangePresets value={preset} onChange={setPreset} />
-          <WeightTrendsChart {...chartProps} />
-          <ProgressChart {...chartProps} hasTarget={targetWeightKg !== null} />
-          <LossRateChart {...chartProps} />
-          {/* A percentage has no unit, so only the rows and date format. */}
-          <WeeklyChangeChart rows={rows} dateFormat={dateFormat} />
-          {/* Uses its own window rather than the preset, so it gets the
-              whole series and its projected range. */}
-          <ProjectionChart
-            {...projection}
-            unit={unit}
-            dateFormat={dateFormat}
-            targetWeightKg={targetWeightKg}
-          />
-        </>
+          <Card>
+            <WeightTrendsChart {...chartProps} />
+          </Card>
+          <Card>
+            <ProgressChart
+              {...chartProps}
+              hasTarget={targetWeightKg !== null}
+            />
+          </Card>
+          <Card>
+            <LossRateChart {...chartProps} />
+          </Card>
+          <Card>
+            {/* A percentage has no unit, so only the rows and date format. */}
+            <WeeklyChangeChart rows={rows} dateFormat={dateFormat} />
+          </Card>
+          <Card>
+            {/* Uses its own window rather than the preset, so it gets the
+                whole series and its projected range. */}
+            <ProjectionChart
+              {...projection}
+              unit={unit}
+              dateFormat={dateFormat}
+              targetWeightKg={targetWeightKg}
+            />
+          </Card>
+        </div>
       )}
     </>
   );

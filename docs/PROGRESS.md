@@ -1,8 +1,8 @@
 # Progress
 
-**Current status:** Milestone 9 is finished. The app has an app shell with four screens and responsive navigation, a logging form, settings for the unit, target and date format, the latest figures and goal date on Home, and error handling that records to the activity log. Settings exports and imports CSV files, with a preview before an import saves anything, and links to the Log page, which lists the activity log and exports it as JSON. The Data screen shows every daily figure newest first, as a full table on desktop and as rows that expand on a phone, with estimated days marked and edit and delete for saved entries. Charts is still a placeholder. The user's real history from 2025 and 2026 is imported into the desktop's dev server copy. Unit and component tests run in Vitest, and Playwright runs in CI at desktop and phone sizes, saving a report and traces when a test fails. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
+**Current status:** Milestone 10 is finished. The app has an app shell with four screens and responsive navigation, a logging form, settings for the unit, target and date format, the latest figures and goal date on Home, and error handling that records to the activity log. Settings exports and imports CSV files, with a preview before an import saves anything, and links to the Log page, which lists the activity log and exports it as JSON. The Data screen shows every daily figure newest first, as a full table on desktop and as rows that expand on a phone, with estimated days marked and edit and delete for saved entries. The Charts screen has the five charts, Weight trends, Progress, Loss rate, Weekly change and Projection, sharing one frame, with range presets, legend toggles and tooltips in the date format setting. The user's real history from 2025 and 2026 is imported into the desktop's dev server copy. Unit and component tests run in Vitest, and Playwright runs in CI at desktop and phone sizes, saving a report and traces when a test fails. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
 
-**Next:** Start milestone 10, Charts.
+**Next:** Group the sections on Home, Charts and Settings visually, on its own branch, as the user asked during milestone 10. Then start milestone 11, PWA.
 
 **In progress:** Nothing.
 
@@ -25,7 +25,7 @@
 - [x] 7. App shell, logging and settings
 - [x] 8. CSV screens and log page
 - [x] 9. Data table
-- [ ] 10. Charts
+- [x] 10. Charts
 - [ ] 11. PWA
 - [ ] 12. GitHub Pages and the container image
 - [ ] 13. Release
@@ -61,6 +61,19 @@ Record changes to the spec or plan here, with the reason.
 - The homelab setup moves to an optional milestone 14 after the release, in a new phase 4. Quadlet, systemd, auto-update, Caddy with its certificate authority and mDNS are still learning goals, but no longer block 1.0 or hold real data. The homelab copy would have its own, separate browser data.
 - No custom domain, because the user doesn't want to pay for anything. Two small risks stay and are in the plan's risks table: all Pages sites on the account share the `<username>.github.io` origin, and a freed username could be taken by someone who then publishes at the same address.
 - One codebase serves from `/weight-tracker-react/` on Pages and from `/` in the container. Vite's base path comes from a build environment variable, React Router's `basename` and the manifest follow it, and the Pages build copies `index.html` to `404.html` because Pages has no route fallback. Milestone 11 already makes the manifest follow the base path.
+- The Progress chart is a stacked area, not the overlapping areas the spec first said. The user's spreadsheet stacks them, and stacked, the two always add up to the start weight minus the target, so the split shows progress at a glance. Weight to lose is split at 0 into `leftToLose` and `pastTarget`, with the part past the target in a stack of its own. Recharts' `stackOffset="sign"` was tried first and drew spikes, both when the value changed sign and when it was exactly 0.
+- Weight to lose is called "Left to lose" everywhere, because that's the spreadsheet's name and the user asked for the app to be consistent. Every figure's name now comes from one table, `src/lib/figureLabels.ts`, which Home, the Data table and the charts all read. Tests keep the visible text written out, so they still catch an accidental rename.
+- Estimated days are faded only on the Weight line, with a note under the chart. Fading the averages and lows, which estimated days also feed, would grey out most of the chart after a gap. The tooltip says "Estimated" on every chart.
+- The projection's range is calculated directly rather than simulated. The production build's 1,000-path simulation took 49 ms on the desktop, 190 ms with the CPU slowed four times and 284 ms slowed six times, enough to freeze a phone's screen. Each day's change is normal in the model, so each future day is normal too, centred on the latest weight plus the days times the mean change, with the daily standard deviation times the square root of the days. That gives the answer the simulation approximated, in microseconds, so no web worker is needed. `seedrandom` and `d3-random` were removed.
+- The projection's range is 2 standard deviations either side of the trend, about 95%, rather than the 10th to 90th percentile band, at the user's preference for standard deviations. It's wider, on a band the spec already says looks wider than the true uncertainty.
+- The Projection chart ignores the range presets and always shows the 90 days the projection learns from, then 180 projected days, because the presets only cover the past. It says so under the chart.
+- Every chart's y-axis is 56 pixels wide, so the plots start at the same point and dates line up down the page. At 48 pixels, "-0.45%" lost its minus sign.
+- The Weekly change chart colours losses blue and gains red, from the palette's pair of opposite colours. Bars also sit below or above 0, so the direction doesn't rely on colour.
+- Charts are 28rem tall from the 48rem breakpoint, and 20rem on phones, because the desktop had room to spread out lines that sat close together.
+- The range preset resets to YTD when leaving the Charts screen, because its state lives in the screen. Keeping it would need settings or the URL, and the spec doesn't ask for it.
+- Charts with one series, Loss rate and Weekly change, have no legend. The heading names the series, and hiding the only series would leave an empty chart.
+- Recharts took the main JavaScript file past Vite's 500 kB warning. Milestone 11 checks the first load, and splits the file if it's slow.
+- Milestone 11 also checks that an installed app keeps working when its server returns 404, which the user asked about in case GitHub Pages goes away.
 
 ### 2026-11-07
 

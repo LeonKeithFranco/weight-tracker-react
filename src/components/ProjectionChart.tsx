@@ -2,7 +2,7 @@ import { useId } from "react";
 import { Area, ComposedChart, Line } from "recharts";
 import { FIGURE_LABELS } from "../lib/figureLabels";
 import { toProjectionRows, type ProjectionRow } from "../lib/projectionRows";
-import type { SimulatedDay } from "../lib/simulation";
+import type { ProjectedDay } from "../lib/projectedRange";
 import type { DailyPoint, WeightUnit } from "../lib/types";
 import { WEIGHT_DECIMALS } from "../lib/units";
 import { ChartFrame } from "./ChartFrame";
@@ -18,10 +18,10 @@ const WEIGHT: RowSeries<ProjectionRow> = {
   decimals: WEIGHT_DECIMALS,
 };
 
-// The median and its band share a colour, so they read as one projection.
-const MEDIAN: RowSeries<ProjectionRow> = {
-  key: "median",
-  name: "Projected median",
+// The trend and its range share a colour, so they read as one projection.
+const TREND: RowSeries<ProjectionRow> = {
+  key: "trend",
+  name: "Projected trend",
   color: "var(--series-2)",
   dashed: true,
   decimals: WEIGHT_DECIMALS,
@@ -45,21 +45,21 @@ const TARGET: RowSeries<ProjectionRow> = {
 
 type Props = {
   series: DailyPoint[];
-  /** `null` when there aren't enough days to simulate. */
-  simulated: SimulatedDay[] | null;
+  /** `null` when there aren't enough days to project from. */
+  projected: ProjectedDay[] | null;
   unit: WeightUnit;
   dateFormat: string;
   targetWeightKg: number | null;
 };
 
 /**
- * Where the weight might go over the next 180 days, from a random walk of
- * recent day-to-day changes: the median path and the range that 80% of the
- * paths fall within.
+ * Where the weight might go over the next 180 days, from the size of recent
+ * day-to-day changes: the trend, and the range two standard deviations
+ * either side of it, which widens with time.
  */
 export function ProjectionChart({
   series,
-  simulated,
+  projected,
   unit,
   dateFormat,
   targetWeightKg,
@@ -68,7 +68,7 @@ export function ProjectionChart({
   const headingId = useId();
   const title = `Projection (${unit})`;
 
-  if (simulated === null) {
+  if (projected === null) {
     return (
       <section aria-labelledby={headingId}>
         <h2 id={headingId}>{title}</h2>
@@ -77,12 +77,12 @@ export function ProjectionChart({
     );
   }
 
-  const rows = toProjectionRows(series, simulated, unit, targetWeightKg);
+  const rows = toProjectionRows(series, projected, unit, targetWeightKg);
   // Without a target, the target line is left out, as the spec says.
   const legend =
     targetWeightKg === null
-      ? [WEIGHT, MEDIAN, RANGE]
-      : [WEIGHT, MEDIAN, RANGE, TARGET];
+      ? [WEIGHT, TREND, RANGE]
+      : [WEIGHT, TREND, RANGE, TARGET];
 
   return (
     <ChartFrame
@@ -97,9 +97,10 @@ export function ProjectionChart({
       yDomain={["auto", "auto"]}
       footer={
         <p className={styles.note}>
-          The last 90 days, then 180 simulated days. The range shows where 80%
-          of 1,000 simulated paths fall. It doesn&apos;t follow the range
-          presets, which only cover the past.
+          The last 90 days, then 180 projected days. The trend continues the
+          average daily change, and the range reaches 2 standard deviations of
+          daily changes either side, so about 95% likely. It doesn&apos;t follow
+          the range presets, which only cover the past.
         </p>
       }
     >

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { toProjectionRows } from "./projectionRows";
-import type { SimulatedDay } from "./simulation";
+import type { ProjectedDay } from "./projectedRange";
 import type { DailyPoint } from "./types";
 import { KG_PER_LB } from "./units";
 
@@ -13,16 +13,16 @@ function seriesOf(weights: number[]): DailyPoint[] {
   }));
 }
 
-const simulated: SimulatedDay[] = [
-  { date: "2026-01-04", lowKg: 88, medianKg: 89, highKg: 90 },
-  { date: "2026-01-05", lowKg: 87, medianKg: 88.5, highKg: 90 },
+const projected: ProjectedDay[] = [
+  { date: "2026-01-04", lowKg: 88, trendKg: 89, highKg: 90 },
+  { date: "2026-01-05", lowKg: 87, trendKg: 88.5, highKg: 90 },
 ];
 
 describe("toProjectionRows", () => {
-  it("joins the recent weights to the simulated days at the latest weight", () => {
+  it("joins the recent weights to the projected days at the latest weight", () => {
     const rows = toProjectionRows(
       seriesOf([91, 90, 89.5]),
-      simulated,
+      projected,
       "kg",
       80,
     );
@@ -32,7 +32,7 @@ describe("toProjectionRows", () => {
         date: "2026-01-01",
         isEstimated: false,
         weight: 91,
-        median: null,
+        trend: null,
         range: null,
         target: 80,
       },
@@ -40,16 +40,16 @@ describe("toProjectionRows", () => {
         date: "2026-01-02",
         isEstimated: false,
         weight: 90,
-        median: null,
+        trend: null,
         range: null,
         target: 80,
       },
-      // The latest day starts the median and the band at its own weight.
+      // The latest day starts the trend and the band at its own weight.
       {
         date: "2026-01-03",
         isEstimated: true,
         weight: 89.5,
-        median: 89.5,
+        trend: 89.5,
         range: [89.5, 89.5],
         target: 80,
       },
@@ -57,7 +57,7 @@ describe("toProjectionRows", () => {
         date: "2026-01-04",
         isEstimated: false,
         weight: null,
-        median: 89,
+        trend: 89,
         range: [88, 90],
         target: 80,
       },
@@ -65,14 +65,14 @@ describe("toProjectionRows", () => {
         date: "2026-01-05",
         isEstimated: false,
         weight: null,
-        median: 88.5,
+        trend: 88.5,
         range: [87, 90],
         target: 80,
       },
     ]);
   });
 
-  it("uses only the simulation's 90-day window of past days", () => {
+  it("uses only the projection's 90-day window of past days", () => {
     const rows = toProjectionRows(
       seriesOf(Array.from({ length: 120 }, () => 90)),
       [],
@@ -86,7 +86,7 @@ describe("toProjectionRows", () => {
   it("converts to lb and leaves the target empty without one", () => {
     const [first, , , future] = toProjectionRows(
       seriesOf([91, 90, 89.5]),
-      simulated,
+      projected,
       "lb",
       null,
     );

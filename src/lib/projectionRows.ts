@@ -1,11 +1,11 @@
+import type { ProjectedDay } from "./projectedRange";
 import { projectionWindow } from "./projectionWindow";
-import type { SimulatedDay } from "./simulation";
 import type { CalendarDate, DailyPoint, WeightUnit } from "./types";
 import { fromKg } from "./units";
 
 /**
  * One day of the Projection chart, in the display unit: either a recent day
- * with its weight, or a simulated future day with the median and range. The
+ * with its weight, or a projected future day with the trend and range. The
  * latest day has both, so the projection starts from the last weight.
  */
 export type ProjectionRow = {
@@ -14,10 +14,10 @@ export type ProjectionRow = {
   /** `null` on future days. */
   weight: number | null;
   /** `null` on recent days, except the latest. */
-  median: number | null;
+  trend: number | null;
   /**
-   * The 10th to 90th percentile band as `[low, high]`, which is how Recharts
-   * draws a range area. `null` on recent days, except the latest.
+   * The likely range as `[low, high]`, which is how Recharts draws a range
+   * area. `null` on recent days, except the latest.
    */
   range: [number, number] | null;
   /** The same on every day, so it draws as a flat line. `null` without one. */
@@ -25,13 +25,13 @@ export type ProjectionRow = {
 };
 
 /**
- * Joins the days the simulation learned from to the days it projects. Uses
- * the same recent window as the simulation, rather than the range presets,
+ * Joins the days the projection learned from to the days it projects. Uses
+ * the same recent window as the projection, rather than the range presets,
  * because the presets cover only the past.
  */
 export function toProjectionRows(
   series: DailyPoint[],
-  simulated: SimulatedDay[],
+  projected: ProjectedDay[],
   unit: WeightUnit,
   targetWeightKg: number | null,
 ): ProjectionRow[] {
@@ -46,19 +46,19 @@ export function toProjectionRows(
       date: day.date,
       isEstimated: day.isEstimated,
       weight,
-      // Every path starts from the latest weight, so the median line and the
-      // band start there too, joined to the weight line.
-      median: isLatest ? weight : null,
+      // The projection starts from the latest weight, so the trend line and
+      // the range start there too, joined to the weight line.
+      trend: isLatest ? weight : null,
       range: isLatest ? [weight, weight] : null,
       target,
     };
   });
 
-  const futureRows = simulated.map((day): ProjectionRow => ({
+  const futureRows = projected.map((day): ProjectionRow => ({
     date: day.date,
     isEstimated: false,
     weight: null,
-    median: convert(day.medianKg),
+    trend: convert(day.trendKg),
     range: [convert(day.lowKg), convert(day.highKg)],
     target,
   }));

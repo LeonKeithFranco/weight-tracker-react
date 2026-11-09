@@ -2,7 +2,7 @@
 
 ## Context
 
-The spec is finished (`docs/SPEC.md`), and the repo has no app code yet. This plan sets the order, tools and working method for building the app, and teaches React, TypeScript, CI/CD and static hosting along the way. Containers, nginx, Quadlet, HTTPS certificates and local network naming come in an optional homelab milestone after the release.
+This plan was written when the spec (`docs/SPEC.md`) was finished and before any app code existed. It sets the order, tools and working method for building the app, and teaches React, TypeScript, CI/CD and static hosting along the way. Containers, nginx, Quadlet, HTTPS certificates and local network naming come in an optional homelab milestone after the release.
 
 ## How we work
 
@@ -10,7 +10,7 @@ The spec is finished (`docs/SPEC.md`), and the repo has no app code yet. This pl
 - Claude commits in small steps as the work goes, with each commit being one logical change that passes the checks by itself.
 - Each milestone is merged through a pull request once CI passes. You review the code as it's written, and Claude merges when you ask.
 - A milestone is done when CI passes, its concepts have been covered, `docs/PROGRESS.md` is updated, and the PR is merged.
-- Tests are written alongside or after the code to guard against regressions, not test-first. There are no coverage targets.
+- Tests are written after the code, once its behaviour is right, to guard against regressions. A bug fix starts with a regression test that's seen to fail. There are no coverage targets.
 - Commands on the homelab, in the optional milestone 14, are yours to run. Claude provides each step and explains it.
 
 ## Stack
@@ -54,7 +54,7 @@ The work runs in three phases, plus an optional fourth:
 
 1. **Pipeline:** CI and branch protection come first, so everything after them is checked automatically.
 2. **Logic:** all calculations, parsing and storage are built and unit tested, with no UI.
-3. **UI:** components are built on the tested logic, with component and Playwright tests alongside them. Deployment comes last, after you've used and tested the finished app locally.
+3. **UI:** components are built on the tested logic, then covered by component and Playwright tests. Deployment comes last, after you've used and tested the finished app locally.
 4. **Optional:** the homelab setup, purely for learning, after the release.
 
 ## Phase 1: Pipeline
@@ -179,8 +179,9 @@ Until milestone 12, the app runs from the dev server on your desktop. Your phone
 
 ### 13. Release
 
-- Write the README, covering using the app from GitHub Pages, self-hosting the built files on any web server with a route fallback, and the data limitations
-- Tag version 1.0.0
+- Write the README as a portfolio piece, covering why the app exists, how it was built with an AI agent, the technical highlights, using and installing the app from GitHub Pages, the data limitations, and self-hosting the built files on any web server with a route fallback
+- Show the app's version in Settings, with links to the README
+- Bump the version to 1.0.0, then tag the merged commit and publish a GitHub release
 - Retire the spreadsheet once you trust the app
 
 **Learn:** versioning, release tags, writing docs for users and self-hosters

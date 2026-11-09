@@ -1,0 +1,15 @@
+/* Phones: the cards stack, one above the other. */
+.layout {
+  display: grid;
+  gap: 2rem;
+}
+
+/* Wider screens: the log form on the left, as wide as it needs, and the
+   figures taking the rest. `start` keeps the shorter card at its own height
+   rather than stretching it to match the taller one. */
+@media (min-width: 48rem) {
+  .layout {
+    grid-template-columns: auto 1fr;
+    align-items: start;
+  }
+}

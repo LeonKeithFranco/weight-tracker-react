@@ -1,0 +1,10 @@
+/* A loss in blue and a gain in red, the same hues as the charts, in their
+   text versions so they pass the contrast text needs. The minus sign also
+   shows the direction, so it doesn't rely on colour alone. */
+.loss {
+  color: var(--text-loss);
+}
+
+.gain {
+  color: var(--text-gain);
+}

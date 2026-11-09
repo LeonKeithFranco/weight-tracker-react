@@ -1,6 +1,11 @@
 import { FIGURE_LABELS, type FigureKey } from "./figureLabels";
 import type { DailyFigures, WeightUnit } from "./types";
-import { formatAverage, formatPercent, formatWeight } from "./units";
+import {
+  formatAverage,
+  formatPercent,
+  formatWeight,
+  PERCENT_DECIMALS,
+} from "./units";
 
 /** One figure in the data table, shared by the desktop table and phone rows. */
 export type FigureColumn = {
@@ -17,7 +22,19 @@ export type FigureColumn = {
   group?: { label: string; subLabel: string };
   /** The value as shown, in the display unit with the spec's precision. */
   format(figures: DailyFigures, unit: WeightUnit): string;
+  /** Whether the value is a loss or a gain, for columns coloured by it. */
+  tone?(figures: DailyFigures): Tone;
 };
+
+/** A loss is shown in blue and a gain in red, as in the charts. */
+export type Tone = "loss" | "gain" | null;
+
+/** Below 0 is a loss and above 0 a gain. Exactly 0 is neither. */
+export function toneOf(change: number): Tone {
+  if (change < 0) return "loss";
+  if (change > 0) return "gain";
+  return null;
+}
 
 /**
  * Every daily figure, in the order of the table in `docs/SPEC.md`. Labels are
@@ -51,6 +68,10 @@ const DEFINITIONS: Omit<FigureColumn, "label">[] = [
     inDisplayUnit: false,
     group: { label: FIGURE_LABELS.average7Kg, subLabel: "Change" },
     format: (figures) => formatPercent(figures.average7Change),
+    // From the percentage as shown, so a change that rounds to "0.00%"
+    // isn't coloured as a loss or gain.
+    tone: (figures) =>
+      toneOf(Number((figures.average7Change * 100).toFixed(PERCENT_DECIMALS))),
   },
   {
     key: "average28Kg",

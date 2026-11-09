@@ -67,12 +67,20 @@
   font-style: italic;
 }
 
-.estimatedLabel {
-  display: block;
-  color: GrayText;
-  font-size: 0.75rem;
-  font-weight: normal;
-  text-transform: uppercase;
+/* The date, with the "Estimated" pill under it when there is one, because
+   a phone has no room for both on one line. */
+.date {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.125rem;
+}
+
+/* The open day is tinted, so its figures read as one block, apart from the
+   rows above and below. `:has()` styles the list item by what's inside it:
+   here, a button saying it's expanded. */
+.list li:has(> .toggle[aria-expanded="true"]) {
+  background: color-mix(in srgb, CanvasText 5%, transparent);
 }
 
 .panel {

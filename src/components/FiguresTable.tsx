@@ -3,7 +3,9 @@ import { formatDate } from "../lib/dates";
 import { columnGroups, figureColumns } from "../lib/figureColumns";
 import type { DailyFigures, WeightEntry } from "../lib/types";
 import { EntryActions } from "./EntryActions";
+import { EstimatedPill } from "./EstimatedPill";
 import styles from "./FiguresTable.module.css";
+import { toneClass } from "./toneClass";
 
 type FiguresTableProps = {
   /** The days to show, in the order to show them. */
@@ -85,12 +87,12 @@ export function FiguresTable({ days, onEdit, onDelete }: FiguresTableProps) {
                 {/* A row header, so screen readers announce the date with each value. */}
                 <th scope="row">
                   {shownDate}
-                  {day.isEstimated && (
-                    <span className={styles.estimatedLabel}>Estimated</span>
-                  )}
+                  {day.isEstimated && <EstimatedPill className={styles.pill} />}
                 </th>
                 {columns.map((column) => (
-                  <td key={column.key}>{column.format(day, unit)}</td>
+                  <td key={column.key} className={toneClass(column, day)}>
+                    {column.format(day, unit)}
+                  </td>
                 ))}
                 <td>
                   <EntryActions

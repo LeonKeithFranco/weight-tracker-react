@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { calculateDailyFigures } from "./dailyFigures";
-import { columnGroups, columnHeading, figureColumns } from "./figureColumns";
+import {
+  columnGroups,
+  columnHeading,
+  figureColumns,
+  toneOf,
+} from "./figureColumns";
+import type { DailyFigures } from "./types";
 import { seriesOf } from "./testSeries";
 import { toKg } from "./units";
 
@@ -61,6 +67,36 @@ describe("figureColumns", () => {
     const values = formattedLastDay([toKg(203.8, "lb")], null, "lb");
 
     expect(values.Weight).toBe("203.8");
+  });
+});
+
+describe("toneOf", () => {
+  it("calls a fall a loss, a rise a gain, and no change neither", () => {
+    expect([-0.5, 0.5, 0].map(toneOf)).toEqual(["loss", "gain", null]);
+  });
+});
+
+describe("the 7-day change's tone", () => {
+  const change = figureColumns(true).find(
+    (column) => column.key === "average7Change",
+  )!;
+  const withChange = (average7Change: number) =>
+    ({ average7Change }) as DailyFigures;
+
+  it("follows the sign of the change", () => {
+    expect(change.tone?.(withChange(-0.0058))).toBe("loss");
+    expect(change.tone?.(withChange(0.0021))).toBe("gain");
+  });
+
+  it("has none when the change rounds to 0.00%, as it's shown", () => {
+    // -0.001% shows as "0.00%", so colouring it blue would contradict it.
+    expect(change.format(withChange(-0.00001), "kg")).toBe("0.00%");
+    expect(change.tone?.(withChange(-0.00001))).toBeNull();
+  });
+
+  it("is the only column with a tone", () => {
+    const toned = figureColumns(true).filter((column) => column.tone);
+    expect(toned.map((column) => column.key)).toEqual(["average7Change"]);
   });
 });
 

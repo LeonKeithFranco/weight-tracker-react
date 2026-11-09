@@ -168,7 +168,7 @@ describe("DataScreen", () => {
     ).toBeInTheDocument();
   });
 
-  describe("editing", () => {
+  describe("editing and deleting", () => {
     afterEach(() => {
       vi.restoreAllMocks();
     });
@@ -185,15 +185,20 @@ describe("DataScreen", () => {
       return within(screen.getByRole("dialog")).getByLabelText("Weight (kg)");
     }
 
-    it("offers Edit for saved entries only", async () => {
+    it("offers Edit and Delete for saved entries only", async () => {
       await renderWithGap();
 
       const table = screen.getByRole("table");
       expect(
         within(table)
-          .getAllByRole("button", { name: /^Edit/ })
+          .getAllByRole("button")
           .map((button) => button.textContent),
-      ).toEqual(["Edit 2026-11-03", "Edit 2026-11-01"]);
+      ).toEqual([
+        "Edit 2026-11-03",
+        "Delete 2026-11-03",
+        "Edit 2026-11-01",
+        "Delete 2026-11-01",
+      ]);
     });
 
     it("saves a new weight for the same date", async () => {
@@ -288,6 +293,55 @@ describe("DataScreen", () => {
       expect(
         screen.getByRole("dialog", { name: "Edit 2026-11-03" }),
       ).toBeVisible();
+    });
+
+    it("asks before deleting, and deletes once confirmed", async () => {
+      const user = await renderWithGap();
+
+      await user.click(
+        screen.getByRole("button", { name: "Delete 2026-11-03" }),
+      );
+      const dialog = screen.getByRole("dialog", { name: "Delete 2026-11-03?" });
+      expect(dialog).toHaveAccessibleDescription(
+        "This deletes 89.0 kg for 2026-11-03. It can't be undone.",
+      );
+      await user.click(within(dialog).getByRole("button", { name: "Delete" }));
+
+      await waitFor(() => {
+        expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+      });
+      expect(await storage.getEntries()).toEqual([
+        { date: "2026-11-01", weightKg: 90 },
+      ]);
+      expect(bodyRows().map((cells) => cells[0])).toEqual(["2026-11-01"]);
+    });
+
+    it("keeps the entry when deleting is cancelled", async () => {
+      const user = await renderWithGap();
+
+      await user.click(
+        screen.getByRole("button", { name: "Delete 2026-11-03" }),
+      );
+      await user.click(screen.getByRole("button", { name: "Cancel" }));
+
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+      expect(await storage.getEntries()).toHaveLength(2);
+    });
+
+    it("stays open with an alert if deleting fails", async () => {
+      const user = await renderWithGap();
+      vi.spyOn(storage, "deleteEntry").mockRejectedValue(new Error("locked"));
+
+      await user.click(
+        screen.getByRole("button", { name: "Delete 2026-11-03" }),
+      );
+      const dialog = screen.getByRole("dialog");
+      await user.click(within(dialog).getByRole("button", { name: "Delete" }));
+
+      expect(await screen.findByRole("alert")).toHaveTextContent(
+        "Couldn't delete. Try again.",
+      );
+      expect(dialog).toBeVisible();
     });
   });
 });

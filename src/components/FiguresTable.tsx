@@ -9,10 +9,11 @@ type FiguresTableProps = {
   /** The days to show, in the order to show them. */
   days: DailyFigures[];
   onEdit(entry: WeightEntry): void;
+  onDelete(entry: WeightEntry): void;
 };
 
 /** Every figure for every day, one row per day, for wide screens. */
-export function FiguresTable({ days, onEdit }: FiguresTableProps) {
+export function FiguresTable({ days, onEdit, onDelete }: FiguresTableProps) {
   const { settings } = useData();
   const unit = settings.displayUnit;
   const columns = figureColumns(settings.targetWeightKg !== null);
@@ -60,6 +61,7 @@ export function FiguresTable({ days, onEdit }: FiguresTableProps) {
                     day={day}
                     shownDate={shownDate}
                     onEdit={onEdit}
+                    onDelete={onDelete}
                   />
                 </td>
               </tr>

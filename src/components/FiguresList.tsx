@@ -11,10 +11,11 @@ type FiguresListProps = {
   /** The days to show, in the order to show them. */
   days: DailyFigures[];
   onEdit(entry: WeightEntry): void;
+  onDelete(entry: WeightEntry): void;
 };
 
 /** A compact row per day for phones. Tapping a row shows every figure. */
-export function FiguresList({ days, onEdit }: FiguresListProps) {
+export function FiguresList({ days, onEdit, onDelete }: FiguresListProps) {
   const { settings } = useData();
   const unit = settings.displayUnit;
 
@@ -36,6 +37,7 @@ export function FiguresList({ days, onEdit }: FiguresListProps) {
             day={day}
             settings={settings}
             onEdit={onEdit}
+            onDelete={onDelete}
           />
         ))}
       </ul>
@@ -47,10 +49,11 @@ type DayRowProps = {
   day: DailyFigures;
   settings: Settings;
   onEdit(entry: WeightEntry): void;
+  onDelete(entry: WeightEntry): void;
 };
 
 /** One day: a button that shows and hides the rest of its figures. */
-function DayRow({ day, settings, onEdit }: DayRowProps) {
+function DayRow({ day, settings, onEdit, onDelete }: DayRowProps) {
   // Each row keeps its own state, so opening one doesn't re-render the others.
   const [expanded, setExpanded] = useState(false);
   const panelId = useId();
@@ -94,7 +97,12 @@ function DayRow({ day, settings, onEdit }: DayRowProps) {
               </div>
             ))}
           </dl>
-          <EntryActions day={day} shownDate={shownDate} onEdit={onEdit} />
+          <EntryActions
+            day={day}
+            shownDate={shownDate}
+            onEdit={onEdit}
+            onDelete={onDelete}
+          />
         </div>
       )}
     </li>

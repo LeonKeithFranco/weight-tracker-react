@@ -1,15 +1,44 @@
 import type { ChartRow } from "../lib/chartRows";
 import { formatDate } from "../lib/dates";
+import type { CalendarDate } from "../lib/types";
 import { formatNumber } from "../lib/units";
 import type { ChartSeries } from "./ChartLegend";
 import styles from "./ChartTooltip.module.css";
 
-/** A series that plots one of the chart row's fields. */
-export type ChartRowSeries = ChartSeries & { key: keyof ChartRow };
+/** What every chart's rows have, whatever else they hold. */
+export type TooltipRow = { date: CalendarDate; isEstimated: boolean };
 
-type Props = {
-  row: ChartRow;
-  series: ChartRowSeries[];
+/**
+ * A series that plots one of a row type's fields. `& string` drops any
+ * number or symbol keys, because a series key is also a React key and a
+ * legend id.
+ */
+export type RowSeries<Row> = ChartSeries & { key: keyof Row & string };
+
+/** A series of the four spreadsheet charts, which share `ChartRow`. */
+export type ChartRowSeries = RowSeries<ChartRow>;
+
+/**
+ * A value as the tooltip shows it: a number rounded, a `[low, high]` range as
+ * "low – high", and anything else, such as an empty value, as `null`.
+ */
+function formatValue(value: unknown, decimals: number): string | null {
+  if (typeof value === "number") {
+    return formatNumber(value, decimals);
+  }
+  if (
+    Array.isArray(value) &&
+    value.length === 2 &&
+    value.every((part) => typeof part === "number")
+  ) {
+    return `${formatNumber(value[0], decimals)} – ${formatNumber(value[1], decimals)}`;
+  }
+  return null;
+}
+
+type Props<Row extends TooltipRow> = {
+  row: Row;
+  series: RowSeries<Row>[];
   hidden: ReadonlySet<string>;
   /** Added after each value, such as " lb" or "%". */
   suffix: string;
@@ -19,14 +48,15 @@ type Props = {
 /**
  * The day under the pointer or finger: its date in the user's own format,
  * whether it was estimated, and each shown series rounded for display.
+ * Generic over the row type, so any chart's rows work.
  */
-export function ChartTooltip({
+export function ChartTooltip<Row extends TooltipRow>({
   row,
   series,
   hidden,
   suffix,
   dateFormat,
-}: Props) {
+}: Props<Row>) {
   const shown = series.filter(({ key }) => !hidden.has(key));
 
   return (
@@ -37,10 +67,10 @@ export function ChartTooltip({
       </p>
       <dl className={styles.values}>
         {shown.map(({ key, name, color, decimals }) => {
-          const value = row[key];
           // Values that can be empty, such as weight to lose without a
-          // target, are left out. Number checks also rule out the date.
-          if (typeof value !== "number") {
+          // target, are left out.
+          const text = formatValue(row[key], decimals);
+          if (text === null) {
             return null;
           }
           return (
@@ -50,7 +80,7 @@ export function ChartTooltip({
                 {name}
               </dt>
               <dd>
-                {formatNumber(value, decimals)}
+                {text}
                 {suffix}
               </dd>
             </div>

@@ -30,7 +30,11 @@ const series: ChartRowSeries[] = [
   },
 ];
 
-function renderTooltip(props: Partial<Parameters<typeof ChartTooltip>[0]>) {
+// `typeof ChartTooltip<ChartRow>` fixes the generic to this row type before
+// reading its props, which would otherwise use the bare minimum row.
+function renderTooltip(
+  props: Partial<Parameters<typeof ChartTooltip<ChartRow>>[0]>,
+) {
   render(
     <ChartTooltip
       row={row}
@@ -44,6 +48,28 @@ function renderTooltip(props: Partial<Parameters<typeof ChartTooltip>[0]>) {
 }
 
 describe("ChartTooltip", () => {
+  it("shows a [low, high] range as one value", () => {
+    render(
+      <ChartTooltip
+        row={{ date: "2026-11-05", isEstimated: false, range: [88.04, 90.96] }}
+        series={[
+          {
+            key: "range",
+            name: "Likely range",
+            color: "red",
+            dashed: false,
+            decimals: 1,
+          },
+        ]}
+        hidden={new Set()}
+        suffix=" kg"
+        dateFormat="YYYY-MM-DD"
+      />,
+    );
+
+    expect(screen.getByText("88.0 – 91.0 kg")).toBeInTheDocument();
+  });
+
   it("shows the date in the chosen format and each value rounded", () => {
     renderTooltip({});
 

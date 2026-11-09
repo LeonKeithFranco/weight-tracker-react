@@ -40,6 +40,7 @@ Record changes to the spec or plan here, with the reason.
 
 ### 2026-11-09
 
+- Tests are written after the code, no longer alongside it. Code often needs tweaks before its behaviour is exactly right, and tests written after it lock in the final behaviour rather than a first guess. Bug fixes are the exception: the regression test comes first and is seen to fail. The user's testing preferences now also sit in their global Claude Code instructions, so they apply to every project.
 - The app icon is Tabler Icons' `scale-outline`, in white on the charts' blue, rather than art drawn for the app. The user prefers existing royalty-free art. Tabler is MIT-licensed, and its copyright notice sits in a comment in `public/favicon.svg`. A bathroom scale was chosen over Lucide's trending-down arrow, kettlebell and chart icons as the most literal picture of weighing yourself.
 - `@vite-pwa/assets-generator` makes every icon size from that one SVG, with `npm run generate-icons`. The maskable and Apple icons fill the square with the same blue, so their corners blend in. The generated PNGs are committed, because they're small, rarely change and should be reviewed, rather than made on every build.
 - `vite-plugin-pwa` writes the manifest and a Workbox service worker that precaches the whole build. `start_url` and `scope` are left out of the config, so they follow Vite's base path. The title bar matches the page in light and dark mode through two `theme-color` meta tags, but the splash screen is white in both, because the manifest only takes one colour.

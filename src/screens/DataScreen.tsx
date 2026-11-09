@@ -1,5 +1,7 @@
+import { FiguresList } from "../components/FiguresList";
 import { FiguresTable } from "../components/FiguresTable";
 import { useDailyFigures } from "../data/useDailyFigures";
+import styles from "./DataScreen.module.css";
 
 export function DataScreen() {
   const figures = useDailyFigures();
@@ -13,7 +15,14 @@ export function DataScreen() {
       {newestFirst.length === 0 ? (
         <p>No entries yet. Log your first weight on Home.</p>
       ) : (
-        <FiguresTable days={newestFirst} />
+        <>
+          <div className={styles.narrow}>
+            <FiguresList days={newestFirst} />
+          </div>
+          <div className={styles.wide}>
+            <FiguresTable days={newestFirst} />
+          </div>
+        </>
       )}
     </>
   );

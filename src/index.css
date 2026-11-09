@@ -9,3 +9,14 @@
 body {
   margin: 0;
 }
+
+/* Hides text on screen but keeps it for screen readers. `display: none` would
+   hide it from both. A plain global class, because any component may need it. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

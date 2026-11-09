@@ -1,4 +1,5 @@
 import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it } from "vitest";
 import { DataProvider } from "../data/DataProvider";
 import type { Settings } from "../lib/types";
@@ -91,6 +92,67 @@ describe("DataScreen", () => {
     expect(
       screen.queryByRole("columnheader", { name: /To lose/ }),
     ).not.toBeInTheDocument();
+  });
+
+  describe("phone rows", () => {
+    // jsdom doesn't apply the CSS, so both layouts are in the page here.
+    // Playwright checks that each size shows only one.
+    function rowButtons() {
+      const list = screen.getByRole("list", { name: /Daily figures/ });
+      return within(list).getAllByRole("button");
+    }
+
+    it("show the date, weight and 7-day average, newest first", async () => {
+      await storage.saveEntry({ date: "2026-11-01", weightKg: 90 });
+      await storage.saveEntry({ date: "2026-11-03", weightKg: 89 });
+      await renderData();
+
+      expect(rowButtons().map((button) => button.textContent)).toEqual([
+        "2026-11-03Weight 89.07-day average 89.50",
+        "2026-11-02EstimatedWeight 89.57-day average 89.75",
+        "2026-11-01Weight 90.07-day average 90.00",
+      ]);
+    });
+
+    it("expand to show every figure, and collapse again", async () => {
+      await storage.saveEntry({ date: "2026-11-01", weightKg: 90 });
+      await storage.saveEntry({ date: "2026-11-03", weightKg: 89 });
+      await renderData({ targetWeightKg: 80 });
+      const user = userEvent.setup();
+      const [newest] = rowButtons();
+      expect(newest).toHaveAttribute("aria-expanded", "false");
+
+      await user.click(newest);
+
+      expect(newest).toHaveAttribute("aria-expanded", "true");
+      const details = document.getElementById(
+        newest.getAttribute("aria-controls")!,
+      )!;
+      expect(within(details).getAllByRole("term")).toHaveLength(10);
+      expect(
+        within(details).getByText("To lose (kg)").nextSibling,
+      ).toHaveTextContent("9.0");
+
+      await user.click(newest);
+
+      expect(newest).toHaveAttribute("aria-expanded", "false");
+      expect(details).not.toBeInTheDocument();
+    });
+
+    it("open independently of each other", async () => {
+      await storage.saveEntry({ date: "2026-11-01", weightKg: 90 });
+      await storage.saveEntry({ date: "2026-11-03", weightKg: 89 });
+      await renderData();
+      const user = userEvent.setup();
+      const [newest, , oldest] = rowButtons();
+
+      await user.click(newest);
+      await user.click(oldest);
+
+      expect(
+        rowButtons().map((button) => button.getAttribute("aria-expanded")),
+      ).toEqual(["true", "false", "true"]);
+    });
   });
 
   it("shows dates in the date format setting", async () => {

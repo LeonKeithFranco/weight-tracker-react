@@ -17,7 +17,7 @@ installGlobalErrorHandlers(window, storage);
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AppErrorBoundary logger={storage}>
-      <DataProvider storage={storage}>
+      <DataProvider storage={storage} persistenceApi={navigator.storage}>
         <BrowserRouter>
           <App />
         </BrowserRouter>

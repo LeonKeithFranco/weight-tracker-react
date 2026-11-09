@@ -6,11 +6,19 @@ import type {
   Settings,
   WeightEntry,
 } from "../lib/types";
+import type { Persistence } from "../storage/persistence";
 
 export type DataContextValue = {
   /** Every saved entry, oldest first. */
   entries: WeightEntry[];
   settings: Settings;
+  /** Whether the browser keeps the data until the user deletes it. */
+  persistence: Persistence;
+  /**
+   * Asks the browser for persistent storage, and resolves with its answer.
+   * Never rejects. Stays the same function.
+   */
+  requestPersistence(): Promise<Persistence>;
   saveEntry(entry: WeightEntry): Promise<void>;
   deleteEntry(date: CalendarDate): Promise<void>;
   importEntries(parsed: ParsedCsv): Promise<void>;

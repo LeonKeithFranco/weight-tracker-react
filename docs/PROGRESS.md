@@ -1,8 +1,8 @@
 # Progress
 
-**Current status:** Milestone 7 is merged. The app has an app shell with four screens and responsive navigation, a logging form, settings for the unit, target and date format, the latest figures and goal date on Home, and error handling that records to the activity log. Charts and Data are still placeholders. Unit and component tests run in Vitest, and Playwright runs in CI at desktop and phone sizes, saving a report and traces when a test fails. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
+**Current status:** Milestone 8 is finished. The app has an app shell with four screens and responsive navigation, a logging form, settings for the unit, target and date format, the latest figures and goal date on Home, and error handling that records to the activity log. Settings exports and imports CSV files, with a preview before an import saves anything, and links to the Log page, which lists the activity log and exports it as JSON. Charts and Data are still placeholders. The user's real history from 2025 and 2026 is imported into the desktop's dev server copy. Unit and component tests run in Vitest, and Playwright runs in CI at desktop and phone sizes, saving a report and traces when a test fails. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
 
-**Next:** Start milestone 8, CSV screens and log page. It includes a Playwright test that an uncaught error in the browser shows up on the new Log page, because the global handler only has unit tests until something on screen shows the log.
+**Next:** Start milestone 9, Data table.
 
 **In progress:** Nothing.
 
@@ -23,7 +23,7 @@
 ### Phase 3: UI
 
 - [x] 7. App shell, logging and settings
-- [ ] 8. CSV screens and log page
+- [x] 8. CSV screens and log page
 - [ ] 9. Data table
 - [ ] 10. Charts
 - [ ] 11. PWA
@@ -38,6 +38,8 @@ Record changes to the spec or plan here, with the reason.
 
 - Containers and deployment moved from milestone 8 to milestone 12, after the PWA and before the release, and the milestones between were renumbered: CSV screens and log page is now 8, Data table 9, Charts 10 and PWA 11. The user wants to use and test the finished app before deploying it. Entries before this one use the old numbers.
 - Until deployment, the app runs from the dev server on the desktop, and the phone opens it over Wi-Fi. Real history is imported into that local copy in milestone 8, and the spreadsheet stays in use until milestone 12 moves the data to the deployed copy by CSV export and import. Browser data is tied to the exact address, so it moves once, after the address is settled.
+- The real history was imported into the desktop browser's copy at `localhost:5173`: 220 weigh-ins for 2025 and 303 for 2026, with no invalid rows. Each year's figures match its own sheet except on days the sheet estimated differently from a straight line, which were 2 to 9 January and 7 August to 5 September 2025, and the random values in March and May 2026. With both years in the app, weight loss since start and loss per week count from 2025-01-01, and the averages in early January 2026 include December 2025, because each sheet started again each year. The phone holds separate data, so it gets the same files only if needed before deployment.
+- The Log page loads the log itself through `getLogEntries` in the data context, rather than `DataProvider` loading it with everything else, because only that page needs it. `DataProvider` wraps `getLogEntries` and `logError` in `useCallback`, so they can be effect dependencies.
 - Export downloads through a link with the `download` attribute, so the browser chooses where the file goes, which is the Downloads folder unless it's set to ask. `showSaveFilePicker()` would open a Save As window, but only Chromium on desktop has it, so the phone would still need the link. The browser's own "ask where to save" setting gives the same window with one code path.
 - Milestone 8's check now counts real weigh-ins rather than days. The 309 days in the 2026 sheet include days it filled with estimates, which were pasted in as plain values. A reading counts as real when it fits the scale's 0.2 lb steps, which gave 220 weigh-ins for 2025 and 303 for 2026 on 2026-11-08. The figures can differ near the days the sheet estimated with random values, because the app interpolates in a straight line there.
 - The PWA is tested on the phone through Chrome's USB port forwarding, which makes the dev server count as `localhost`. Service workers need HTTPS or `localhost`, and HTTPS only arrives with deployment.

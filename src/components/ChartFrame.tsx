@@ -3,6 +3,7 @@ import {
   AreaChart,
   BarChart,
   CartesianGrid,
+  ComposedChart,
   LineChart,
   Tooltip,
   XAxis,
@@ -25,7 +26,11 @@ const Y_AXIS_WIDTH = 56;
 type Props<Row extends TooltipRow> = {
   title: string;
   /** Which Recharts chart to draw, such as `LineChart`. */
-  chart: typeof LineChart | typeof AreaChart | typeof BarChart;
+  chart:
+    | typeof LineChart
+    | typeof AreaChart
+    | typeof BarChart
+    | typeof ComposedChart;
   rows: Row[];
   series: RowSeries<Row>[];
   hidden: ReadonlySet<string>;

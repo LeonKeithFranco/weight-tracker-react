@@ -158,9 +158,10 @@ Until milestone 12, the app runs from the dev server on your desktop. Your phone
 
 - Add the manifest, icons and service worker
 - Add the reload prompt for new versions
+- Request persistent storage, and show the browser's answer in Settings with a way to ask again
 - Test install, offline use and updating on your desktop, and on your phone through Chrome's USB port forwarding, which counts as `localhost`, so no HTTPS is needed yet
 
-**Learn:** service workers, caching, the app update lifecycle, why HTTPS is required, USB port forwarding
+**Learn:** service workers, caching, the app update lifecycle, why HTTPS is required, USB port forwarding, best-effort compared to persistent storage
 
 ### 12. Containers and deployment
 
@@ -191,14 +192,14 @@ Homelab:
 
 ## Risks
 
-| Risk                                           | Mitigation                                                                                         |
-| ---------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| The UI needs logic output in a different shape | Keep logic functions small, and adjust them in UI milestones; existing tests protect those changes |
-| `homelab.local` doesn't work on your phone     | Test it first in milestone 12; fall back to HTTPS on the fixed IP                                  |
-| The address changes after real data is entered | Data stays at the local address until milestone 12, then moves once by CSV export and import       |
-| A figure doesn't match the spreadsheet         | Compare against the real spreadsheet in milestone 3                                                |
-| Browser data is lost                           | Export regularly, and keep the spreadsheet until milestone 13                                      |
-| The simulation is slow on your phone           | Measure in milestone 4, and use a web worker in milestone 10 if needed                             |
+| Risk                                           | Mitigation                                                                                                |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| The UI needs logic output in a different shape | Keep logic functions small, and adjust them in UI milestones; existing tests protect those changes        |
+| `homelab.local` doesn't work on your phone     | Test it first in milestone 12; fall back to HTTPS on the fixed IP                                         |
+| The address changes after real data is entered | Data stays at the local address until milestone 12, then moves once by CSV export and import              |
+| A figure doesn't match the spreadsheet         | Compare against the real spreadsheet in milestone 3                                                       |
+| Browser data is lost                           | Request persistent storage in milestone 11, export regularly, and keep the spreadsheet until milestone 13 |
+| The simulation is slow on your phone           | Measure in milestone 4, and use a web worker in milestone 10 if needed                                    |
 
 ## Verification
 
@@ -207,6 +208,6 @@ Every milestone must pass lint, type checks, tests and the build in CI, with Pla
 - **Milestone 2:** a PR with a deliberately failing test can't be merged.
 - **Milestone 3:** every calculated figure matches the real spreadsheet.
 - **Milestone 8:** all of your real weigh-ins from 2025 and 2026 import, which was 523 on 2026-11-08, and the figures match the spreadsheet except near the days it estimated with random values.
-- **Milestone 11:** the installed app opens and logs an entry in airplane mode.
+- **Milestone 11:** the installed app opens and logs an entry in airplane mode, and Settings shows the browser's answer to the persistent storage request.
 - **Milestone 12:** a merged change appears on your phone over HTTPS with no manual steps, and your data moves over intact.
 - **Milestone 13:** a fresh setup following only the README works.

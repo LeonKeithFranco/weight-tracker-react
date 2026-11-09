@@ -82,3 +82,20 @@ test("the date format applies to logging and survives a reload", async ({
     page.getByRole("form", { name: "Log your weight" }).getByRole("status"),
   ).toHaveText(/^Saved 203\.8 lb for \d{1,2} [A-Z][a-z]{2} \d{4}\.$/);
 });
+
+test("asks the real browser for persistent storage and shows its answer", async ({
+  page,
+}) => {
+  await page.goto("/settings");
+  const card = page.getByRole("region", { name: "Storage" });
+
+  // A new browser profile starts best-effort, like every site.
+  await expect(card).toContainText("Your browser may delete this data");
+  await card.getByRole("button", { name: "Ask to keep data" }).click();
+
+  // Chromium decides by its own rules, which can change, so either answer
+  // shows that the app reached the real API.
+  await expect(card.getByRole("status")).toHaveText(
+    /^(Your browser will now keep this data|Your browser said no)/,
+  );
+});

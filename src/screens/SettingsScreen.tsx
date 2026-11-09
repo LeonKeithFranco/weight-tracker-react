@@ -4,6 +4,7 @@ import { Card } from "../components/Card";
 import { CsvExport } from "../components/CsvExport";
 import { CsvImport } from "../components/CsvImport";
 import { DateFormatForm } from "../components/DateFormatForm";
+import { StorageStatus } from "../components/StorageStatus";
 import { TargetWeightForm } from "../components/TargetWeightForm";
 import { UnitSetting } from "../components/UnitSetting";
 import styles from "../components/forms.module.css";
@@ -31,7 +32,8 @@ export function SettingsScreen() {
             <DateFormatForm />
           </Card>
         </div>
-        {/* Data: getting weigh-ins in and out, and the record of changes. */}
+        {/* Data: getting weigh-ins in and out, the record of changes, and
+            whether the browser keeps them. */}
         <div className={layoutStyles.column}>
           <Card>
             <CsvExport />
@@ -50,6 +52,9 @@ export function SettingsScreen() {
               </p>
               <Link to="/settings/log">View the activity log</Link>
             </section>
+          </Card>
+          <Card>
+            <StorageStatus />
           </Card>
         </div>
       </div>

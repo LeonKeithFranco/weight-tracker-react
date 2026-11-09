@@ -4,13 +4,13 @@
 
 A self-hostable, offline-capable React PWA that replaces a personal weight-tracking spreadsheet. You log one weight per day, and the app calculates averages, lows, progress toward a target and projections.
 
-It is built primarily for one person. Anyone else can run their own copy.
+It is built primarily for one person. Anyone else can use it from GitHub Pages, with their data kept in their own browser, or run their own copy.
 
 ## Goals
 
 - Reproduce every figure and chart from the spreadsheet.
 - Make daily logging quick on a phone, and reviewing data comfortable on desktop.
-- Keep deployment simple: a static React app served from one container image.
+- Keep deployment simple: a static React app hosted free on GitHub Pages, which anyone can open and install, and also published as one container image for self-hosting.
 - Act as a learning project for React, TypeScript and CI/CD.
 
 ## Non-goals
@@ -18,7 +18,7 @@ It is built primarily for one person. Anyone else can run their own copy.
 - Accounts, login or multiple users within one deployment
 - A custom backend or any server-side data storage
 - Sync between devices (each browser has its own data)
-- Reaching the homelab deployment from outside the home network
+- Reaching the optional homelab copy from outside the home network
 - Backup reminders
 - Body measurements or notes on entries
 - Weight-gain goals (the target is assumed to be below the starting weight)
@@ -28,7 +28,7 @@ It is built primarily for one person. Anyone else can run their own copy.
 - The app is React only, with no custom backend.
 - Data is stored in the browser's IndexedDB.
 - All data access goes through a storage interface, so a sync or backend option can be added later without rewriting the UI.
-- The container only serves static files. It never sees weight data.
+- GitHub Pages and the container only serve static files. Neither ever sees weight data.
 
 ## Data model
 
@@ -176,7 +176,7 @@ type LogEntry = {
 - A page within Settings lists entries, newest first, and can export them as a JSON file.
 - Log entries never leave the device, except through that export.
 - A failure to write a log entry never blocks the data change.
-- Browser logs are separate from server logs. nginx, Caddy and Podman logs on the homelab cover availability and deployments only.
+- Browser logs are separate from server logs. On a self-hosted copy, nginx, Caddy and Podman logs cover availability and deployments only.
 
 ### PWA
 
@@ -206,17 +206,35 @@ The app is a single-page app, and each screen has its own URL. Navigation is a b
 
 - The source lives in a public GitHub repo named `weight-tracker-react`, under the MIT license.
 - GitHub Actions runs checks on every push and pull request.
-- Podman is the container tool, locally and on the homelab. The build file is a `Containerfile`.
-- A push to `main` that passes all checks builds a container image and publishes it to GitHub Container Registry (`ghcr.io`).
+- The build's base path comes from an environment variable, so the same code serves from `/weight-tracker-react/` on GitHub Pages and from `/` in the container. The router and the PWA manifest follow it.
+
+### GitHub Pages
+
+- A push to `main` that passes all checks builds the app and deploys it to GitHub Pages with GitHub Actions.
+- The app is served at `https://<username>.github.io/weight-tracker-react/`, with no custom domain. This is the main copy, and the author's own data lives there.
+- Pages has no route fallback, so the build copies `index.html` to `404.html`, and refreshing a screen's URL still loads the app. Once the app is installed, its service worker serves app routes itself.
+- Every Pages site under one GitHub account shares the `<username>.github.io` origin, so those sites can read each other's browser storage.
+- The GitHub username must be kept. If it were freed, whoever took it next could publish at the same address, and installed copies would update to their code.
+
+### Self-hosting
+
+- Podman is the container tool. The build file is a `Containerfile`.
+- A push to `main` that passes all checks also builds a container image and publishes it to GitHub Container Registry (`ghcr.io`).
 - The image contains the built static files and unprivileged nginx, and runs rootless. Node.js is used only to build the app and is not in the final image.
 - nginx returns `index.html` for app routes, so refreshing a screen's URL works. It keeps `index.html` and the service worker out of long-term caches, and caches hashed JS and CSS files for a long time.
+- Self-hosters pull the public image and put it behind HTTPS. It is a standard OCI image, so it also works with Docker.
+- The image is also the way out if GitHub Pages ever changes or ends: run it anywhere, then move data across by CSV.
+- The image is built for x86-64 only. ARM hosts aren't supported.
+
+### Homelab (optional, after 1.0)
+
+A learning project on the author's homelab, separate from the main copy. Its browser data is separate too.
+
 - The homelab runs the container as a Podman Quadlet (a systemd service), and `podman auto-update` picks up new images.
 - The homelab has a fixed private IP.
 - The app is reachable only on the home network at `https://homelab.local`, using Avahi (mDNS) for the name.
 - Caddy runs on the homelab in front of the container and provides HTTPS, using its local certificate authority. Its root certificate is installed once on each device.
-- If `homelab.local` doesn't work on the Android phone, the fallback is HTTPS on the homelab's fixed IP. Confirm the address before entering real data, because browser data is tied to it.
-- Self-hosters pull the same public image and put it behind HTTPS. It is a standard OCI image, so it also works with Docker.
-- The image is built for x86-64 only, which matches the homelab. ARM hosts aren't supported.
+- If `homelab.local` doesn't work on the Android phone, the fallback is HTTPS on the homelab's fixed IP.
 
 ## Data limitations
 
@@ -224,7 +242,7 @@ These follow from browser-only storage and should appear in the README:
 
 - Phone and desktop hold separate data. CSV export and import is the only way to move it.
 - Clearing browser data deletes entries that weren't exported.
-- Data belongs to the browser and the exact site address. Changing the homelab's hostname or port starts with an empty app, so export first.
+- Data belongs to the browser and the exact site address. Opening the app at a different address, such as a self-hosted copy instead of GitHub Pages, starts with an empty app, so export first.
 
 ## Testing
 

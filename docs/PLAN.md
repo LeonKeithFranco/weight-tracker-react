@@ -2,7 +2,7 @@
 
 ## Context
 
-The spec is finished (`docs/SPEC.md`), and the repo has no app code yet. This plan sets the order, tools and working method for building the app, and teaches React, TypeScript, CI/CD, Quadlet, nginx, HTTPS and certificates, and local network naming along the way.
+The spec is finished (`docs/SPEC.md`), and the repo has no app code yet. This plan sets the order, tools and working method for building the app, and teaches React, TypeScript, CI/CD, static hosting, containers and nginx along the way. Quadlet, HTTPS certificates and local network naming come in an optional homelab milestone after the release.
 
 ## How we work
 
@@ -11,30 +11,32 @@ The spec is finished (`docs/SPEC.md`), and the repo has no app code yet. This pl
 - Each milestone is merged through a pull request once CI passes. You review the code as it's written, and Claude merges when you ask.
 - A milestone is done when CI passes, its concepts have been covered, `docs/PROGRESS.md` is updated, and the PR is merged.
 - Tests are written alongside or after the code to guard against regressions, not test-first. There are no coverage targets.
-- Commands on the homelab are yours to run. Claude provides each step and explains it.
+- Commands on the homelab, in the optional milestone 14, are yours to run. Claude provides each step and explains it.
 
 ## Stack
 
-| Concern                  | Choice                                     | Why                                                 |
-| ------------------------ | ------------------------------------------ | --------------------------------------------------- |
-| Build tool               | Vite                                       | The standard way to start a React app               |
-| UI                       | React + TypeScript (strict)                | Learning goals                                      |
-| Routing                  | React Router                               | Four screens, and a widely used skill               |
-| Storage                  | Dexie over IndexedDB                       | Simpler API, with React hooks for live data         |
-| Dates                    | Day.js                                     | Small, with `YYYY-MM-DD` style format tokens        |
-| Statistics               | simple-statistics                          | Regression, percentiles and standard deviation      |
-| Seeded randomness        | seedrandom and d3-random                   | Repeatable generator and normal distribution draws  |
-| CSV                      | PapaParse                                  | Handles quoting, line endings and byte order marks  |
-| Charts                   | Recharts                                   | Written for React; covers line, area and bar charts |
-| Styling                  | CSS Modules                                | Teaches responsive CSS directly                     |
-| PWA                      | vite-plugin-pwa                            | Generates the service worker and manifest           |
-| Unit and component tests | Vitest + React Testing Library             | Integrates with Vite                                |
-| End-to-end tests         | Playwright                                 | Builds on your Selenium experience                  |
-| Containers               | Podman, Quadlet, `podman auto-update`      | Your homelab setup; rootless                        |
-| Web server               | Unprivileged nginx                         | Serves static files without root                    |
-| HTTPS                    | Caddy with its local certificate authority | No domain needed                                    |
-| Local name               | Avahi (mDNS)                               | Your router can't set custom DNS names              |
-| CI/CD                    | GitHub Actions + `ghcr.io`                 | The planned deployment                              |
+| Concern                        | Choice                                     | Why                                                 |
+| ------------------------------ | ------------------------------------------ | --------------------------------------------------- |
+| Build tool                     | Vite                                       | The standard way to start a React app               |
+| UI                             | React + TypeScript (strict)                | Learning goals                                      |
+| Routing                        | React Router                               | Four screens, and a widely used skill               |
+| Storage                        | Dexie over IndexedDB                       | Simpler API, with React hooks for live data         |
+| Dates                          | Day.js                                     | Small, with `YYYY-MM-DD` style format tokens        |
+| Statistics                     | simple-statistics                          | Regression, percentiles and standard deviation      |
+| Seeded randomness              | seedrandom and d3-random                   | Repeatable generator and normal distribution draws  |
+| CSV                            | PapaParse                                  | Handles quoting, line endings and byte order marks  |
+| Charts                         | Recharts                                   | Written for React; covers line, area and bar charts |
+| Styling                        | CSS Modules                                | Teaches responsive CSS directly                     |
+| PWA                            | vite-plugin-pwa                            | Generates the service worker and manifest           |
+| Unit and component tests       | Vitest + React Testing Library             | Integrates with Vite                                |
+| End-to-end tests               | Playwright                                 | Builds on your Selenium experience                  |
+| Hosting                        | GitHub Pages                               | Free, with HTTPS, and anyone can install from it    |
+| Containers                     | Podman                                     | Rootless; the self-hosting image                    |
+| Web server                     | Unprivileged nginx                         | Serves static files without root                    |
+| CI/CD                          | GitHub Actions, GitHub Pages and `ghcr.io` | Deploys the app and publishes the image             |
+| Homelab service (milestone 14) | Quadlet, `podman auto-update`              | Your homelab setup                                  |
+| Homelab HTTPS (milestone 14)   | Caddy with its local certificate authority | No domain needed                                    |
+| Homelab name (milestone 14)    | Avahi (mDNS)                               | Your router can't set custom DNS names              |
 
 ## Before milestone 1
 
@@ -49,11 +51,12 @@ Claude:
 
 ## Milestones
 
-The work runs in three phases:
+The work runs in three phases, plus an optional fourth:
 
 1. **Pipeline:** CI and branch protection come first, so everything after them is checked automatically.
 2. **Logic:** all calculations, parsing and storage are built and unit tested, with no UI.
 3. **UI:** components are built on the tested logic, with component and Playwright tests alongside them. Deployment comes last, after you've used and tested the finished app locally.
+4. **Optional:** the homelab setup, purely for learning, after the release.
 
 ## Phase 1: Pipeline
 
@@ -156,50 +159,68 @@ Until milestone 12, the app runs from the dev server on your desktop. Your phone
 
 ### 11. PWA
 
-- Add the manifest, icons and service worker
+- Add the manifest, icons and service worker, with the manifest's `start_url` and `scope` following Vite's base path, so the app installs from a subfolder such as GitHub Pages' `/weight-tracker-react/`
 - Add the reload prompt for new versions
 - Request persistent storage, and show the browser's answer in Settings with a way to ask again
 - Test install, offline use and updating on your desktop, and on your phone through Chrome's USB port forwarding, which counts as `localhost`, so no HTTPS is needed yet
 
 **Learn:** service workers, caching, the app update lifecycle, why HTTPS is required, USB port forwarding, best-effort compared to persistent storage
 
-### 12. Containers and deployment
+### 12. GitHub Pages and the container image
+
+GitHub Pages:
+
+- Take Vite's base path from a build environment variable, and give React Router `basename={import.meta.env.BASE_URL}`, so one codebase serves from `/weight-tracker-react/` and from `/`
+- Copy `index.html` to `404.html` in the build, because Pages has no route fallback
+- Deploy from GitHub Actions on pushes to `main`, only after checks pass, with `actions/upload-pages-artifact` and `actions/deploy-pages`, the `pages: write` and `id-token: write` permissions, and the repo's Pages source set to GitHub Actions
+- Confirm the app installs from Pages on your phone and desktop, works offline, and updates after a merge
+- Move your data to the Pages copy with CSV export and import, then log there instead of in the spreadsheet
 
 Image:
 
 - Add a multi-stage `Containerfile` and the nginx config, with the route fallback and caching rules
 - Build with Podman on pushes to `main`, only after checks pass, and publish to `ghcr.io` tagged `latest` and with the commit SHA
 - Make the image public
+- Run the image locally with Podman, and check it serves the app from `/`
 
-Homelab:
-
-- Test `homelab.local` from your Android phone, using Avahi, and settle on the final address
-- Add the app's Quadlet file, then enable lingering and `podman-auto-update.timer`
-- Set up Caddy, allow rootless use of port 443, and install its root certificate on your devices
-- Stop the laptop from suspending when the lid closes
-- Confirm the app loads over HTTPS on your phone and desktop, and that a merged change deploys by itself
-- Move your data to the deployed copy with CSV export and import, then log there instead of in the spreadsheet
-
-**Learn:** images and containers, rootless containers, multi-stage builds, registries and tags, workflow permissions, CI compared to CD, Quadlet and systemd, auto-update and rollback, nginx config, HTTPS, certificates and certificate authorities, DNS compared to mDNS
+**Learn:** static hosting, base paths, deploy jobs and environments, workflow permissions, CI compared to CD, images and containers, rootless containers, multi-stage builds, registries and tags, nginx config
 
 ### 13. Release
 
-- Write the README, covering self-hosting and the data limitations
+- Write the README, covering using the app from GitHub Pages, self-hosting the image, and the data limitations
 - Tag version 1.0.0, with a versioned image tag
 - Retire the spreadsheet once you trust the app
 
-**Learn:** versioning, release tags, writing docs for self-hosters
+**Learn:** versioning, release tags, writing docs for users and self-hosters
+
+## Phase 4: Optional
+
+### 14. Homelab
+
+A learning project after the release. It's a separate copy of the app with its own browser data, so your real data stays on GitHub Pages unless you choose to move it.
+
+- Test `homelab.local` from your Android phone, using Avahi, and settle on the address
+- Add the app's Quadlet file, then enable lingering and `podman-auto-update.timer`
+- Set up Caddy, allow rootless use of port 443, and install its root certificate on your devices
+- Stop the laptop from suspending when the lid closes
+- Confirm the app loads over HTTPS on your phone and desktop, and that a new image deploys by itself
+
+**Learn:** Quadlet and systemd, auto-update and rollback, reverse proxies, HTTPS, certificates and certificate authorities, DNS compared to mDNS
 
 ## Risks
 
-| Risk                                           | Mitigation                                                                                                |
-| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| The UI needs logic output in a different shape | Keep logic functions small, and adjust them in UI milestones; existing tests protect those changes        |
-| `homelab.local` doesn't work on your phone     | Test it first in milestone 12; fall back to HTTPS on the fixed IP                                         |
-| The address changes after real data is entered | Data stays at the local address until milestone 12, then moves once by CSV export and import              |
-| A figure doesn't match the spreadsheet         | Compare against the real spreadsheet in milestone 3                                                       |
-| Browser data is lost                           | Request persistent storage in milestone 11, export regularly, and keep the spreadsheet until milestone 13 |
-| The simulation is slow on your phone           | Measure in milestone 4, and use a web worker in milestone 10 if needed                                    |
+| Risk                                                        | Mitigation                                                                                                               |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| The UI needs logic output in a different shape              | Keep logic functions small, and adjust them in UI milestones; existing tests protect those changes                       |
+| The address changes after real data is entered              | Data stays at the local address until milestone 12, then moves once to the GitHub Pages address by CSV export and import |
+| The site is public                                          | The app's code is public anyway, and weight data never leaves the browser                                                |
+| Other Pages sites on the account can read the app's storage | Host no untrusted code on the account's Pages; a custom domain would fix it but isn't wanted                             |
+| Someone takes a freed username and publishes at the address | Keep the username, and export regularly                                                                                  |
+| GitHub Pages changes its terms or ends                      | Installed copies keep working offline; export by CSV and move to the self-hosted image                                   |
+| `homelab.local` doesn't work on your phone                  | Test it first in milestone 14; fall back to HTTPS on the fixed IP                                                        |
+| A figure doesn't match the spreadsheet                      | Compare against the real spreadsheet in milestone 3                                                                      |
+| Browser data is lost                                        | Request persistent storage in milestone 11, export regularly, and keep the spreadsheet until milestone 13                |
+| The simulation is slow on your phone                        | Measure in milestone 4, and use a web worker in milestone 10 if needed                                                   |
 
 ## Verification
 
@@ -209,5 +230,6 @@ Every milestone must pass lint, type checks, tests and the build in CI, with Pla
 - **Milestone 3:** every calculated figure matches the real spreadsheet.
 - **Milestone 8:** all of your real weigh-ins from 2025 and 2026 import, which was 523 on 2026-11-08, and the figures match the spreadsheet except near the days it estimated with random values.
 - **Milestone 11:** the installed app opens and logs an entry in airplane mode, and Settings shows the browser's answer to the persistent storage request.
-- **Milestone 12:** a merged change appears on your phone over HTTPS with no manual steps, and your data moves over intact.
-- **Milestone 13:** a fresh setup following only the README works.
+- **Milestone 12:** a merged change reaches the app installed from GitHub Pages on your phone with no manual steps, your data moves over intact, and the image serves the app locally with Podman.
+- **Milestone 13:** a fresh self-hosted setup following only the README works.
+- **Milestone 14:** the app loads over HTTPS at `homelab.local` on your phone and desktop, and a new image deploys by itself.

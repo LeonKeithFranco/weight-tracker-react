@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { LossRateChart } from "../components/LossRateChart";
 import { ProgressChart } from "../components/ProgressChart";
 import { RangePresets } from "../components/RangePresets";
 import { WeightTrendsChart } from "../components/WeightTrendsChart";
@@ -28,6 +29,7 @@ export function ChartsScreen() {
           <RangePresets value={preset} onChange={setPreset} />
           <WeightTrendsChart {...chartProps} />
           <ProgressChart {...chartProps} hasTarget={targetWeightKg !== null} />
+          <LossRateChart {...chartProps} />
         </>
       )}
     </>

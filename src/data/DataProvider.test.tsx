@@ -8,6 +8,7 @@ import {
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AppStorage, DEFAULT_SETTINGS } from "../storage/appStorage";
 import { InMemoryBackend } from "../storage/inMemoryBackend";
+import type { PersistenceApi } from "../storage/persistence";
 import { useData } from "./dataContext";
 import { DataProvider } from "./DataProvider";
 
@@ -23,10 +24,12 @@ describe("DataProvider", () => {
   });
 
   /** Renders `useData` inside a provider and waits until the data has loaded. */
-  async function renderLoaded() {
+  async function renderLoaded(persistenceApi?: PersistenceApi) {
     const { result } = renderHook(() => useData(), {
       wrapper: ({ children }) => (
-        <DataProvider storage={storage}>{children}</DataProvider>
+        <DataProvider storage={storage} persistenceApi={persistenceApi}>
+          {children}
+        </DataProvider>
       ),
     });
     // The hook only runs once the provider has loaded and drawn its children.
@@ -126,6 +129,131 @@ describe("DataProvider", () => {
         type: "error",
         message: "Couldn't load saved data",
         details: { error: "Error: disk full" },
+      });
+    });
+  });
+
+  describe("persistent storage", () => {
+    /**
+     * A stand-in for `navigator.storage`. It starts best-effort unless told
+     * otherwise, and `persist()` answers with `grant` and remembers it.
+     */
+    function fakeBrowser({ persisted = false, grant = true } = {}) {
+      let current = persisted;
+      return {
+        persisted: vi.fn(() => Promise.resolve(current)),
+        persist: vi.fn(() => {
+          current = current || grant;
+          return Promise.resolve(current);
+        }),
+      };
+    }
+
+    it("is unsupported when the browser has no API", async () => {
+      const result = await renderLoaded();
+
+      expect(result.current.persistence).toBe("unsupported");
+    });
+
+    it("asks once at startup when entries are already saved", async () => {
+      await storage.saveEntry({ date: "2026-01-01", weightKg: 90 });
+      const browser = fakeBrowser();
+
+      const result = await renderLoaded(browser);
+
+      await waitFor(() =>
+        expect(result.current.persistence).toBe("persistent"),
+      );
+      expect(browser.persist).toHaveBeenCalledOnce();
+    });
+
+    it("waits for the first save before asking, then asks only once", async () => {
+      const browser = fakeBrowser({ grant: false });
+      const result = await renderLoaded(browser);
+      expect(result.current.persistence).toBe("best-effort");
+      expect(browser.persist).not.toHaveBeenCalled();
+
+      await act(() =>
+        result.current.saveEntry({ date: "2026-01-01", weightKg: 90 }),
+      );
+      await waitFor(() => expect(browser.persist).toHaveBeenCalledOnce());
+      await act(() =>
+        result.current.saveEntry({ date: "2026-01-02", weightKg: 89 }),
+      );
+
+      // The browser refused, and a later save doesn't ask again.
+      expect(browser.persist).toHaveBeenCalledOnce();
+      expect(result.current.persistence).toBe("best-effort");
+    });
+
+    it("asks only once a visit, even if every entry is deleted and logged again", async () => {
+      const browser = fakeBrowser({ grant: false });
+      const result = await renderLoaded(browser);
+      await act(() =>
+        result.current.saveEntry({ date: "2026-01-01", weightKg: 90 }),
+      );
+      await waitFor(() => expect(browser.persist).toHaveBeenCalledOnce());
+
+      await act(() => result.current.deleteEntry("2026-01-01"));
+      await act(() =>
+        result.current.saveEntry({ date: "2026-01-01", weightKg: 90 }),
+      );
+
+      expect(browser.persist).toHaveBeenCalledOnce();
+    });
+
+    it("asks after the first import too", async () => {
+      const browser = fakeBrowser();
+      const result = await renderLoaded(browser);
+
+      await act(() =>
+        result.current.importEntries({
+          entries: [{ date: "2026-01-01", weightKg: 90 }],
+          invalidRows: [],
+        }),
+      );
+
+      await waitFor(() =>
+        expect(result.current.persistence).toBe("persistent"),
+      );
+    });
+
+    it("doesn't ask when storage is already persistent", async () => {
+      await storage.saveEntry({ date: "2026-01-01", weightKg: 90 });
+      const browser = fakeBrowser({ persisted: true });
+
+      const result = await renderLoaded(browser);
+
+      expect(result.current.persistence).toBe("persistent");
+      expect(browser.persist).not.toHaveBeenCalled();
+    });
+
+    it("asks again on request, and resolves with the answer", async () => {
+      const browser = fakeBrowser({ grant: false });
+      const result = await renderLoaded(browser);
+
+      let answer;
+      await act(async () => {
+        answer = await result.current.requestPersistence();
+      });
+
+      expect(answer).toBe("best-effort");
+      expect(browser.persist).toHaveBeenCalledOnce();
+    });
+
+    it("logs a failed request and keeps working", async () => {
+      const browser = fakeBrowser();
+      browser.persist.mockRejectedValue(new Error("Not allowed"));
+      const result = await renderLoaded(browser);
+
+      await act(() => result.current.requestPersistence());
+
+      expect(result.current.persistence).toBe("best-effort");
+      const [record] = await storage.getLogEntries();
+      expect(record).toMatchObject({
+        type: "error",
+        message: "Couldn't ask for persistent storage",
+        details: { error: "Error: Not allowed" },
       });
     });
   });

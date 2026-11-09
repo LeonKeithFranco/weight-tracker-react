@@ -11,14 +11,18 @@
   gap: 2rem;
 }
 
-/* Wider screens: preferences on the left and data on the right, since each
-   form is at most 20rem wide and a full-width card would be mostly empty.
+/* Wider screens: preferences on the left and data on the right.
+   Each column is as wide as its widest form, at most 20rem plus the card's
+   padding, so the cards fit their forms rather than leaving empty space
+   inside. Whatever width is left over becomes margin on the right of the
+   page. `minmax(0, …)` lets a column shrink if the window is too narrow
+   for both.
    The columns don't share rows, so a card never stretches to match one
    beside it, and an import preview only lengthens its own column. `start`
    keeps the shorter column at its own height too. */
 @media (min-width: 48rem) {
   .layout {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, max-content));
     align-items: start;
   }
 }

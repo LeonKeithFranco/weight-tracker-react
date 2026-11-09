@@ -1,0 +1,16 @@
+/* Phones get the compact rows, and wider screens the full table. Only one is
+   ever shown, and `display: none` also hides the other from screen readers.
+   48rem matches the app shell, because media queries can't use `var()`. */
+.wide {
+  display: none;
+}
+
+@media (min-width: 48rem) {
+  .narrow {
+    display: none;
+  }
+
+  .wide {
+    display: block;
+  }
+}

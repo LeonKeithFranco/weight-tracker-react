@@ -8,6 +8,8 @@ const row: ChartRow = {
   date: "2026-11-05",
   isEstimated: false,
   weight: 200,
+  realWeight: 200,
+  estimatedWeight: null,
   lowestWeight: 199,
   average7: 201,
   lowestAverage7: 200.5,

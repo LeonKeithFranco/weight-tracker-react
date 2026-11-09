@@ -10,6 +10,14 @@ export type ChartRow = {
   date: CalendarDate;
   isEstimated: boolean;
   weight: number;
+  /**
+   * The weight split in two so estimates can be drawn differently. Recharts
+   * joins two neighbouring days only when both have a value, so `realWeight`
+   * draws the stretches between logged days, and `estimatedWeight` draws
+   * every stretch that touches an estimated day.
+   */
+  realWeight: number | null;
+  estimatedWeight: number | null;
   lowestWeight: number;
   average7: number;
   lowestAverage7: number;
@@ -30,19 +38,31 @@ export function toChartRows(
 ): ChartRow[] {
   const convert = (weightKg: number) => fromKg(weightKg, unit);
 
-  return figures.map((day) => ({
-    date: day.date,
-    isEstimated: day.isEstimated,
-    weight: convert(day.weightKg),
-    lowestWeight: convert(day.lowestWeightKg),
-    average7: convert(day.average7Kg),
-    lowestAverage7: convert(day.lowestAverage7Kg),
-    average7ChangePercent: day.average7Change * 100,
-    average28: convert(day.average28Kg),
-    lowestAverage28: convert(day.lowestAverage28Kg),
-    weightToLose:
-      day.weightToLoseKg === null ? null : convert(day.weightToLoseKg),
-    weightLossSinceStart: convert(day.weightLossSinceStartKg),
-    weightLossPerWeek: convert(day.weightLossPerWeekKg),
-  }));
+  return figures.map((day, index) => {
+    const weight = convert(day.weightKg);
+    // A logged day next to an estimate also gets an estimated value, so the
+    // faded line reaches it rather than stopping a day short.
+    const touchesEstimate =
+      day.isEstimated ||
+      figures[index - 1]?.isEstimated === true ||
+      figures[index + 1]?.isEstimated === true;
+
+    return {
+      date: day.date,
+      isEstimated: day.isEstimated,
+      weight,
+      realWeight: day.isEstimated ? null : weight,
+      estimatedWeight: touchesEstimate ? weight : null,
+      lowestWeight: convert(day.lowestWeightKg),
+      average7: convert(day.average7Kg),
+      lowestAverage7: convert(day.lowestAverage7Kg),
+      average7ChangePercent: day.average7Change * 100,
+      average28: convert(day.average28Kg),
+      lowestAverage28: convert(day.lowestAverage28Kg),
+      weightToLose:
+        day.weightToLoseKg === null ? null : convert(day.weightToLoseKg),
+      weightLossSinceStart: convert(day.weightLossSinceStartKg),
+      weightLossPerWeek: convert(day.weightLossPerWeekKg),
+    };
+  });
 }

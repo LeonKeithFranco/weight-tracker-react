@@ -27,6 +27,15 @@ export type ChartRow = {
   lowestAverage28: number;
   /** `null` when no target is set, which Recharts leaves out of the chart. */
   weightToLose: number | null;
+  /**
+   * Weight to lose split at 0 for the stacked Progress chart, because a band
+   * that changes sign jumps from the top of the stack to below 0. Neither
+   * part changes sign: `leftToLose` is 0 once past the target, and
+   * `pastTarget` is empty until then, except beside days past the target, so
+   * its band starts and ends at 0. Both are `null` without a target.
+   */
+  leftToLose: number | null;
+  pastTarget: number | null;
   weightLossSinceStart: number;
   weightLossPerWeek: number;
 };
@@ -37,9 +46,19 @@ export function toChartRows(
   unit: WeightUnit,
 ): ChartRow[] {
   const convert = (weightKg: number) => fromKg(weightKg, unit);
+  // Loose `!=` is true for both `null` (no target) and `undefined` (no day,
+  // past either end of the list), the one common use of loose equality.
+  const isPastTarget = (day: DailyFigures | undefined) =>
+    day?.weightToLoseKg != null && day.weightToLoseKg < 0;
 
   return figures.map((day, index) => {
     const weight = convert(day.weightKg);
+    const toLose =
+      day.weightToLoseKg === null ? null : convert(day.weightToLoseKg);
+    const nearPastTarget =
+      isPastTarget(day) ||
+      isPastTarget(figures[index - 1]) ||
+      isPastTarget(figures[index + 1]);
     // A logged day next to an estimate also gets an estimated value, so the
     // faded line reaches it rather than stopping a day short.
     const touchesEstimate =
@@ -59,8 +78,10 @@ export function toChartRows(
       average7ChangePercent: day.average7Change * 100,
       average28: convert(day.average28Kg),
       lowestAverage28: convert(day.lowestAverage28Kg),
-      weightToLose:
-        day.weightToLoseKg === null ? null : convert(day.weightToLoseKg),
+      weightToLose: toLose,
+      leftToLose: toLose === null ? null : Math.max(toLose, 0),
+      pastTarget:
+        toLose === null || !nearPastTarget ? null : Math.min(toLose, 0),
       weightLossSinceStart: convert(day.weightLossSinceStartKg),
       weightLossPerWeek: convert(day.weightLossPerWeekKg),
     };

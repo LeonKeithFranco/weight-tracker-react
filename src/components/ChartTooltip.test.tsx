@@ -1,23 +1,15 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import type { ChartRow } from "../lib/chartRows";
+import { sampleChartRow } from "../test/chartRow";
 import { ChartTooltip, type ChartRowSeries } from "./ChartTooltip";
 
+// Values that need rounding, and no target.
 const row: ChartRow = {
-  date: "2026-11-05",
-  isEstimated: false,
+  ...sampleChartRow,
   weight: 203.84,
-  realWeight: 203.84,
-  estimatedWeight: null,
-  lowestWeight: 199,
   average7: 204.126,
-  lowestAverage7: 200.5,
-  average7ChangePercent: -1,
-  average28: 202,
-  lowestAverage28: 201.5,
   weightToLose: null,
-  weightLossSinceStart: 10,
-  weightLossPerWeek: 1,
 };
 
 const series: ChartRowSeries[] = [

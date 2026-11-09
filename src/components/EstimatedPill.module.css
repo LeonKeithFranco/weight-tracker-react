@@ -1,0 +1,13 @@
+/* A small rounded tag, quieter than the date it follows. */
+.pill {
+  display: inline-block;
+  padding: 0 0.4rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  color: GrayText;
+  font-size: 0.75rem;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1.4;
+  vertical-align: middle;
+}

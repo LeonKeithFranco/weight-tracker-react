@@ -13,6 +13,11 @@
      blue for a loss and red for a gain. */
   --chart-loss: light-dark(#2a78d6, #3987e5);
   --chart-gain: light-dark(#e34948, #e66767);
+  /* The same two hues for text, such as the Data table's 7-day change. Text
+     needs 4.5:1 contrast rather than the 3:1 for chart marks, so these are
+     darker in light mode and lighter in dark. All pass on a card. */
+  --text-loss: light-dark(#1f62b5, #6aa8ef);
+  --text-gain: light-dark(#c0302f, #f08a89);
   --chart-grid: light-dark(#e1e0d9, #2c2c2a);
   --chart-axis: #898781;
   /* Section cards: a panel a step away from the page background, lighter

@@ -94,9 +94,17 @@
   font-style: italic;
 }
 
-.estimatedLabel {
-  margin-left: 0.5rem;
-  color: GrayText;
-  font-size: 0.75rem;
-  text-transform: uppercase;
+/* Where the "Estimated" pill sits: beside the date. */
+.pill {
+  margin-inline-start: 0.5rem;
+}
+
+/* The row under the pointer is shaded, so the eye can follow it from the
+   date across to the last column. The shade is mixed into the card colour
+   rather than laid over it, so the sticky date cell stays solid and still
+   hides the figures scrolling under it. Only where a mouse can hover. */
+@media (hover: hover) {
+  .table tbody tr:hover > * {
+    background: color-mix(in srgb, CanvasText 6%, var(--card-background));
+  }
 }

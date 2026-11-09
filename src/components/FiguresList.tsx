@@ -5,7 +5,9 @@ import { columnHeading, figureColumns } from "../lib/figureColumns";
 import type { DailyFigures, Settings, WeightEntry } from "../lib/types";
 import { formatAverage, formatWeight } from "../lib/units";
 import { EntryActions } from "./EntryActions";
+import { EstimatedPill } from "./EstimatedPill";
 import styles from "./FiguresList.module.css";
+import { toneClass } from "./toneClass";
 
 type FiguresListProps = {
   /** The days to show, in the order to show them. */
@@ -70,11 +72,9 @@ function DayRow({ day, settings, onEdit, onDelete }: DayRowProps) {
         aria-expanded={expanded}
         aria-controls={expanded ? panelId : undefined}
       >
-        <span>
+        <span className={styles.date}>
           {shownDate}
-          {day.isEstimated && (
-            <span className={styles.estimatedLabel}>Estimated</span>
-          )}
+          {day.isEstimated && <EstimatedPill />}
         </span>
         <span>
           <span className="visually-hidden">Weight </span>
@@ -93,7 +93,9 @@ function DayRow({ day, settings, onEdit, onDelete }: DayRowProps) {
             {figureColumns(settings.targetWeightKg !== null).map((column) => (
               <div key={column.key} className={styles.detail}>
                 <dt>{columnHeading(column, unit)}</dt>
-                <dd>{column.format(day, unit)}</dd>
+                <dd className={toneClass(column, day)}>
+                  {column.format(day, unit)}
+                </dd>
               </div>
             ))}
           </dl>

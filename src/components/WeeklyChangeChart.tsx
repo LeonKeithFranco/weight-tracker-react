@@ -3,6 +3,7 @@ import type { ChartRow } from "../lib/chartRows";
 import { FIGURE_LABELS } from "../lib/figureLabels";
 import { PERCENT_DECIMALS } from "../lib/units";
 import { ChartFrame } from "./ChartFrame";
+import type { LegendItem } from "./ChartLegend";
 import type { ChartRowSeries } from "./ChartTooltip";
 import styles from "./chart.module.css";
 
@@ -16,7 +17,25 @@ const SERIES: ChartRowSeries[] = [
   },
 ];
 
-/** Nothing is ever hidden, because a single series has no legend to hide it. */
+/** The legend shows the two bar colours rather than the one series. */
+const LEGEND: LegendItem[] = [
+  {
+    key: "loss",
+    name: "Loss",
+    color: "var(--chart-loss)",
+    dashed: false,
+    marker: "square",
+  },
+  {
+    key: "gain",
+    name: "Gain",
+    color: "var(--chart-gain)",
+    dashed: false,
+    marker: "square",
+  },
+];
+
+/** Nothing is ever hidden, because a single series can't be toggled off. */
 const NONE_HIDDEN: ReadonlySet<string> = new Set();
 
 type Props = {
@@ -37,6 +56,7 @@ export function WeeklyChangeChart({ rows, dateFormat }: Props) {
       rows={rows}
       series={SERIES}
       hidden={NONE_HIDDEN}
+      legendItems={LEGEND}
       suffix="%"
       dateFormat={dateFormat}
       yTickFormatter={(value) => `${value}%`}

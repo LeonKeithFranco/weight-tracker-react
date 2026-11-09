@@ -16,7 +16,7 @@ const SERIES: ChartRowSeries[] = [
   },
 ];
 
-/** Nothing is ever hidden, because a single line has no legend to hide it. */
+/** Nothing is ever hidden, because hiding the only line would empty the chart. */
 const NONE_HIDDEN: ReadonlySet<string> = new Set();
 
 type Props = {
@@ -26,8 +26,8 @@ type Props = {
 };
 
 /**
- * The average loss per week since the start. One line, so the heading names
- * it and there's no legend.
+ * The average loss per week since the start. One line, so its legend is
+ * plain text rather than a button to hide it.
  */
 export function LossRateChart({ rows, unit, dateFormat }: Props) {
   return (

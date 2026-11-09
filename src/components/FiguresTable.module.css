@@ -56,6 +56,15 @@
    showing which columns it covers. */
 .table .groupHeading {
   text-align: center;
+  /* The underline stops short of each end, so neighbouring groups' lines
+     don't join into one and each covers only its own columns. A shadow
+     can't be shortened, so it's a one-pixel gradient of one colour instead,
+     sized and placed like an image along the bottom. */
+  box-shadow: none;
+  background-image: linear-gradient(var(--row-line), var(--row-line));
+  background-position: center bottom;
+  background-size: calc(100% - 0.75rem) 1px;
+  background-repeat: no-repeat;
 }
 
 /* The dates stay at the left while the figures scroll sideways. Only the

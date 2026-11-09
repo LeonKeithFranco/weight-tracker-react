@@ -22,8 +22,7 @@ The spec is finished (`docs/SPEC.md`), and the repo has no app code yet. This pl
 | Routing                        | React Router                               | Four screens, and a widely used skill               |
 | Storage                        | Dexie over IndexedDB                       | Simpler API, with React hooks for live data         |
 | Dates                          | Day.js                                     | Small, with `YYYY-MM-DD` style format tokens        |
-| Statistics                     | simple-statistics                          | Regression, percentiles and standard deviation      |
-| Seeded randomness              | seedrandom and d3-random                   | Repeatable generator and normal distribution draws  |
+| Statistics                     | simple-statistics                          | Regression, mean and standard deviation             |
 | CSV                            | PapaParse                                  | Handles quoting, line endings and byte order marks  |
 | Charts                         | Recharts                                   | Written for React; covers line, area and bar charts |
 | Styling                        | CSS Modules                                | Teaches responsive CSS directly                     |
@@ -162,7 +161,9 @@ Until milestone 12, the app runs from the dev server on your desktop. Your phone
 - Add the manifest, icons and service worker, with the manifest's `start_url` and `scope` following Vite's base path, so the app installs from a subfolder such as GitHub Pages' `/weight-tracker-react/`
 - Add the reload prompt for new versions
 - Request persistent storage, and show the browser's answer in Settings with a way to ask again
+- Split the JavaScript into smaller files if the first load is slow, since Recharts took the main file past Vite's 500 kB warning
 - Test install, offline use and updating on your desktop, and on your phone through Chrome's USB port forwarding, which counts as `localhost`, so no HTTPS is needed yet
+- Check that an installed app keeps working when its server returns 404 for everything, as it would if GitHub Pages went away
 
 **Learn:** service workers, caching, the app update lifecycle, why HTTPS is required, USB port forwarding, best-effort compared to persistent storage
 
@@ -220,7 +221,7 @@ A learning project after the release. It's a separate copy of the app with its o
 | `homelab.local` doesn't work on your phone                  | Test it first in milestone 14; fall back to HTTPS on the fixed IP                                                        |
 | A figure doesn't match the spreadsheet                      | Compare against the real spreadsheet in milestone 3                                                                      |
 | Browser data is lost                                        | Request persistent storage in milestone 11, export regularly, and keep the spreadsheet until milestone 13                |
-| The simulation is slow on your phone                        | Measure in milestone 4, and use a web worker in milestone 10 if needed                                                   |
+| The projection is slow on your phone                        | Measured in milestone 10 at up to 284 ms with a slowed CPU, so the simulation was replaced by a direct calculation       |
 
 ## Verification
 
@@ -229,7 +230,7 @@ Every milestone must pass lint, type checks, tests and the build in CI, with Pla
 - **Milestone 2:** a PR with a deliberately failing test can't be merged.
 - **Milestone 3:** every calculated figure matches the real spreadsheet.
 - **Milestone 8:** all of your real weigh-ins from 2025 and 2026 import, which was 523 on 2026-11-08, and the figures match the spreadsheet except near the days it estimated with random values.
-- **Milestone 11:** the installed app opens and logs an entry in airplane mode, and Settings shows the browser's answer to the persistent storage request.
+- **Milestone 11:** the installed app opens and logs an entry in airplane mode, still opens when its server returns 404, and Settings shows the browser's answer to the persistent storage request.
 - **Milestone 12:** a merged change reaches the app installed from GitHub Pages on your phone with no manual steps, your data moves over intact, and the image serves the app locally with Podman.
 - **Milestone 13:** a fresh self-hosted setup following only the README works.
 - **Milestone 14:** the app loads over HTTPS at `homelab.local` on your phone and desktop, and a new image deploys by itself.

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ProgressChart } from "../components/ProgressChart";
 import { RangePresets } from "../components/RangePresets";
 import { WeightTrendsChart } from "../components/WeightTrendsChart";
 import { useData } from "../data/dataContext";
@@ -8,12 +9,14 @@ import { toChartRows } from "../lib/chartRows";
 
 export function ChartsScreen() {
   const figures = useDailyFigures();
-  const { displayUnit: unit, dateFormat } = useData().settings;
+  const { displayUnit: unit, dateFormat, targetWeightKg } = useData().settings;
   // One preset for every chart, so they always cover the same days.
   const [preset, setPreset] = useState(DEFAULT_RANGE_PRESET);
   // The figures come from the full history, so running lows and averages are
   // right before the range cuts them down to what's shown.
   const rows = filterByRange(toChartRows(figures, unit), preset);
+  // What every chart needs, passed with one spread.
+  const chartProps = { rows, unit, dateFormat };
 
   return (
     <>
@@ -23,7 +26,8 @@ export function ChartsScreen() {
       ) : (
         <>
           <RangePresets value={preset} onChange={setPreset} />
-          <WeightTrendsChart rows={rows} unit={unit} dateFormat={dateFormat} />
+          <WeightTrendsChart {...chartProps} />
+          <ProgressChart {...chartProps} hasTarget={targetWeightKg !== null} />
         </>
       )}
     </>

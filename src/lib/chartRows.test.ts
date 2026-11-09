@@ -34,6 +34,8 @@ describe("toChartRows", () => {
         average28: 91,
         lowestAverage28: 90.75,
         weightToLose: 10,
+        leftToLose: 10,
+        pastTarget: null,
         weightLossSinceStart: 5,
         weightLossPerWeek: 0.5,
       },
@@ -55,6 +57,30 @@ describe("toChartRows", () => {
     const [row] = toChartRows([{ ...day, weightToLoseKg: null }], "lb");
 
     expect(row.weightToLose).toBeNull();
+    expect(row.leftToLose).toBeNull();
+    expect(row.pastTarget).toBeNull();
+  });
+
+  it("splits weight to lose at 0 so neither part changes sign", () => {
+    // Above the target, then past it, then back above.
+    const days = [3, 1, -1, -2, 1, 2].map((toLose) => ({
+      ...day,
+      weightToLoseKg: toLose,
+    }));
+
+    const rows = toChartRows(days, "kg");
+
+    expect(rows.map((row) => row.leftToLose)).toEqual([3, 1, 0, 0, 1, 2]);
+    // The days beside those past the target get 0, so the band below the
+    // line starts and ends at 0 rather than at its first value.
+    expect(rows.map((row) => row.pastTarget)).toEqual([
+      null,
+      0,
+      -1,
+      -2,
+      0,
+      null,
+    ]);
   });
 
   it("splits the weight so estimated stretches reach the logged days beside them", () => {

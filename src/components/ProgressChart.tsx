@@ -19,7 +19,7 @@ import { useHiddenSeries } from "./useHiddenSeries";
 
 const TO_LOSE: ChartRowSeries = {
   key: "weightToLose",
-  name: "To lose",
+  name: "Left to lose",
   color: "var(--series-1)",
   dashed: false,
   decimals: WEIGHT_DECIMALS,
@@ -33,6 +33,15 @@ const LOST: ChartRowSeries = {
   decimals: WEIGHT_DECIMALS,
 };
 
+/**
+ * The fields that draw one series. What's left to lose is drawn in two parts,
+ * above and below 0, so neither band jumps across the stack when you pass the
+ * target. The legend and tooltip still use the series' own field.
+ */
+function areasFor(key: keyof ChartRow): (keyof ChartRow)[] {
+  return key === "weightToLose" ? ["leftToLose", "pastTarget"] : [key];
+}
+
 type Props = {
   rows: ChartRow[];
   unit: WeightUnit;
@@ -41,14 +50,16 @@ type Props = {
 };
 
 /**
- * How far there is to go and how far you've come. The two areas meet in the
- * middle as the loss grows and the amount left shrinks.
+ * How far you've come, with how far there is to go stacked on top. The two
+ * add up to the start weight minus the target, so the stack stays the same
+ * height and the split between the colours shows the progress.
  */
 export function ProgressChart({ rows, unit, dateFormat, hasTarget }: Props) {
   const headingId = useId();
   const { hidden, toggle } = useHiddenSeries();
   // Without a target there's nothing to lose towards, so only the loss shows.
-  const series = hasTarget ? [TO_LOSE, LOST] : [LOST];
+  // The first series is drawn at the bottom of the stack.
+  const series = hasTarget ? [LOST, TO_LOSE] : [LOST];
 
   return (
     <section aria-labelledby={headingId}>
@@ -82,25 +93,29 @@ export function ProgressChart({ rows, unit, dateFormat, hasTarget }: Props) {
           cursor={{ stroke: "var(--chart-axis)" }}
           isAnimationActive={false}
         />
-        {series.map((item) => (
-          <Area
-            key={item.key}
-            dataKey={item.key}
-            name={item.name}
-            hide={hidden.has(item.key)}
-            stroke={item.color}
-            strokeWidth={2}
-            fill={item.color}
-            // A light fill, so the grid and the other area show through.
-            fillOpacity={0.2}
-            // Fills towards 0 rather than the bottom of the chart, so a
-            // negative value fills downwards from the 0 line.
-            baseValue={0}
-            activeDot={{ r: 4 }}
-            type="linear"
-            isAnimationActive={false}
-          />
-        ))}
+        {series.flatMap((item) =>
+          areasFor(item.key).map((dataKey) => (
+            <Area
+              key={dataKey}
+              dataKey={dataKey}
+              name={item.name}
+              hide={hidden.has(item.key)}
+              stroke={item.color}
+              strokeWidth={2}
+              fill={item.color}
+              // Stacked areas don't overlap, so a fairly strong fill keeps the
+              // two bands easy to tell apart.
+              fillOpacity={0.5}
+              // Areas with the same id are piled on top of each other. The
+              // part past the target is a stack of its own, so it starts at 0
+              // and hangs below the line instead of sitting on the others.
+              stackId={dataKey === "pastTarget" ? "pastTarget" : "progress"}
+              activeDot={{ r: 4 }}
+              type="linear"
+              isAnimationActive={false}
+            />
+          )),
+        )}
       </AreaChart>
       <ChartLegend series={series} hidden={hidden} onToggle={toggle} />
     </section>

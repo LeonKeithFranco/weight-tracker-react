@@ -19,7 +19,7 @@ It is built primarily for one person. Anyone else can run their own copy.
 - A custom backend or any server-side data storage
 - Sync between devices (each browser has its own data)
 - Reaching the homelab deployment from outside the home network
-- Backup reminders or a persistent storage request
+- Backup reminders
 - Body measurements or notes on entries
 - Weight-gain goals (the target is assumed to be below the starting weight)
 
@@ -184,6 +184,14 @@ type LogEntry = {
 - Works fully offline after the first load.
 - Shows a prompt to reload when a new version is available.
 - Requires HTTPS, except on `localhost`.
+
+### Persistent storage
+
+- The app asks the browser for persistent storage with `navigator.storage.persist()`. Without it, a browser that runs low on space may delete the app's data without asking.
+- It asks after the first successful save, and again at startup while storage isn't persistent yet.
+- Settings shows whether storage is persistent, with a button to ask again when it isn't.
+- The browser can refuse, and the app works the same either way. Chrome decides without a prompt and usually grants it to installed apps. Firefox asks the user.
+- Persistent storage doesn't protect against clearing site data, uninstalling or changing devices, so CSV export is still the backup.
 
 ## Screens
 

@@ -4,3 +4,11 @@
   width: 100%;
   height: 20rem;
 }
+
+/* Wide screens have room for a taller chart, which spreads out lines that
+   sit close together. The same breakpoint as the navigation and Data table. */
+@media (min-width: 48rem) {
+  .chart {
+    height: 28rem;
+  }
+}

@@ -1,8 +1,8 @@
 # Progress
 
-**Current status:** Milestone 8 is finished. The app has an app shell with four screens and responsive navigation, a logging form, settings for the unit, target and date format, the latest figures and goal date on Home, and error handling that records to the activity log. Settings exports and imports CSV files, with a preview before an import saves anything, and links to the Log page, which lists the activity log and exports it as JSON. Charts and Data are still placeholders. The user's real history from 2025 and 2026 is imported into the desktop's dev server copy. Unit and component tests run in Vitest, and Playwright runs in CI at desktop and phone sizes, saving a report and traces when a test fails. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
+**Current status:** Milestone 9 is finished. The app has an app shell with four screens and responsive navigation, a logging form, settings for the unit, target and date format, the latest figures and goal date on Home, and error handling that records to the activity log. Settings exports and imports CSV files, with a preview before an import saves anything, and links to the Log page, which lists the activity log and exports it as JSON. The Data screen shows every daily figure newest first, as a full table on desktop and as rows that expand on a phone, with estimated days marked and edit and delete for saved entries. Charts is still a placeholder. The user's real history from 2025 and 2026 is imported into the desktop's dev server copy. Unit and component tests run in Vitest, and Playwright runs in CI at desktop and phone sizes, saving a report and traces when a test fails. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
 
-**Next:** Start milestone 9, Data table.
+**Next:** Start milestone 10, Charts.
 
 **In progress:** Nothing.
 
@@ -24,7 +24,7 @@
 
 - [x] 7. App shell, logging and settings
 - [x] 8. CSV screens and log page
-- [ ] 9. Data table
+- [x] 9. Data table
 - [ ] 10. Charts
 - [ ] 11. PWA
 - [ ] 12. Containers and deployment
@@ -36,6 +36,14 @@ Record changes to the spec or plan here, with the reason.
 
 ### 2026-11-08
 
+- The Data screen puts both layouts in the page and a CSS media query shows one, rather than reading the width with `matchMedia` in JavaScript. `display: none` also hides the other layout from screen readers, and there's no hook or flash on load. The phone rows draw a day's details only when it's opened, so the extra page size is small.
+- The table isn't virtualised. About 680 days is small for a browser, and virtualising is the fix if the phone feels slow, not a starting point.
+- The "To lose" column is left out when no target is set, because every value would be empty, matching Home.
+- Phone rows expand with a button using `aria-expanded`, not `<details>`, so closed rows don't hold their hidden figures in the page.
+- Edit and delete use the native `<dialog>` with `showModal()`, which brings the backdrop, keyboard blocking, Escape and focus return without a library. jsdom lacks `showModal()` and `close()`, so the component test setup adds simple versions, and Playwright checks the real ones.
+- Estimated days have no edit or delete buttons, because there's no entry to change. Logging that date on Home makes it a real entry, as the spec says.
+- Saving the edit dialog with its weight unchanged keeps the stored value, for the same reason as the target: the field shows a rounded value.
+- After a delete, focus goes to the page rather than back to the Delete button, because the button's row is gone or estimated. That's accepted for now.
 - Containers and deployment moved from milestone 8 to milestone 12, after the PWA and before the release, and the milestones between were renumbered: CSV screens and log page is now 8, Data table 9, Charts 10 and PWA 11. The user wants to use and test the finished app before deploying it. Entries before this one use the old numbers.
 - Until deployment, the app runs from the dev server on the desktop, and the phone opens it over Wi-Fi. Real history is imported into that local copy in milestone 8, and the spreadsheet stays in use until milestone 12 moves the data to the deployed copy by CSV export and import. Browser data is tied to the exact address, so it moves once, after the address is settled.
 - The real history was imported into the desktop browser's copy at `localhost:5173`: 220 weigh-ins for 2025 and 303 for 2026, with no invalid rows. Each year's figures match its own sheet except on days the sheet estimated differently from a straight line, which were 2 to 9 January and 7 August to 5 September 2025, and the random values in March and May 2026. With both years in the app, weight loss since start and loss per week count from 2025-01-01, and the averages in early January 2026 include December 2025, because each sheet started again each year. The phone holds separate data, so it gets the same files only if needed before deployment.

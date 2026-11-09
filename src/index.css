@@ -2,6 +2,13 @@
   color-scheme: light dark;
   font-family: system-ui, sans-serif;
   --color-error: light-dark(#b3261e, #f2b8b5);
+  /* Chart series colours, checked for colour blindness in this order. Each
+     mode has its own steps, so lines stay clear on a dark background. */
+  --series-1: light-dark(#2a78d6, #3987e5);
+  --series-2: light-dark(#eb6834, #d95926);
+  --series-3: light-dark(#1baf7a, #199e70);
+  --chart-grid: light-dark(#e1e0d9, #2c2c2a);
+  --chart-axis: #898781;
   /* The widest the page content gets, shared by the header and each screen. */
   --content-max-width: 64rem;
 }

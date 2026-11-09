@@ -1,0 +1,10 @@
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actions button {
+  min-height: 2.25rem;
+  padding: 0 0.75rem;
+  font: inherit;
+}

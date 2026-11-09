@@ -2,17 +2,19 @@ import { useId, useState } from "react";
 import { useData } from "../data/dataContext";
 import { formatDate } from "../lib/dates";
 import { columnHeading, figureColumns } from "../lib/figureColumns";
-import type { DailyFigures, Settings } from "../lib/types";
+import type { DailyFigures, Settings, WeightEntry } from "../lib/types";
 import { formatAverage, formatWeight } from "../lib/units";
+import { EntryActions } from "./EntryActions";
 import styles from "./FiguresList.module.css";
 
 type FiguresListProps = {
   /** The days to show, in the order to show them. */
   days: DailyFigures[];
+  onEdit(entry: WeightEntry): void;
 };
 
 /** A compact row per day for phones. Tapping a row shows every figure. */
-export function FiguresList({ days }: FiguresListProps) {
+export function FiguresList({ days, onEdit }: FiguresListProps) {
   const { settings } = useData();
   const unit = settings.displayUnit;
 
@@ -29,7 +31,12 @@ export function FiguresList({ days }: FiguresListProps) {
         {days.map((day) => (
           // The key keeps each row's open or closed state with its own date,
           // even when a new day is added at the top.
-          <DayRow key={day.date} day={day} settings={settings} />
+          <DayRow
+            key={day.date}
+            day={day}
+            settings={settings}
+            onEdit={onEdit}
+          />
         ))}
       </ul>
     </>
@@ -39,14 +46,16 @@ export function FiguresList({ days }: FiguresListProps) {
 type DayRowProps = {
   day: DailyFigures;
   settings: Settings;
+  onEdit(entry: WeightEntry): void;
 };
 
 /** One day: a button that shows and hides the rest of its figures. */
-function DayRow({ day, settings }: DayRowProps) {
+function DayRow({ day, settings, onEdit }: DayRowProps) {
   // Each row keeps its own state, so opening one doesn't re-render the others.
   const [expanded, setExpanded] = useState(false);
   const panelId = useId();
   const unit = settings.displayUnit;
+  const shownDate = formatDate(day.date, settings.dateFormat);
 
   return (
     <li className={day.isEstimated ? styles.estimated : undefined}>
@@ -59,7 +68,7 @@ function DayRow({ day, settings }: DayRowProps) {
         aria-controls={expanded ? panelId : undefined}
       >
         <span>
-          {formatDate(day.date, settings.dateFormat)}
+          {shownDate}
           {day.isEstimated && (
             <span className={styles.estimatedLabel}>Estimated</span>
           )}
@@ -76,14 +85,17 @@ function DayRow({ day, settings }: DayRowProps) {
 
       {/* Only drawn when open, so hundreds of closed rows stay light. */}
       {expanded && (
-        <dl id={panelId} className={styles.details}>
-          {figureColumns(settings.targetWeightKg !== null).map((column) => (
-            <div key={column.key} className={styles.detail}>
-              <dt>{columnHeading(column, unit)}</dt>
-              <dd>{column.format(day, unit)}</dd>
-            </div>
-          ))}
-        </dl>
+        <div id={panelId} className={styles.panel}>
+          <dl className={styles.details}>
+            {figureColumns(settings.targetWeightKg !== null).map((column) => (
+              <div key={column.key} className={styles.detail}>
+                <dt>{columnHeading(column, unit)}</dt>
+                <dd>{column.format(day, unit)}</dd>
+              </div>
+            ))}
+          </dl>
+          <EntryActions day={day} shownDate={shownDate} onEdit={onEdit} />
+        </div>
       )}
     </li>
   );

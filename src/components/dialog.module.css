@@ -1,0 +1,32 @@
+.dialog {
+  /* The width includes the padding, so it leaves a gap at each side of a phone. */
+  box-sizing: border-box;
+  width: min(22rem, calc(100% - 2rem));
+  padding: 1.25rem;
+  border: 1px solid GrayText;
+  border-radius: 0.5rem;
+  background: Canvas;
+  color: CanvasText;
+}
+
+/* Dims the page behind the dialog. */
+.dialog::backdrop {
+  background: rgb(0 0 0 / 50%);
+}
+
+.dialog h2 {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+}
+
+/* Buttons side by side, each easy to tap. */
+.buttons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.buttons button {
+  flex: 1;
+  min-height: 3rem;
+  font: inherit;
+}

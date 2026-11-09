@@ -54,6 +54,11 @@
   font-weight: normal;
 }
 
+/* Keeps the rows a steady height, with or without buttons. */
+.table td:last-child {
+  padding-block: 0.125rem;
+}
+
 /* Estimated days are greyed, so real weigh-ins stand out. */
 .estimated td {
   color: GrayText;

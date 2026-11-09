@@ -1,6 +1,6 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DataProvider } from "../data/DataProvider";
 import type { Settings } from "../lib/types";
 import { AppStorage, DEFAULT_SETTINGS } from "../storage/appStorage";
@@ -81,6 +81,7 @@ describe("DataScreen", () => {
       "To lose (lb)",
       "Lost since start (lb)",
       "Loss per week (lb)",
+      "Actions",
     ]);
     expect(bodyRows()[0][1]).toBe("198.4");
   });
@@ -97,9 +98,12 @@ describe("DataScreen", () => {
   describe("phone rows", () => {
     // jsdom doesn't apply the CSS, so both layouts are in the page here.
     // Playwright checks that each size shows only one.
+    /** The button that opens each row, leaving out the Edit buttons inside. */
     function rowButtons() {
       const list = screen.getByRole("list", { name: /Daily figures/ });
-      return within(list).getAllByRole("button");
+      return within(list)
+        .getAllByRole("listitem")
+        .map((item) => within(item).getAllByRole("button")[0]);
     }
 
     it("show the date, weight and 7-day average, newest first", async () => {
@@ -162,5 +166,128 @@ describe("DataScreen", () => {
     expect(
       screen.getByRole("rowheader", { name: "01/11/2026" }),
     ).toBeInTheDocument();
+  });
+
+  describe("editing", () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    /** Saves two days apart, so the day between them is estimated. */
+    async function renderWithGap() {
+      await storage.saveEntry({ date: "2026-11-01", weightKg: 90 });
+      await storage.saveEntry({ date: "2026-11-03", weightKg: 89.04 });
+      await renderData();
+      return userEvent.setup();
+    }
+
+    function weightField() {
+      return within(screen.getByRole("dialog")).getByLabelText("Weight (kg)");
+    }
+
+    it("offers Edit for saved entries only", async () => {
+      await renderWithGap();
+
+      const table = screen.getByRole("table");
+      expect(
+        within(table)
+          .getAllByRole("button", { name: /^Edit/ })
+          .map((button) => button.textContent),
+      ).toEqual(["Edit 2026-11-03", "Edit 2026-11-01"]);
+    });
+
+    it("saves a new weight for the same date", async () => {
+      const user = await renderWithGap();
+
+      await user.click(screen.getByRole("button", { name: "Edit 2026-11-03" }));
+      expect(
+        screen.getByRole("dialog", { name: "Edit 2026-11-03" }),
+      ).toBeVisible();
+      expect(weightField()).toHaveValue("89.0");
+      await user.clear(weightField());
+      await user.type(weightField(), "88.5{Enter}");
+
+      await waitFor(() => {
+        expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+      });
+      expect(await storage.getEntries()).toContainEqual({
+        date: "2026-11-03",
+        weightKg: 88.5,
+      });
+      expect(bodyRows()[0].slice(0, 2)).toEqual(["2026-11-03", "88.5"]);
+    });
+
+    it("keeps the full-precision weight when saved unchanged", async () => {
+      const user = await renderWithGap();
+
+      await user.click(screen.getByRole("button", { name: "Edit 2026-11-03" }));
+      await user.click(screen.getByRole("button", { name: "Save" }));
+
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+      expect(await storage.getEntries()).toContainEqual({
+        date: "2026-11-03",
+        weightKg: 89.04,
+      });
+    });
+
+    it("rejects a weight that isn't a number above 0", async () => {
+      const user = await renderWithGap();
+
+      await user.click(screen.getByRole("button", { name: "Edit 2026-11-03" }));
+      await user.clear(weightField());
+      await user.type(weightField(), "abc{Enter}");
+
+      expect(weightField()).toHaveAttribute("aria-invalid", "true");
+      expect(weightField()).toHaveAccessibleDescription(
+        "Enter a number above 0, such as 203.8.",
+      );
+      expect(await storage.getEntries()).toContainEqual({
+        date: "2026-11-03",
+        weightKg: 89.04,
+      });
+    });
+
+    it("closes without saving when cancelled", async () => {
+      const user = await renderWithGap();
+
+      await user.click(screen.getByRole("button", { name: "Edit 2026-11-03" }));
+      await user.clear(weightField());
+      await user.type(weightField(), "70");
+      await user.click(screen.getByRole("button", { name: "Cancel" }));
+
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+      expect(await storage.getEntries()).toContainEqual({
+        date: "2026-11-03",
+        weightKg: 89.04,
+      });
+    });
+
+    it("stays open with an alert if saving fails", async () => {
+      const user = await renderWithGap();
+      vi.spyOn(storage, "saveEntry").mockRejectedValue(new Error("full"));
+
+      await user.click(screen.getByRole("button", { name: "Edit 2026-11-03" }));
+      await user.clear(weightField());
+      await user.type(weightField(), "88.5{Enter}");
+
+      expect(await screen.findByRole("alert")).toHaveTextContent(
+        "Couldn't save. Try again.",
+      );
+      expect(screen.getByRole("dialog")).toBeVisible();
+    });
+
+    it("can be opened from an expanded phone row", async () => {
+      const user = await renderWithGap();
+      const list = screen.getByRole("list", { name: /Daily figures/ });
+
+      await user.click(within(list).getAllByRole("button")[0]);
+      await user.click(
+        within(list).getByRole("button", { name: "Edit 2026-11-03" }),
+      );
+
+      expect(
+        screen.getByRole("dialog", { name: "Edit 2026-11-03" }),
+      ).toBeVisible();
+    });
   });
 });

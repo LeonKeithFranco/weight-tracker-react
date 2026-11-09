@@ -1,10 +1,10 @@
 # Progress
 
-**Current status:** Milestone 11 is finished. The app is an installable PWA with its own icon, a web app manifest and a service worker that keeps the whole app for offline use. A card offers to reload when a new version is ready, the app asks for persistent storage once there's data to keep, and Settings shows the browser's answer. The charts load from a file of their own, which halved the main JavaScript file. Install, offline use, updates and a server that answers 404 were checked on the desktop and on an Android phone, and a Playwright project checks offline use against a production build. The app has an app shell with four screens and responsive navigation, a logging form, settings for the unit, target and date format, the latest figures and goal date on Home, and error handling that records to the activity log. Settings exports and imports CSV files, with a preview before an import saves anything, and links to the Log page, which lists the activity log and exports it as JSON. The Data screen shows every daily figure newest first, as a full table on desktop and as rows that expand on a phone, with estimated days marked and edit and delete for saved entries. The table has grouped headings for the averages, quiet icon buttons, a highlight on the row under the pointer and the 7-day change in blue or red. The Charts screen has the five charts, Weight trends, Progress, Loss rate, Weekly change and Projection, sharing one frame, with range presets, legend toggles and tooltips in the date format setting. Each section on Home, Charts and Settings sits in a card, and success messages show in green. The user's real history from 2025 and 2026 is imported into the desktop's dev server copy. Unit and component tests run in Vitest, and Playwright runs in CI at desktop and phone sizes, saving a report and traces when a test fails. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
+**Current status:** Milestone 12 is finished apart from one check, that a merged change to the app reaches the installed copies. The app is live on GitHub Pages at `https://leonkeithfranco.github.io/weight-tracker-react/`, installed on the desktop and the phone, works offline on both, and holds the real history on both, so logging moves from the spreadsheet to the app. It takes its base path from the build, and `pipeline.yml`, called `CI/CD`, deploys it after `Checks` passes on `main`. The app is an installable PWA with its own icon, a web app manifest and a service worker that keeps the whole app for offline use. A card offers to reload when a new version is ready, the app asks for persistent storage once there's data to keep, and Settings shows the browser's answer. The charts load from a file of their own, which halved the main JavaScript file. Install, offline use, updates and a server that answers 404 were checked on the desktop and on an Android phone, and a Playwright project checks offline use against a production build. The app has an app shell with four screens and responsive navigation, a logging form, settings for the unit, target and date format, the latest figures and goal date on Home, and error handling that records to the activity log. Settings exports and imports CSV files, with a preview before an import saves anything, and links to the Log page, which lists the activity log and exports it as JSON. The Data screen shows every daily figure newest first, as a full table on desktop and as rows that expand on a phone, with estimated days marked and edit and delete for saved entries. The table has grouped headings for the averages, quiet icon buttons, a highlight on the row under the pointer and the 7-day change in blue or red. The Charts screen has the five charts, Weight trends, Progress, Loss rate, Weekly change and Projection, sharing one frame, with range presets, legend toggles and tooltips in the date format setting. Each section on Home, Charts and Settings sits in a card, and success messages show in green. The user's real history from 2025 and 2026 is imported into the desktop's dev server copy. Unit and component tests run in Vitest, and Playwright runs in CI at desktop and phone sizes, saving a report and traces when a test fails. CI runs on every PR, and the `Protect main` ruleset blocks merging until the `Checks` job passes.
 
-**Next:** Merge the GitHub Pages PR, check the first deploy, install the app from Pages on the phone and desktop, and move the data there by CSV. Then build the container image on its own branch.
+**Next:** Check that the next merged change to the app reaches the installed copies on the desktop and the phone, then start milestone 13, the release.
 
-**In progress:** Milestone 12. The app takes its base path from the build, and `pipeline.yml`, now called `CI/CD`, deploys to GitHub Pages after `Checks` passes on `main`. The repo's Pages source is set to GitHub Actions, and nothing has been deployed yet.
+**In progress:** Nothing.
 
 ## Milestones
 
@@ -27,12 +27,12 @@
 - [x] 9. Data table
 - [x] 10. Charts
 - [x] 11. PWA
-- [ ] 12. GitHub Pages and the container image
+- [ ] 12. GitHub Pages
 - [ ] 13. Release
 
 ### Phase 4: Optional
 
-- [ ] 14. Homelab
+- [ ] 14. Container image and homelab
 
 ## Decision log
 
@@ -61,6 +61,10 @@ Record changes to the spec or plan here, with the reason.
 - The Pages build and deploy are separate jobs, as in GitHub's starter workflow. The build runs the dependencies' code with the read-only token, and only the deploy job, which runs GitHub's own action, has `pages: write` and `id-token: write`. Pull requests skip both.
 - `index.html` is copied to `404.html` in the workflow, not in the Vite build, because only Pages needs it. The container's nginx has its own route fallback.
 - The Pages artifact keeps its default name, `github-pages`, on both actions, with a comment saying how the deploy finds it, rather than writing the name out on each.
+- The first deploy was checked in headless Chromium: a screen's URL opens on a first visit through `404.html`, the service worker's scope is `/weight-tracker-react/`, screens open offline, and links inside the app keep the subfolder. The user then installed the app from Pages on the desktop and the phone, and both work offline.
+- The data moved by importing the spreadsheet CSVs straight into the Pages copy, rather than exporting from `localhost:5173` as planned. The 5173 copy came from the same files and the user kept logging in the spreadsheet, so the files were re-extracted to add 2026-11-09. Both devices imported 220 weigh-ins for 2025 and 304 for 2026, with no invalid rows. Each device keeps its own copy, because nothing syncs, and the activity log at 5173 stays there.
+- The container image moved from milestone 12 to the optional milestone 14, now "Container image and homelab", at the user's suggestion. Self-hosting already works without it: a build with no base path set is static files for the root of a site, which any web server with a route fallback can serve. The way out if Pages ends is the installed app, which keeps working offline, and CSV export. In milestone 14, Quadlet and auto-update run the image, so it's built when it has a use and can't break unnoticed, and images, registries and nginx lead straight into the homelab work. The 1.0 README describes self-hosting the built files, and the release has no image tag.
+- Milestone 12's last check, that a merged change reaches the installed copies with no manual steps, waits for the next change to the app. A docs-only merge redeploys an identical build, so the service worker has no update to offer.
 
 ### 2026-11-08
 

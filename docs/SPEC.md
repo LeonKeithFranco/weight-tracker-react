@@ -10,7 +10,7 @@ It is built primarily for one person. Anyone else can use it from GitHub Pages, 
 
 - Reproduce every figure and chart from the spreadsheet.
 - Make daily logging quick on a phone, and reviewing data comfortable on desktop.
-- Keep deployment simple: a static React app hosted free on GitHub Pages, which anyone can open and install, and also published as one container image for self-hosting.
+- Keep deployment simple: a static React app hosted free on GitHub Pages, which anyone can open and install. Its built files can also be self-hosted on any web server, and a container image for self-hosting comes with the optional homelab work.
 - Act as a learning project for React, TypeScript and CI/CD.
 
 ## Non-goals
@@ -28,7 +28,7 @@ It is built primarily for one person. Anyone else can use it from GitHub Pages, 
 - The app is React only, with no custom backend.
 - Data is stored in the browser's IndexedDB.
 - All data access goes through a storage interface, so a sync or backend option can be added later without rewriting the UI.
-- GitHub Pages and the container only serve static files. Neither ever sees weight data.
+- GitHub Pages and self-hosted copies only serve static files. None of them ever sees weight data.
 
 ## Data model
 
@@ -208,24 +208,32 @@ The app is a single-page app, and each screen has its own URL. Navigation is a b
 
 - The source lives in a public GitHub repo named `weight-tracker-react`, under the MIT license.
 - GitHub Actions runs checks on every push and pull request.
-- The build's base path comes from an environment variable, so the same code serves from `/weight-tracker-react/` on GitHub Pages and from `/` in the container. The router and the PWA manifest follow it.
+- The build's base path comes from an environment variable, so the same code serves from `/weight-tracker-react/` on GitHub Pages and from `/` when self-hosted. The router and the PWA manifest follow it.
 
 ### GitHub Pages
 
 - A push to `main` that passes all checks builds the app and deploys it to GitHub Pages with GitHub Actions.
 - The app is served at `https://<username>.github.io/weight-tracker-react/`, with no custom domain. This is the main copy, and the author's own data lives there.
-- Pages has no route fallback, so the build copies `index.html` to `404.html`, and refreshing a screen's URL still loads the app. Once the app is installed, its service worker serves app routes itself.
+- Pages has no route fallback, so the deploy workflow copies `index.html` to `404.html`, and refreshing a screen's URL still loads the app. Once the app is installed, its service worker serves app routes itself.
 - Every Pages site under one GitHub account shares the `<username>.github.io` origin, so those sites can read each other's browser storage.
 - The GitHub username must be kept. If it were freed, whoever took it next could publish at the same address, and installed copies would update to their code.
 
 ### Self-hosting
 
+- `npm run build` with no base path set gives static files for the root of a site, in `dist`. Any web server can serve them.
+- The server must return `index.html` for app routes, so refreshing a screen's URL works.
+- Off `localhost`, the server needs HTTPS, or the service worker won't run and the app can't be installed.
+- The way out if GitHub Pages ever changes or ends is the installed app, which keeps working offline, and CSV export. Self-host the built files, then move data across by CSV.
+
+### Container image (optional, after 1.0)
+
+Built in the homelab milestone, which runs it.
+
 - Podman is the container tool. The build file is a `Containerfile`.
 - A push to `main` that passes all checks also builds a container image and publishes it to GitHub Container Registry (`ghcr.io`).
 - The image contains the built static files and unprivileged nginx, and runs rootless. Node.js is used only to build the app and is not in the final image.
-- nginx returns `index.html` for app routes, so refreshing a screen's URL works. It keeps `index.html` and the service worker out of long-term caches, and caches hashed JS and CSS files for a long time.
+- nginx returns `index.html` for app routes. It keeps `index.html` and the service worker out of long-term caches, and caches hashed JS and CSS files for a long time.
 - Self-hosters pull the public image and put it behind HTTPS. It is a standard OCI image, so it also works with Docker.
-- The image is also the way out if GitHub Pages ever changes or ends: run it anywhere, then move data across by CSV.
 - The image is built for x86-64 only. ARM hosts aren't supported.
 
 ### Homelab (optional, after 1.0)

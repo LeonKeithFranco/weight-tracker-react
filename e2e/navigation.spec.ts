@@ -65,3 +65,25 @@ test("puts the tabs in the header on desktop", async ({ page, isMobile }) => {
 
   expect(nav.y + nav.height).toBeLessThanOrEqual(header.y + header.height);
 });
+
+test("centres the content on a wide screen, lined up with the header", async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, "A phone is narrower than the content's maximum width");
+  await page.setViewportSize({ width: 1600, height: 900 });
+  await page.goto("/");
+
+  const main = (await page.getByRole("main").boundingBox())!;
+  const leftGap = main.x;
+  const rightGap = 1600 - (main.x + main.width);
+  expect(leftGap).toBeGreaterThan(0);
+  expect(leftGap).toBeCloseTo(rightGap, 0);
+
+  // The app name starts where the screen's heading does.
+  const appName = (await page.getByText("Weight Tracker").boundingBox())!;
+  const heading = (await page
+    .getByRole("heading", { level: 1, name: "Home" })
+    .boundingBox())!;
+  expect(appName.x).toBeCloseTo(heading.x, 0);
+});

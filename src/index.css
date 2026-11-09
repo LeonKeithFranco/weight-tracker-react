@@ -2,6 +2,8 @@
   color-scheme: light dark;
   font-family: system-ui, sans-serif;
   --color-error: light-dark(#b3261e, #f2b8b5);
+  /* The widest the page content gets, shared by the header and each screen. */
+  --content-max-width: 64rem;
 }
 
 body {

@@ -1,29 +1,29 @@
-import { useState } from "react";
-import { Card } from "../components/Card";
-import { LossRateChart } from "../components/LossRateChart";
-import { ProgressChart } from "../components/ProgressChart";
-import { ProjectionChart } from "../components/ProjectionChart";
+import { lazy, Suspense, useState } from "react";
 import { RangePresets } from "../components/RangePresets";
-import { WeeklyChangeChart } from "../components/WeeklyChangeChart";
-import { WeightTrendsChart } from "../components/WeightTrendsChart";
 import { useData } from "../data/dataContext";
 import { useDailyFigures } from "../data/useDailyFigures";
-import { useProjection } from "../data/useProjection";
 import { DEFAULT_RANGE_PRESET, filterByRange } from "../lib/chartRange";
 import { toChartRows } from "../lib/chartRows";
 import styles from "./ChartsScreen.module.css";
 
+// The charts load in their own file the first time they're shown, because
+// Recharts is most of the app's JavaScript and no other screen uses it. The
+// rest of this screen loads with the app, so the heading and presets show at
+// once. `lazy` expects a default export, so the named one is renamed.
+const ChartCards = lazy(() =>
+  import("../components/ChartCards").then((module) => ({
+    default: module.ChartCards,
+  })),
+);
+
 export function ChartsScreen() {
   const figures = useDailyFigures();
-  const projection = useProjection();
   const { displayUnit: unit, dateFormat, targetWeightKg } = useData().settings;
   // One preset for every chart, so they always cover the same days.
   const [preset, setPreset] = useState(DEFAULT_RANGE_PRESET);
   // The figures come from the full history, so running lows and averages are
   // right before the range cuts them down to what's shown.
   const rows = filterByRange(toChartRows(figures, unit), preset);
-  // What every chart needs, passed with one spread.
-  const chartProps = { rows, unit, dateFormat };
 
   return (
     <>
@@ -34,32 +34,16 @@ export function ChartsScreen() {
         <div className={styles.layout}>
           {/* Outside the cards, because it changes every chart below it. */}
           <RangePresets value={preset} onChange={setPreset} />
-          <Card>
-            <WeightTrendsChart {...chartProps} />
-          </Card>
-          <Card>
-            <ProgressChart
-              {...chartProps}
-              hasTarget={targetWeightKg !== null}
-            />
-          </Card>
-          <Card>
-            <LossRateChart {...chartProps} />
-          </Card>
-          <Card>
-            {/* A percentage has no unit, so only the rows and date format. */}
-            <WeeklyChangeChart rows={rows} dateFormat={dateFormat} />
-          </Card>
-          <Card>
-            {/* Uses its own window rather than the preset, so it gets the
-                whole series and its projected range. */}
-            <ProjectionChart
-              {...projection}
+          {/* Nothing shows below the presets for the moment the charts'
+              file takes to load, so nothing above them moves. */}
+          <Suspense fallback={null}>
+            <ChartCards
+              rows={rows}
               unit={unit}
               dateFormat={dateFormat}
               targetWeightKg={targetWeightKg}
             />
-          </Card>
+          </Suspense>
         </div>
       )}
     </>

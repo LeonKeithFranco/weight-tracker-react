@@ -17,8 +17,10 @@ import styles from "./chart.module.css";
 /**
  * Every chart's y-axis is this wide, in pixels, whatever its labels are, so
  * the plots all start at the same point and dates line up down the page.
+ * Wide enough for the longest labels, such as "-0.45%", whose minus sign was
+ * cut off at 48.
  */
-const Y_AXIS_WIDTH = 48;
+const Y_AXIS_WIDTH = 56;
 
 type Props = {
   title: string;

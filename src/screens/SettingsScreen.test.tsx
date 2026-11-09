@@ -2,6 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import packageJson from "../../package.json" with { type: "json" };
 import { DataProvider } from "../data/DataProvider";
 import type { Settings } from "../lib/types";
 import { KG_PER_LB } from "../lib/units";
@@ -213,6 +214,25 @@ describe("SettingsScreen", () => {
       expect(
         await screen.findByText("Couldn't save the date format. Try again."),
       ).toBeVisible();
+    });
+  });
+
+  describe("about", () => {
+    it("shows the version from package.json and links to the repo", async () => {
+      await renderSettings();
+
+      const about = screen.getByRole("region", { name: "About" });
+      expect(
+        within(about).getByText(`Version ${packageJson.version}`),
+      ).toBeVisible();
+      expect(
+        within(about).getByRole("link", {
+          name: "Help and source code on GitHub",
+        }),
+      ).toHaveAttribute(
+        "href",
+        "https://github.com/leonkeithfranco/weight-tracker-react",
+      );
     });
   });
 });

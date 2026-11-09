@@ -1,5 +1,6 @@
 import { useId } from "react";
 import { Link } from "react-router";
+import { AboutApp } from "../components/AboutApp";
 import { Card } from "../components/Card";
 import { CsvExport } from "../components/CsvExport";
 import { CsvImport } from "../components/CsvImport";
@@ -33,7 +34,8 @@ export function SettingsScreen() {
           </Card>
         </div>
         {/* Data: getting weigh-ins in and out, the record of changes, and
-            whether the browser keeps them. */}
+            whether the browser keeps them. About comes last, as in most
+            apps' settings. */}
         <div className={layoutStyles.column}>
           <Card>
             <CsvExport />
@@ -55,6 +57,9 @@ export function SettingsScreen() {
           </Card>
           <Card>
             <StorageStatus />
+          </Card>
+          <Card>
+            <AboutApp />
           </Card>
         </div>
       </div>

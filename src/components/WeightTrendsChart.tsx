@@ -1,9 +1,11 @@
 import { useId } from "react";
-import { CartesianGrid, Legend, Line, LineChart, XAxis, YAxis } from "recharts";
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import type { ChartRow } from "../lib/chartRows";
 import { formatChartLabel } from "../lib/dates";
 import type { WeightUnit } from "../lib/types";
+import { ChartLegend, type ChartSeries } from "./ChartLegend";
 import styles from "./chart.module.css";
+import { useHiddenSeries } from "./useHiddenSeries";
 
 /**
  * Each figure and its running low share a colour, and the low is dashed, so
@@ -41,12 +43,8 @@ const SERIES = [
     color: "var(--series-3)",
     dashed: true,
   },
-] satisfies {
-  key: keyof ChartRow;
-  name: string;
-  color: string;
-  dashed: boolean;
-}[];
+  // `&` narrows the legend's plain `string` key to the row's field names.
+] satisfies (ChartSeries & { key: keyof ChartRow })[];
 
 type Props = {
   rows: ChartRow[];
@@ -55,6 +53,7 @@ type Props = {
 
 export function WeightTrendsChart({ rows, unit }: Props) {
   const headingId = useId();
+  const { hidden, toggle } = useHiddenSeries();
 
   return (
     <section aria-labelledby={headingId}>
@@ -74,13 +73,14 @@ export function WeightTrendsChart({ rows, unit }: Props) {
           stroke="var(--chart-axis)"
           width="auto"
         />
-        {/* `null` keeps the lines' own order. The default sorts by name. */}
-        <Legend itemSorter={null} />
         {SERIES.map((series) => (
           <Line
             key={series.key}
             dataKey={series.key}
             name={series.name}
+            // Hidden lines leave the y-axis too, so it rescales to fit the
+            // lines that are left.
+            hide={hidden.has(series.key)}
             stroke={series.color}
             strokeWidth={2}
             strokeDasharray={series.dashed ? "6 4" : undefined}
@@ -92,6 +92,7 @@ export function WeightTrendsChart({ rows, unit }: Props) {
           />
         ))}
       </LineChart>
+      <ChartLegend series={SERIES} hidden={hidden} onToggle={toggle} />
     </section>
   );
 }

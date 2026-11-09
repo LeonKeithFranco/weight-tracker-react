@@ -1,6 +1,7 @@
 import { useId, useState, type FormEvent } from "react";
 import { useData } from "../data/dataContext";
 import { formatTargetWeight, parseTargetWeight } from "../lib/targetWeight";
+import { FormStatus } from "./FormStatus";
 import styles from "./forms.module.css";
 
 type SaveState =
@@ -96,12 +97,20 @@ export function TargetWeightForm() {
         Save
       </button>
 
-      <p role="status" className={styles.status}>
-        {saveState.status === "saved" &&
-          (saveState.removed ? "Target removed." : "Target saved.")}
-        {saveState.status === "failed" &&
-          "Couldn't save the target. Try again."}
-      </p>
+      <FormStatus
+        success={
+          saveState.status === "saved"
+            ? saveState.removed
+              ? "Target removed."
+              : "Target saved."
+            : null
+        }
+        failure={
+          saveState.status === "failed"
+            ? "Couldn't save the target. Try again."
+            : null
+        }
+      />
     </form>
   );
 }

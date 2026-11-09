@@ -14,20 +14,24 @@ export function AppShell() {
   return (
     <>
       <header className={styles.header}>
-        <span className={styles.appName}>Weight Tracker</span>
-        <nav className={styles.nav} aria-label="Screens">
-          {screens.map((screen) => (
-            <NavLink
-              key={screen.path}
-              to={screen.path}
-              // Without `end`, "/" would count as active on every screen.
-              end={screen.path === "/"}
-              className={styles.link}
-            >
-              {screen.label}
-            </NavLink>
-          ))}
-        </nav>
+        {/* The header's border spans the window, and its contents line up
+            with the screen below. */}
+        <div className={styles.headerContent}>
+          <span className={styles.appName}>Weight Tracker</span>
+          <nav className={styles.nav} aria-label="Screens">
+            {screens.map((screen) => (
+              <NavLink
+                key={screen.path}
+                to={screen.path}
+                // Without `end`, "/" would count as active on every screen.
+                end={screen.path === "/"}
+                className={styles.link}
+              >
+                {screen.label}
+              </NavLink>
+            ))}
+          </nav>
+        </div>
       </header>
       <main className={styles.main}>
         <ScreenErrorBoundary>

@@ -5,6 +5,13 @@
   height: 20rem;
 }
 
+/* The chart takes focus so the arrow keys can move between days. A tap or
+   click focuses it too, so the ring only shows when the keyboard moved focus
+   there, which is what `:focus-visible` tells apart. */
+.chart :focus:not(:focus-visible) {
+  outline: none;
+}
+
 /* Wide screens have room for a taller chart, which spreads out lines that
    sit close together. The same breakpoint as the navigation and Data table. */
 @media (min-width: 48rem) {

@@ -2,6 +2,7 @@ import { useId, useMemo } from "react";
 import { useData } from "../data/dataContext";
 import { useDailyFigures } from "../data/useDailyFigures";
 import { formatDate } from "../lib/dates";
+import { FIGURE_LABELS } from "../lib/figureLabels";
 import { estimateGoalDate, type GoalEstimate } from "../lib/goalDate";
 import { formatAverage, formatPercent, formatWeight } from "../lib/units";
 import styles from "./LatestFigures.module.css";
@@ -46,34 +47,40 @@ export function LatestFigures() {
   const goalText = describeGoal(goal, settings.dateFormat);
 
   const rows: { term: string; value: string }[] = [
-    { term: "Weight", value: `${formatWeight(latest.weightKg, unit)} ${unit}` },
     {
-      term: "7-day average",
+      term: FIGURE_LABELS.weightKg,
+      value: `${formatWeight(latest.weightKg, unit)} ${unit}`,
+    },
+    {
+      term: FIGURE_LABELS.average7Kg,
       value: `${formatAverage(latest.average7Kg, unit)} ${unit}`,
     },
-    { term: "7-day change", value: formatPercent(latest.average7Change) },
     {
-      term: "28-day average",
+      term: FIGURE_LABELS.average7Change,
+      value: formatPercent(latest.average7Change),
+    },
+    {
+      term: FIGURE_LABELS.average28Kg,
       value: `${formatAverage(latest.average28Kg, unit)} ${unit}`,
     },
     {
-      term: "Lowest weight",
+      term: FIGURE_LABELS.lowestWeightKg,
       value: `${formatWeight(latest.lowestWeightKg, unit)} ${unit}`,
     },
     ...(latest.weightToLoseKg === null
       ? []
       : [
           {
-            term: "To lose",
+            term: FIGURE_LABELS.weightToLoseKg,
             value: `${formatWeight(latest.weightToLoseKg, unit)} ${unit}`,
           },
         ]),
     {
-      term: "Lost since start",
+      term: FIGURE_LABELS.weightLossSinceStartKg,
       value: `${formatWeight(latest.weightLossSinceStartKg, unit)} ${unit}`,
     },
     {
-      term: "Loss per week",
+      term: FIGURE_LABELS.weightLossPerWeekKg,
       value: `${formatAverage(latest.weightLossPerWeekKg, unit)} ${unit}`,
     },
     ...(goalText === null ? [] : [{ term: "Goal date", value: goalText }]),

@@ -9,6 +9,7 @@ import {
 } from "recharts";
 import type { ChartRow } from "../lib/chartRows";
 import { formatChartLabel } from "../lib/dates";
+import { FIGURE_LABELS } from "../lib/figureLabels";
 import type { WeightUnit } from "../lib/types";
 import { AVERAGE_DECIMALS, WEIGHT_DECIMALS } from "../lib/units";
 import { ChartLegend } from "./ChartLegend";
@@ -23,42 +24,42 @@ import { useHiddenSeries } from "./useHiddenSeries";
 const SERIES = [
   {
     key: "weight",
-    name: "Weight",
+    name: FIGURE_LABELS.weightKg,
     color: "var(--series-1)",
     dashed: false,
     decimals: WEIGHT_DECIMALS,
   },
   {
     key: "lowestWeight",
-    name: "Lowest weight",
+    name: FIGURE_LABELS.lowestWeightKg,
     color: "var(--series-1)",
     dashed: true,
     decimals: WEIGHT_DECIMALS,
   },
   {
     key: "average7",
-    name: "7-day average",
+    name: FIGURE_LABELS.average7Kg,
     color: "var(--series-2)",
     dashed: false,
     decimals: AVERAGE_DECIMALS,
   },
   {
     key: "lowestAverage7",
-    name: "Lowest 7-day average",
+    name: FIGURE_LABELS.lowestAverage7Kg,
     color: "var(--series-2)",
     dashed: true,
     decimals: AVERAGE_DECIMALS,
   },
   {
     key: "average28",
-    name: "28-day average",
+    name: FIGURE_LABELS.average28Kg,
     color: "var(--series-3)",
     dashed: false,
     decimals: AVERAGE_DECIMALS,
   },
   {
     key: "lowestAverage28",
-    name: "Lowest 28-day average",
+    name: FIGURE_LABELS.lowestAverage28Kg,
     color: "var(--series-3)",
     dashed: true,
     decimals: AVERAGE_DECIMALS,

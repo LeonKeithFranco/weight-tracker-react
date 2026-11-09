@@ -2,9 +2,13 @@ import { defineConfig, devices } from "@playwright/test";
 
 const isCi = !!process.env.CI;
 
+// The production build is served from a subfolder, as on GitHub Pages, so the
+// tests catch a link that ignores the base path. The dev server covers `/`.
+const productionBasePath = "/weight-tracker-react/";
+
 // The production build's address. Its own port, so it never clashes with a
 // dev server or a `vite preview` you're running yourself.
-const productionUrl = "http://localhost:4175";
+const productionUrl = `http://localhost:4175${productionBasePath}`;
 
 export default defineConfig({
   testDir: "./e2e",
@@ -49,6 +53,8 @@ export default defineConfig({
       // Builds first, so the tests never run against an old `dist`. Type
       // checking is left to its own step.
       command: "npx vite build && npx vite preview --port 4175 --strictPort",
+      // Both the build and the preview server read the base path.
+      env: { BASE_PATH: productionBasePath },
       url: productionUrl,
       // Never reused, because a server left running could be serving an
       // older build.

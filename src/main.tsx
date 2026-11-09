@@ -18,7 +18,9 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AppErrorBoundary logger={storage}>
       <DataProvider storage={storage} persistenceApi={navigator.storage}>
-        <BrowserRouter>
+        {/* Routes are written from the base path, so `/charts` means
+            `/weight-tracker-react/charts` on GitHub Pages. */}
+        <BrowserRouter basename={import.meta.env.BASE_URL}>
           <App />
         </BrowserRouter>
       </DataProvider>

@@ -4,6 +4,11 @@ import { configDefaults, defineConfig } from "vitest/config";
 
 // https://vite.dev/config/
 export default defineConfig({
+  // The path the app is served from. GitHub Pages serves it from the repo's
+  // name, such as `/weight-tracker-react/`, and the container from `/`. Vite
+  // puts it in front of every file the build links to, and the app reads it
+  // as `import.meta.env.BASE_URL`.
+  base: process.env.BASE_PATH ?? "/",
   plugins: [
     react(),
     // Writes the web app manifest and a service worker into the build, which

@@ -7,7 +7,9 @@ async function logAndOpenData(page: Page, entries: [string, string][]) {
     await page.getByLabel("Date").fill(date);
     await page.getByLabel("Weight (lb)").fill(weight);
     await page.getByRole("button", { name: "Save" }).click();
-    await expect(page.getByRole("status")).toHaveText(/^Saved/);
+    await expect(
+      page.getByRole("form", { name: "Log your weight" }).getByRole("status"),
+    ).toHaveText(/^Saved/);
   }
   await page
     .getByRole("navigation", { name: "Screens" })

@@ -31,8 +31,10 @@ describe("DataScreen", () => {
   /** Every body row's cell text, top to bottom. */
   function bodyRows() {
     const table = screen.getByRole("table", { name: /Daily figures/ });
-    // The first row holds the headings.
-    const [, ...rows] = within(table).getAllByRole("row");
+    // `thead` and `tbody` are both row groups, and the body comes last, so
+    // this skips the heading rows however many there are.
+    const body = within(table).getAllByRole("rowgroup").at(-1)!;
+    const rows = within(body).getAllByRole("row");
     // `cells` holds a row's `th` and `td` elements, in order.
     return rows.map((row) =>
       Array.from(
@@ -61,27 +63,39 @@ describe("DataScreen", () => {
     ]);
   });
 
-  it("shows every figure, with the unit in the headings", async () => {
+  it("shows every figure, with the averages under shared headings and the unit in the caption", async () => {
     await storage.saveEntry({ date: "2026-11-01", weightKg: 90 });
     await renderData({ displayUnit: "lb", targetWeightKg: 80 });
 
-    const headings = screen
-      .getAllByRole("columnheader")
-      .map((heading) => heading.textContent);
-
-    expect(headings).toEqual([
+    expect(
+      screen.getByRole("table", { name: "Daily figures in lb, newest first" }),
+    ).toBeInTheDocument();
+    const [top, bottom] = screen
+      .getAllByRole("row")
+      .slice(0, 2)
+      .map((row) =>
+        within(row)
+          .getAllByRole("columnheader")
+          .map((heading) => heading.textContent),
+      );
+    expect(top).toEqual([
       "Date",
-      "Weight (lb)",
-      "Lowest weight (lb)",
-      "7-day average (lb)",
-      "Lowest 7-day average (lb)",
-      "7-day change",
-      "28-day average (lb)",
-      "Lowest 28-day average (lb)",
-      "Left to lose (lb)",
-      "Lost since start (lb)",
-      "Loss per week (lb)",
+      "Weight",
+      "Lowest weight",
+      "7-day average",
+      "28-day average",
+      "Left to lose",
+      "Lost since start",
+      "Loss per week",
       "Actions",
+    ]);
+    // Under "7-day average", then "28-day average".
+    expect(bottom).toEqual([
+      "Average",
+      "Lowest",
+      "Change",
+      "Average",
+      "Lowest",
     ]);
     expect(bodyRows()[0][1]).toBe("198.4");
   });

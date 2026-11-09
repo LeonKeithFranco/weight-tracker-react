@@ -13,7 +13,8 @@
     "test:e2e": "playwright test",
     "typecheck": "tsc -b",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "generate-icons": "pwa-assets-generator"
   },
   "dependencies": {
     "dayjs": "^1.11.23",
@@ -38,6 +39,7 @@
     "@types/papaparse": "^5.5.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@vite-pwa/assets-generator": "^2.0.0",
     "@vitejs/plugin-react": "^6.1.2",
     "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.8",

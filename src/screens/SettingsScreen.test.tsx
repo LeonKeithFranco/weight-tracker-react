@@ -218,13 +218,19 @@ describe("SettingsScreen", () => {
   });
 
   describe("about", () => {
-    it("shows the version from package.json and links to the repo", async () => {
+    it("shows the version from package.json and links to the README", async () => {
       await renderSettings();
 
       const about = screen.getByRole("region", { name: "About" });
       expect(
         within(about).getByText(`Version ${packageJson.version}`),
       ).toBeVisible();
+      expect(
+        within(about).getByRole("link", { name: "How to install the app" }),
+      ).toHaveAttribute(
+        "href",
+        "https://github.com/leonkeithfranco/weight-tracker-react#install-the-app",
+      );
       expect(
         within(about).getByRole("link", {
           name: "Help and source code on GitHub",

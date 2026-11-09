@@ -12,6 +12,8 @@ export function AboutApp() {
     <section className={styles.form} aria-labelledby={`${id}-heading`}>
       <h2 id={`${id}-heading`}>About</h2>
       <p className={styles.hint}>Version {__APP_VERSION__}</p>
+      {/* GitHub gives each README heading an anchor made from its text. */}
+      <a href={`${REPO_URL}#install-the-app`}>How to install the app</a>
       <a href={REPO_URL}>Help and source code on GitHub</a>
     </section>
   );

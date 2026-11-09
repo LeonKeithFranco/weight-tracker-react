@@ -8,10 +8,9 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import type { ChartRow } from "../lib/chartRows";
 import { formatChartLabel } from "../lib/dates";
 import { ChartLegend } from "./ChartLegend";
-import { ChartTooltip, type ChartRowSeries } from "./ChartTooltip";
+import { ChartTooltip, type RowSeries, type TooltipRow } from "./ChartTooltip";
 import styles from "./chart.module.css";
 
 /**
@@ -22,12 +21,13 @@ import styles from "./chart.module.css";
  */
 const Y_AXIS_WIDTH = 56;
 
-type Props = {
+/** Generic over the row type, so the Projection chart's rows work too. */
+type Props<Row extends TooltipRow> = {
   title: string;
   /** Which Recharts chart to draw, such as `LineChart`. */
   chart: typeof LineChart | typeof AreaChart | typeof BarChart;
-  rows: ChartRow[];
-  series: ChartRowSeries[];
+  rows: Row[];
+  series: RowSeries<Row>[];
   hidden: ReadonlySet<string>;
   /** Shows the legend's toggle buttons. Left out for a single series. */
   onToggle?: (key: string) => void;
@@ -48,7 +48,7 @@ type Props = {
  * What every chart has in common: the heading, grid, date axis, y-axis,
  * tooltip and legend. Each chart passes in only what makes it different.
  */
-export function ChartFrame({
+export function ChartFrame<Row extends TooltipRow>({
   title,
   chart: Chart,
   rows,
@@ -61,7 +61,7 @@ export function ChartFrame({
   yTickFormatter,
   children,
   footer,
-}: Props) {
+}: Props<Row>) {
   const headingId = useId();
   // A line chart marks the day under the pointer with a thin vertical line.
   // A bar chart shades the whole bar's slot instead, which suits bars better.
@@ -92,7 +92,7 @@ export function ChartFrame({
           // data in. Every series shares one row per day, so the first entry's
           // row is the whole day, whichever series are hidden.
           content={({ active, payload }) => {
-            const row = payload[0]?.payload as ChartRow | undefined;
+            const row = payload[0]?.payload as Row | undefined;
             return active && row ? (
               <ChartTooltip
                 row={row}

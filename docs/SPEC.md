@@ -96,7 +96,7 @@ Display precision: weights to 1 decimal place, averages and rates to 2, percenta
 | Chart         | Type           | Series                                                                                            |
 | ------------- | -------------- | ------------------------------------------------------------------------------------------------- |
 | Weight trends | Line           | Weight, lowest weight, 7-day average, lowest 7-day average, 28-day average, lowest 28-day average |
-| Progress      | Area           | Weight to lose until target, weight loss since start                                              |
+| Progress      | Stacked area   | Weight loss since start, with weight to lose until target stacked on top                          |
 | Loss rate     | Line           | Weight loss per week                                                                              |
 | Weekly change | Bar            | 7-day average % change                                                                            |
 | Projection    | Line with band | Recent weight, simulated median and range, target                                                 |
@@ -106,6 +106,7 @@ Display precision: weights to 1 decimal place, averages and rates to 2, percenta
 - Each series can be toggled from the legend, which keeps the six-line chart readable on a phone.
 - Chart axes use compact date labels, such as `Nov 5`, regardless of the date format setting. Tooltips use the date format setting.
 - Without a target, the Progress chart shows only weight loss since start, and target lines are hidden.
+- The Progress stack's height is the start weight minus the target. Once the weight is below the target, the weight still to lose is negative and is drawn below 0.
 
 ### Goal date estimate
 

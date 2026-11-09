@@ -3,12 +3,18 @@
   color: GrayText;
 }
 
-/* Two columns of figures on a phone, more when there's room. */
+/* Two columns of figures on a phone, and at most three when there's room,
+   so the nine figures with a target set make a full 3 by 3 grid. Each column
+   is at least 9rem, or a third of the row if that's wider, which stops a
+   fourth column fitting. The 1.5rem takes off the two gaps between columns.
+   The tiles stretch to fill the card, so no empty space is left at the end. */
 .figures {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(max(9rem, (100% - 1.5rem) / 3), 1fr)
+  );
   gap: 0.75rem;
-  max-width: 40rem;
   margin: 0;
 }
 

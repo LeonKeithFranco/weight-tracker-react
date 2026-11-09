@@ -8,16 +8,12 @@ import {
 } from "../lib/logForm";
 import type { WeightEntry } from "../lib/types";
 import { formatWeight } from "../lib/units";
+import { WEIGHT_MESSAGES } from "./formMessages";
 import styles from "./forms.module.css";
 
 const DATE_MESSAGES: Record<NonNullable<LogFormErrors["date"]>, string> = {
   missing: "Enter a date.",
   future: "The date can't be in the future.",
-};
-
-const WEIGHT_MESSAGES: Record<NonNullable<LogFormErrors["weight"]>, string> = {
-  missing: "Enter your weight.",
-  invalid: "Enter a number above 0, such as 203.8.",
 };
 
 type SaveState =

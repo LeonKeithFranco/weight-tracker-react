@@ -1,21 +1,10 @@
-import { useId } from "react";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  ReferenceLine,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Area, AreaChart, ReferenceLine } from "recharts";
 import type { ChartRow } from "../lib/chartRows";
-import { formatChartLabel } from "../lib/dates";
 import { FIGURE_LABELS } from "../lib/figureLabels";
 import type { WeightUnit } from "../lib/types";
 import { WEIGHT_DECIMALS } from "../lib/units";
-import { ChartLegend } from "./ChartLegend";
-import { ChartTooltip, type ChartRowSeries } from "./ChartTooltip";
-import styles from "./chart.module.css";
+import { ChartFrame } from "./ChartFrame";
+import type { ChartRowSeries } from "./ChartTooltip";
 import { useHiddenSeries } from "./useHiddenSeries";
 
 const TO_LOSE: ChartRowSeries = {
@@ -56,69 +45,49 @@ type Props = {
  * height and the split between the colours shows the progress.
  */
 export function ProgressChart({ rows, unit, dateFormat, hasTarget }: Props) {
-  const headingId = useId();
   const { hidden, toggle } = useHiddenSeries();
   // Without a target there's nothing to lose towards, so only the loss shows.
   // The first series is drawn at the bottom of the stack.
   const series = hasTarget ? [LOST, TO_LOSE] : [LOST];
 
   return (
-    <section aria-labelledby={headingId}>
-      <h2 id={headingId}>Progress ({unit})</h2>
-      <AreaChart className={styles.chart} data={rows} responsive>
-        <CartesianGrid stroke="var(--chart-grid)" vertical={false} />
-        <XAxis
-          dataKey="date"
-          tickFormatter={formatChartLabel}
-          stroke="var(--chart-axis)"
-          minTickGap={24}
-        />
-        {/* Starts from 0 by default, and stretches below it when a value goes
-            negative, such as once you're below the target. */}
-        <YAxis stroke="var(--chart-axis)" width="auto" />
-        {/* Marks 0, where "left to lose" means the target is reached. */}
-        <ReferenceLine y={0} stroke="var(--chart-axis)" />
-        <Tooltip
-          content={({ active, payload }) => {
-            const row = payload[0]?.payload as ChartRow | undefined;
-            return active && row ? (
-              <ChartTooltip
-                row={row}
-                series={series}
-                hidden={hidden}
-                suffix={` ${unit}`}
-                dateFormat={dateFormat}
-              />
-            ) : null;
-          }}
-          cursor={{ stroke: "var(--chart-axis)" }}
-          isAnimationActive={false}
-        />
-        {series.flatMap((item) =>
-          areasFor(item.key).map((dataKey) => (
-            <Area
-              key={dataKey}
-              dataKey={dataKey}
-              name={item.name}
-              hide={hidden.has(item.key)}
-              stroke={item.color}
-              strokeWidth={2}
-              fill={item.color}
-              // Stacked areas don't overlap, so a fairly strong fill keeps the
-              // two bands easy to tell apart.
-              fillOpacity={0.5}
-              // Areas with the same id are piled on top of each other. The
-              // part past the target is a stack of its own, so it starts at 0
-              // and hangs below the line instead of sitting on the others.
-              stackId={dataKey === "pastTarget" ? "pastTarget" : "progress"}
-              activeDot={{ r: 4 }}
-              type="linear"
-              isAnimationActive={false}
-            />
-          )),
-        )}
-      </AreaChart>
-      <ChartLegend series={series} hidden={hidden} onToggle={toggle} />
-    </section>
+    // No `yDomain`: the default starts from 0 and stretches below it when a
+    // value goes negative, such as once you're below the target.
+    <ChartFrame
+      title={`Progress (${unit})`}
+      chart={AreaChart}
+      rows={rows}
+      series={series}
+      hidden={hidden}
+      onToggle={toggle}
+      suffix={` ${unit}`}
+      dateFormat={dateFormat}
+    >
+      {/* Marks 0, where "left to lose" means the target is reached. */}
+      <ReferenceLine y={0} stroke="var(--chart-axis)" />
+      {series.flatMap((item) =>
+        areasFor(item.key).map((dataKey) => (
+          <Area
+            key={dataKey}
+            dataKey={dataKey}
+            name={item.name}
+            hide={hidden.has(item.key)}
+            stroke={item.color}
+            strokeWidth={2}
+            fill={item.color}
+            // Stacked areas don't overlap, so a fairly strong fill keeps the
+            // two bands easy to tell apart.
+            fillOpacity={0.5}
+            // Areas with the same id are piled on top of each other. The
+            // part past the target is a stack of its own, so it starts at 0
+            // and hangs below the line instead of sitting on the others.
+            stackId={dataKey === "pastTarget" ? "pastTarget" : "progress"}
+            activeDot={{ r: 4 }}
+            type="linear"
+            isAnimationActive={false}
+          />
+        )),
+      )}
+    </ChartFrame>
   );
 }

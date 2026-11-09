@@ -62,6 +62,7 @@ An agent writes code quickly, so the project relies on checks that don't depend 
 - **Check that tests can fail.** A test can pass for the wrong reason. The test for links under GitHub Pages' subfolder was checked by removing the router's base path, and the test for a bug where the Data screen's rows took taps meant for the phone's tab bar, by removing the fix. Seeing a test fail on broken code is what shows it guards anything.
 - **Write rules down.** Preferences explained only in a chat don't reliably reach the next session. Written into `CLAUDE.md`, the decision log and the agent's own memory files, they carried over without being explained again.
 - **Measure before optimising, including with a slowed CPU.** The projection's simulation took 49 ms on the desktop but up to 284 ms with the CPU slowed six times, enough to freeze a phone's screen. It was replaced by a direct calculation of the result the simulation only approximated, which takes microseconds. Loading the charts from a separate file came from measured load times too.
+- **Review with a fresh context.** Before the 1.0 release, the README went through four reviews by subagents that hadn't seen it being written. Each round found claims that overstated the record, including one introduced by the previous round's fix, until a final errors-only check came back clean. A reviewer that doesn't share the writer's assumptions catches what the writer can't.
 
 ## Technical highlights
 
@@ -139,6 +140,8 @@ npm ci
 npm run build
 ```
 
+Without Git, download the source code zip from the [latest release](https://github.com/leonkeithfranco/weight-tracker-react/releases/latest), unzip it, and run `npm ci` and `npm run build` in its folder.
+
 `npm ci` installs exactly the dependency versions in `package-lock.json`, so every build of a release uses the same code. The site is in the `dist` folder. Copy its contents to the web server. To serve the app from a subfolder, such as `https://example.com/weight/`, build with `BASE_PATH=/weight/ npm run build`, with a slash at each end. The path is fixed when the app is built.
 
 The server needs three things:
@@ -189,13 +192,14 @@ Versions follow [semantic versioning](https://semver.org/): a fix bumps the patc
    npm version minor --no-git-tag-version
    ```
 2. Merge the pull request once the checks pass.
-3. Tag the merged commit on `main` and publish the release:
+3. Wait for the `CI/CD` run on `main` to pass and deploy, so the tag names code that passed its checks on `main` and is live. If it fails, the fix is a new commit, and that's the one to tag.
+4. Tag the merged commit on `main` and publish the release. `--verify-tag` makes `gh` stop if the tag isn't on GitHub, rather than creating a new one from a mistyped name:
    ```bash
    git switch main
    git pull
    git tag -a v1.1.0 -m "v1.1.0"
    git push origin v1.1.0
-   gh release create v1.1.0 --generate-notes
+   gh release create v1.1.0 --title "v1.1.0" --generate-notes --verify-tag
    ```
 
 ## License

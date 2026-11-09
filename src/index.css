@@ -13,6 +13,11 @@
   --chart-gain: light-dark(#e34948, #e66767);
   --chart-grid: light-dark(#e1e0d9, #2c2c2a);
   --chart-axis: #898781;
+  /* Section cards: a panel a step away from the page background, lighter
+     than the page in dark mode, and a border for screens where the two
+     backgrounds look the same. */
+  --card-background: light-dark(#f7f7f5, #1e1e1d);
+  --card-border: light-dark(#e1e0d9, #2c2c2a);
   /* The widest the page content gets, shared by the header and each screen. */
   --content-max-width: 64rem;
 }

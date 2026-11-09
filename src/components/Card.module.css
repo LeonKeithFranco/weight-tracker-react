@@ -1,0 +1,13 @@
+/* A panel behind one section, so it's clear what belongs together. */
+.card {
+  padding: 1rem;
+  border: 1px solid var(--card-border);
+  border-radius: 0.75rem;
+  background: var(--card-background);
+}
+
+/* The card's padding already spaces the heading from the edge, so a
+   heading's own top margin would double it. */
+.card h2:first-child {
+  margin-block-start: 0;
+}

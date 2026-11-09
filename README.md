@@ -35,7 +35,7 @@ The code was written with [Claude Code](https://claude.com/claude-code), an AI c
 
 1. **Spec first.** [`docs/SPEC.md`](docs/SPEC.md) defines what the app does, down to how each figure is calculated. Its figure definitions are the source of truth for the calculations, and when a decision changes the spec, the decision log records why.
 2. **Then a plan.** [`docs/PLAN.md`](docs/PLAN.md) sets the stack and splits the work into milestones, each with what it should teach, plus checks that prove the key milestones work. Logic came before UI, so the screens were built on tested code.
-3. **Then small rounds.** Each milestone was built on its own branch, in rounds of about one commit. After each round, the agent explained what it changed and the concepts behind it, then stopped for questions before going on. The lessons below say how this way of working came about.
+3. **Then small rounds.** Each milestone was built on its own branch. From the storage milestone on, the work went in rounds of about one commit. After each round, the agent explained what it changed and the concepts behind it, then stopped for questions before going on. The lessons below say how this way of working came about.
 4. **Then a pull request.** Every milestone merged through a pull request, from the second milestone on, which added CI, only once CI passed, and only when the developer asked for the merge.
 
 ### Who did what

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Card } from "../components/Card";
 import { DeleteEntryDialog } from "../components/DeleteEntryDialog";
 import { EditEntryDialog } from "../components/EditEntryDialog";
 import { FiguresList } from "../components/FiguresList";
@@ -33,10 +34,14 @@ export function DataScreen() {
       ) : (
         <>
           <div className={styles.narrow}>
-            <FiguresList days={newestFirst} {...actions} />
+            <Card>
+              <FiguresList days={newestFirst} {...actions} />
+            </Card>
           </div>
           <div className={styles.wide}>
-            <FiguresTable days={newestFirst} {...actions} />
+            <Card>
+              <FiguresTable days={newestFirst} {...actions} />
+            </Card>
           </div>
         </>
       )}

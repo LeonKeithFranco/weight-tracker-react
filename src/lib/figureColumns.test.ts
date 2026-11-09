@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { calculateDailyFigures } from "./dailyFigures";
-import { columnHeading, figureColumns } from "./figureColumns";
+import { columnGroups, columnHeading, figureColumns } from "./figureColumns";
 import { seriesOf } from "./testSeries";
 import { toKg } from "./units";
 
@@ -61,6 +61,44 @@ describe("figureColumns", () => {
     const values = formattedLastDay([toKg(203.8, "lb")], null, "lb");
 
     expect(values.Weight).toBe("203.8");
+  });
+});
+
+describe("columnGroups", () => {
+  it("puts the averages under shared headings and the rest on their own", () => {
+    const groups = columnGroups(figureColumns(true)).map((group) => [
+      group.label,
+      group.columns.map((column) => column.group?.subLabel ?? column.label),
+    ]);
+
+    expect(groups).toEqual([
+      [null, ["Weight"]],
+      [null, ["Lowest weight"]],
+      ["7-day average", ["Average", "Lowest", "Change"]],
+      ["28-day average", ["Average", "Lowest"]],
+      [null, ["Left to lose"]],
+      [null, ["Lost since start"]],
+      [null, ["Loss per week"]],
+    ]);
+  });
+
+  it("gives each grouped column a heading that names the same figure", () => {
+    // The group and sub-label together should read as the full name, so the
+    // short headings can't drift from the names every other screen uses.
+    const fullNames: Record<string, string> = {
+      "7-day average Average": "7-day average",
+      "7-day average Lowest": "Lowest 7-day average",
+      "7-day average Change": "7-day change",
+      "28-day average Average": "28-day average",
+      "28-day average Lowest": "Lowest 28-day average",
+    };
+
+    for (const column of figureColumns(true)) {
+      if (column.group) {
+        const heading = `${column.group.label} ${column.group.subLabel}`;
+        expect(fullNames[heading]).toBe(column.label);
+      }
+    }
   });
 });
 

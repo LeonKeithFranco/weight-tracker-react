@@ -37,7 +37,7 @@ export function ChartsScreen() {
           {/* A percentage has no unit, so only the rows and date format. */}
           <WeeklyChangeChart rows={rows} dateFormat={dateFormat} />
           {/* Uses its own window rather than the preset, so it gets the
-              whole series and the simulation. */}
+              whole series and its projected range. */}
           <ProjectionChart
             {...projection}
             unit={unit}

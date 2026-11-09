@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import type { SimulatedDay } from "../lib/simulation";
+import type { ProjectedDay } from "../lib/projectedRange";
 import type { DailyPoint } from "../lib/types";
 import { ProjectionChart } from "./ProjectionChart";
 
@@ -9,8 +9,8 @@ const series: DailyPoint[] = [
   { date: "2026-01-02", weightKg: 89.5, isEstimated: false },
 ];
 
-const simulated: SimulatedDay[] = [
-  { date: "2026-01-03", lowKg: 88, medianKg: 89, highKg: 90 },
+const projected: ProjectedDay[] = [
+  { date: "2026-01-03", lowKg: 88, trendKg: 89, highKg: 90 },
 ];
 
 function legendNames() {
@@ -22,7 +22,7 @@ describe("ProjectionChart", () => {
     render(
       <ProjectionChart
         series={series}
-        simulated={simulated}
+        projected={projected}
         unit="kg"
         dateFormat="YYYY-MM-DD"
         targetWeightKg={80}
@@ -31,7 +31,7 @@ describe("ProjectionChart", () => {
 
     expect(legendNames()).toEqual([
       "Weight",
-      "Projected median",
+      "Projected trend",
       "Likely range",
       "Target",
     ]);
@@ -41,7 +41,7 @@ describe("ProjectionChart", () => {
     render(
       <ProjectionChart
         series={series}
-        simulated={simulated}
+        projected={projected}
         unit="kg"
         dateFormat="YYYY-MM-DD"
         targetWeightKg={null}
@@ -51,11 +51,11 @@ describe("ProjectionChart", () => {
     expect(legendNames()).not.toContain("Target");
   });
 
-  it("explains when there isn't enough data to simulate", () => {
+  it("explains when there isn't enough data to project from", () => {
     render(
       <ProjectionChart
         series={series}
-        simulated={null}
+        projected={null}
         unit="kg"
         dateFormat="YYYY-MM-DD"
         targetWeightKg={80}

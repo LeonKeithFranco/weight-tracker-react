@@ -1,0 +1,48 @@
+import type { CalendarDate, DailyFigures, WeightUnit } from "./types";
+import { fromKg } from "./units";
+
+/**
+ * One day as the charts plot it: weights in the display unit and the weekly
+ * change as a percentage. Values aren't rounded, so lines stay smooth, and
+ * tooltips round them when they're shown.
+ */
+export type ChartRow = {
+  date: CalendarDate;
+  isEstimated: boolean;
+  weight: number;
+  lowestWeight: number;
+  average7: number;
+  lowestAverage7: number;
+  /** A percentage, so -1 means a 1% drop. */
+  average7ChangePercent: number;
+  average28: number;
+  lowestAverage28: number;
+  /** `null` when no target is set, which Recharts leaves out of the chart. */
+  weightToLose: number | null;
+  weightLossSinceStart: number;
+  weightLossPerWeek: number;
+};
+
+/** Converts every day's figures into the shape and unit the charts plot. */
+export function toChartRows(
+  figures: DailyFigures[],
+  unit: WeightUnit,
+): ChartRow[] {
+  const convert = (weightKg: number) => fromKg(weightKg, unit);
+
+  return figures.map((day) => ({
+    date: day.date,
+    isEstimated: day.isEstimated,
+    weight: convert(day.weightKg),
+    lowestWeight: convert(day.lowestWeightKg),
+    average7: convert(day.average7Kg),
+    lowestAverage7: convert(day.lowestAverage7Kg),
+    average7ChangePercent: day.average7Change * 100,
+    average28: convert(day.average28Kg),
+    lowestAverage28: convert(day.lowestAverage28Kg),
+    weightToLose:
+      day.weightToLoseKg === null ? null : convert(day.weightToLoseKg),
+    weightLossSinceStart: convert(day.weightLossSinceStartKg),
+    weightLossPerWeek: convert(day.weightLossPerWeekKg),
+  }));
+}

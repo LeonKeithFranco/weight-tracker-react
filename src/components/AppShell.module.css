@@ -27,6 +27,10 @@
   right: 0;
   bottom: 0;
   left: 0;
+  /* Keeps the bar above positioned elements in the screens, such as the Data
+     rows. Without it, those come later in the page, so the browser draws them
+     on top of the bar, and they take its taps. */
+  z-index: 10;
   display: flex;
   border-top: 1px solid GrayText;
   background: Canvas;

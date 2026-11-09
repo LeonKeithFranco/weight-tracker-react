@@ -136,6 +136,46 @@ test("Escape and Cancel close a dialog and return focus to its button", async ({
   await expect(edit).toBeFocused();
 });
 
+test("keeps the tab bar on top of rows scrolled under it", async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(!isMobile, "Only phones have a tab bar fixed over the content");
+  // 30 days, so the rows reach past the bottom of the screen, under the bar.
+  const rows = Array.from({ length: 30 }, (_, index) => {
+    const date = new Date(Date.UTC(2026, 9, 1 + index))
+      .toISOString()
+      .slice(0, 10);
+    return `${date},${(200 - index * 0.2).toFixed(1)}`;
+  });
+  await page.goto("/settings");
+  await page.getByLabel("CSV file").setInputFiles({
+    name: "weights.csv",
+    mimeType: "text/csv",
+    buffer: Buffer.from(["Date,Weight (lbs)", ...rows].join("\n")),
+  });
+  await page.getByRole("button", { name: "Import" }).click();
+  await expect(
+    page.getByRole("region", { name: "Import" }).getByRole("status"),
+  ).toHaveText("Imported 30 entries.");
+
+  // Loaded fresh rather than reached from the tab bar, so it opens at the
+  // top, with the later rows under the bar. The router would keep the scroll
+  // position from Settings.
+  await page.goto("/data");
+  await expect(page.getByRole("listitem").first()).toBeVisible();
+  const nav = page.getByRole("navigation", { name: "Screens" });
+
+  // Before tapping, Playwright checks the tab would get the tap, and retries
+  // while something else is on top of it, such as a row drawn over the bar.
+  // The short timeout makes that fail in seconds rather than at the test's
+  // 30-second limit.
+  await nav.getByRole("link", { name: "Home" }).tap({ timeout: 2_000 });
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Home" }),
+  ).toBeVisible();
+});
+
 test("deletes an entry once confirmed, leaving the day estimated", async ({
   page,
   isMobile,

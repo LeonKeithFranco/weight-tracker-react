@@ -1,9 +1,15 @@
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 import { configDefaults, defineConfig } from "vitest/config";
+import packageJson from "./package.json" with { type: "json" };
 
 // https://vite.dev/config/
 export default defineConfig({
+  // Replaces each `__APP_VERSION__` in the app's code with the version from
+  // `package.json`, written as a string, when the app is built or tested.
+  define: {
+    __APP_VERSION__: JSON.stringify(packageJson.version),
+  },
   // The path the app is served from. GitHub Pages serves it from the repo's
   // name, such as `/weight-tracker-react/`, and the container from `/`. Vite
   // puts it in front of every file the build links to, and the app reads it

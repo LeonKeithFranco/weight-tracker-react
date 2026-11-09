@@ -1,0 +1,6 @@
+/* Recharts measures this box and draws the SVG to fit it, so the chart needs
+   a height from CSS. Its width follows the content column. */
+.chart {
+  width: 100%;
+  height: 20rem;
+}

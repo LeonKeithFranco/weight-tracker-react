@@ -1,0 +1,45 @@
+/* A row of joined buttons, often called a segmented control. */
+.presets {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.preset {
+  flex: 1;
+  min-height: 3rem;
+  max-width: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid ButtonBorder;
+  cursor: pointer;
+}
+
+/* Neighbours share one border rather than doubling it. */
+.preset + .preset {
+  border-inline-start: none;
+}
+
+.preset:first-of-type {
+  border-start-start-radius: 0.5rem;
+  border-end-start-radius: 0.5rem;
+}
+
+.preset:last-of-type {
+  border-start-end-radius: 0.5rem;
+  border-end-end-radius: 0.5rem;
+}
+
+/* The radio itself is hidden, so the label shows its state instead. */
+.preset:has(input:checked) {
+  background: Highlight;
+  color: HighlightText;
+  font-weight: bold;
+}
+
+.preset:has(input:focus-visible) {
+  outline: 2px solid Highlight;
+  outline-offset: 2px;
+}

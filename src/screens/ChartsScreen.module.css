@@ -1,0 +1,7 @@
+/* The range presets, then one card per chart, with the same space between
+   them as the cards on Home. */
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}

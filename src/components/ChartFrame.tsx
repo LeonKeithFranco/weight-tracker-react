@@ -34,6 +34,8 @@ type Props = {
   dateFormat: string;
   /** Borrowed from `YAxis` itself, so it accepts whatever Recharts does. */
   yDomain?: ComponentProps<typeof YAxis>["domain"];
+  /** Formats y-axis labels, such as adding "%". Plain numbers by default. */
+  yTickFormatter?: (value: number) => string;
   /** The chart's own lines, areas or bars, and any reference lines. */
   children: ReactNode;
   /** Shown under the legend, such as a note on what faded lines mean. */
@@ -54,10 +56,17 @@ export function ChartFrame({
   suffix,
   dateFormat,
   yDomain,
+  yTickFormatter,
   children,
   footer,
 }: Props) {
   const headingId = useId();
+  // A line chart marks the day under the pointer with a thin vertical line.
+  // A bar chart shades the whole bar's slot instead, which suits bars better.
+  const cursor =
+    Chart === BarChart
+      ? { fill: "var(--chart-grid)" }
+      : { stroke: "var(--chart-axis)" };
 
   return (
     <section aria-labelledby={headingId}>
@@ -72,6 +81,7 @@ export function ChartFrame({
         />
         <YAxis
           domain={yDomain}
+          tickFormatter={yTickFormatter}
           stroke="var(--chart-axis)"
           width={Y_AXIS_WIDTH}
         />
@@ -91,7 +101,7 @@ export function ChartFrame({
               />
             ) : null;
           }}
-          cursor={{ stroke: "var(--chart-axis)" }}
+          cursor={cursor}
           isAnimationActive={false}
         />
         {children}

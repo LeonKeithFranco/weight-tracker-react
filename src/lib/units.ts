@@ -4,7 +4,7 @@ export const KG_PER_LB = 0.45359237;
 
 export const WEIGHT_DECIMALS = 1;
 export const AVERAGE_DECIMALS = 2;
-const PERCENT_DECIMALS = 2;
+export const PERCENT_DECIMALS = 2;
 
 export function toKg(value: number, unit: WeightUnit): number {
   return unit === "kg" ? value : value * KG_PER_LB;

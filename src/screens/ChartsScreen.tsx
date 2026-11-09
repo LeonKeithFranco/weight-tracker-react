@@ -2,6 +2,7 @@ import { useState } from "react";
 import { LossRateChart } from "../components/LossRateChart";
 import { ProgressChart } from "../components/ProgressChart";
 import { RangePresets } from "../components/RangePresets";
+import { WeeklyChangeChart } from "../components/WeeklyChangeChart";
 import { WeightTrendsChart } from "../components/WeightTrendsChart";
 import { useData } from "../data/dataContext";
 import { useDailyFigures } from "../data/useDailyFigures";
@@ -30,6 +31,8 @@ export function ChartsScreen() {
           <WeightTrendsChart {...chartProps} />
           <ProgressChart {...chartProps} hasTarget={targetWeightKg !== null} />
           <LossRateChart {...chartProps} />
+          {/* A percentage has no unit, so only the rows and date format. */}
+          <WeeklyChangeChart rows={rows} dateFormat={dateFormat} />
         </>
       )}
     </>

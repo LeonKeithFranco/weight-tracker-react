@@ -96,6 +96,7 @@ export function FiguresTable({ days, onEdit, onDelete }: FiguresTableProps) {
                   <EntryActions
                     day={day}
                     shownDate={shownDate}
+                    iconsOnly
                     onEdit={onEdit}
                     onDelete={onDelete}
                   />

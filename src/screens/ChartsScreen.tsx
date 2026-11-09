@@ -8,7 +8,7 @@ import { toChartRows } from "../lib/chartRows";
 
 export function ChartsScreen() {
   const figures = useDailyFigures();
-  const unit = useData().settings.displayUnit;
+  const { displayUnit: unit, dateFormat } = useData().settings;
   // One preset for every chart, so they always cover the same days.
   const [preset, setPreset] = useState(DEFAULT_RANGE_PRESET);
   // The figures come from the full history, so running lows and averages are
@@ -23,7 +23,7 @@ export function ChartsScreen() {
       ) : (
         <>
           <RangePresets value={preset} onChange={setPreset} />
-          <WeightTrendsChart rows={rows} unit={unit} />
+          <WeightTrendsChart rows={rows} unit={unit} dateFormat={dateFormat} />
         </>
       )}
     </>

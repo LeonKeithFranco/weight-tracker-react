@@ -7,6 +7,8 @@ export type ChartSeries = {
   name: string;
   color: string;
   dashed: boolean;
+  /** How many decimal places tooltips round its values to. */
+  decimals: number;
 };
 
 type Props = {

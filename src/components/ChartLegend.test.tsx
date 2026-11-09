@@ -4,8 +4,14 @@ import { describe, expect, it, vi } from "vitest";
 import { ChartLegend, type ChartSeries } from "./ChartLegend";
 
 const series: ChartSeries[] = [
-  { key: "weight", name: "Weight", color: "red", dashed: false },
-  { key: "lowestWeight", name: "Lowest weight", color: "red", dashed: true },
+  { key: "weight", name: "Weight", color: "red", dashed: false, decimals: 1 },
+  {
+    key: "lowestWeight",
+    name: "Lowest weight",
+    color: "red",
+    dashed: true,
+    decimals: 1,
+  },
 ];
 
 describe("ChartLegend", () => {

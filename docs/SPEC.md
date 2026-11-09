@@ -256,7 +256,7 @@ These follow from browser-only storage and should appear in the README:
 
 ## Testing
 
-Tests guard against regressions and are written alongside or after the code, not test-first.
+Tests guard against regressions and are written after the code, once its behaviour is right, not test-first. A bug fix starts with a regression test that's seen to fail.
 
 - **Unit:** units, dates, interpolation, every daily figure, goal date, projected range, CSV parsing
 - **Component:** the form, table and settings behavior

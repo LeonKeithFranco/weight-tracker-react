@@ -1,6 +1,7 @@
 import { useId, useState, type FormEvent } from "react";
 import { useData } from "../data/dataContext";
 import { formatDate, localToday, normalizeDateFormat } from "../lib/dates";
+import { FormStatus } from "./FormStatus";
 import styles from "./forms.module.css";
 
 const DAYJS_FORMAT_DOCS = "https://day.js.org/docs/en/display/format";
@@ -79,11 +80,14 @@ export function DateFormatForm() {
         Save
       </button>
 
-      <p role="status" className={styles.status}>
-        {saveState.status === "saved" && "Date format saved."}
-        {saveState.status === "failed" &&
-          "Couldn't save the date format. Try again."}
-      </p>
+      <FormStatus
+        success={saveState.status === "saved" ? "Date format saved." : null}
+        failure={
+          saveState.status === "failed"
+            ? "Couldn't save the date format. Try again."
+            : null
+        }
+      />
     </form>
   );
 }

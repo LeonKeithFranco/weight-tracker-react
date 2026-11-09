@@ -11,6 +11,7 @@ import {
 import { localToday } from "../lib/dates";
 import { previewImport, type ImportPreview } from "../lib/importPreview";
 import styles from "./CsvImport.module.css";
+import { FormStatus } from "./FormStatus";
 import formStyles from "./forms.module.css";
 
 type RejectReason =
@@ -153,16 +154,22 @@ export function CsvImport() {
         />
       )}
 
-      <p role="status" className={formStyles.status}>
-        {importState.status === "imported" &&
-          `Imported ${plural(
-            importState.counts.newCount + importState.counts.overwriteCount,
-            "entry",
-            "entries",
-          )}.`}
-        {importState.status === "failed" &&
-          "Couldn't import the file. Nothing was changed. Try again."}
-      </p>
+      <FormStatus
+        success={
+          importState.status === "imported"
+            ? `Imported ${plural(
+                importState.counts.newCount + importState.counts.overwriteCount,
+                "entry",
+                "entries",
+              )}.`
+            : null
+        }
+        failure={
+          importState.status === "failed"
+            ? "Couldn't import the file. Nothing was changed. Try again."
+            : null
+        }
+      />
     </section>
   );
 }

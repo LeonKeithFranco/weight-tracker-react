@@ -1,5 +1,6 @@
 import { useEffect, useId, useState } from "react";
 import { Link } from "react-router";
+import { FormStatus } from "../components/FormStatus";
 import formStyles from "../components/forms.module.css";
 import { useData } from "../data/dataContext";
 import { describeError } from "../errors/describeError";
@@ -92,11 +93,16 @@ export function LogScreen() {
             >
               Export JSON
             </button>
-            <p role="status" className={formStyles.status}>
-              {exportState === "exported" && "Exported the activity log."}
-              {exportState === "failed" &&
-                "Couldn't export the activity log. Try again."}
-            </p>
+            <FormStatus
+              success={
+                exportState === "exported" ? "Exported the activity log." : null
+              }
+              failure={
+                exportState === "failed"
+                  ? "Couldn't export the activity log. Try again."
+                  : null
+              }
+            />
           </div>
 
           <ol className={styles.entries} aria-label="Log entries">

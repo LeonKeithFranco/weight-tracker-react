@@ -4,6 +4,7 @@ import { describeError } from "../errors/describeError";
 import { downloadFile } from "../files/downloadFile";
 import { formatCsv } from "../lib/csvExport";
 import { localToday } from "../lib/dates";
+import { FormStatus } from "./FormStatus";
 import styles from "./forms.module.css";
 
 type ExportState =
@@ -59,12 +60,18 @@ export function CsvExport() {
         Export CSV
       </button>
 
-      <p role="status" className={styles.status}>
-        {exportState.status === "exported" &&
-          `Exported ${exportState.count} ${exportState.count === 1 ? "entry" : "entries"}.`}
-        {exportState.status === "failed" &&
-          "Couldn't export your data. Try again."}
-      </p>
+      <FormStatus
+        success={
+          exportState.status === "exported"
+            ? `Exported ${exportState.count} ${exportState.count === 1 ? "entry" : "entries"}.`
+            : null
+        }
+        failure={
+          exportState.status === "failed"
+            ? "Couldn't export your data. Try again."
+            : null
+        }
+      />
     </section>
   );
 }

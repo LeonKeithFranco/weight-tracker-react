@@ -2,6 +2,8 @@
   color-scheme: light dark;
   font-family: system-ui, sans-serif;
   --color-error: light-dark(#b3261e, #f2b8b5);
+  /* Both pass the 4.5:1 contrast needed for text, on the page and on a card. */
+  --color-success: light-dark(#1a7f37, #6fdd8b);
   /* Chart series colours, checked for colour blindness in this order. Each
      mode has its own steps, so lines stay clear on a dark background. */
   --series-1: light-dark(#2a78d6, #3987e5);

@@ -8,6 +8,7 @@ import {
 } from "../lib/logForm";
 import type { WeightEntry } from "../lib/types";
 import { formatWeight } from "../lib/units";
+import { FormStatus } from "./FormStatus";
 import { WEIGHT_MESSAGES } from "./formMessages";
 import styles from "./forms.module.css";
 
@@ -117,12 +118,18 @@ export function LogForm() {
         Save
       </button>
 
-      <p role="status" className={styles.status}>
-        {saveState.status === "saved" &&
-          `Saved ${formatWeight(saveState.entry.weightKg, settings.displayUnit)} ${settings.displayUnit} for ${formatDate(saveState.entry.date, settings.dateFormat)}.`}
-        {saveState.status === "failed" &&
-          "Couldn't save. Your entry is still in the form, so try again."}
-      </p>
+      <FormStatus
+        success={
+          saveState.status === "saved"
+            ? `Saved ${formatWeight(saveState.entry.weightKg, settings.displayUnit)} ${settings.displayUnit} for ${formatDate(saveState.entry.date, settings.dateFormat)}.`
+            : null
+        }
+        failure={
+          saveState.status === "failed"
+            ? "Couldn't save. Your entry is still in the form, so try again."
+            : null
+        }
+      />
     </form>
   );
 }

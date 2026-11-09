@@ -89,6 +89,7 @@ Record changes to the spec or plan here, with the reason.
 - The table's Edit and Delete buttons are small pencil and bin icons from `lucide-react`, a new dependency, because two text buttons on every row drew the eye from the figures. The words stay in the buttons for screen readers, so their names are unchanged, and in a tooltip for mouse users. The phone rows show the icon beside the word, because they only show one day's buttons and touch screens have no tooltips. Showing the buttons only on hover was rejected, because it hides them from touch and keyboard users.
 - The 7-day change is blue for a loss and red for a gain, as in the Weekly change chart. Text needs more contrast than chart marks, so `--text-loss` and `--text-gain` are the same hues, darker in light mode and lighter in dark. The colour follows the rounded value as shown, so "0.00%" has none, and estimated days stay grey.
 - "Estimated" is a pill shared by both layouts, the row under the pointer is shaded on desktop, and the open day on a phone is tinted.
+- Settings stays as it is, in two columns sized to their forms. The user is happy with it, so the settings-row layout noted above as an option for later is dropped.
 
 ### 2026-11-07
 

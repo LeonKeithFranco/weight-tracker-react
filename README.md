@@ -101,14 +101,14 @@ Other libraries include React Router, Day.js, PapaParse and simple-statistics.
 
 Installing gives the app its own icon and window, and makes your browser more likely to keep its data. It works offline either way, after the first visit.
 
-| Device and browser               | How to install                                                                                                                                                               |
-| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Android, in Chrome               | Open the menu (⋮) and choose **Add to home screen** or **Install app**, then **Install**.                                                                                    |
-| iPhone or iPad, in Safari        | Tap **Share**, which newer versions put under the **⋯** button, then **Add to Home Screen**. Other browsers on iOS 16.4 and later have the same option in their Share menu.  |
-| Windows, Mac or Linux, in Chrome | Click the install icon at the right end of the address bar, or open the menu (⋮) and look for **Install**.                                                                   |
-| Windows, Mac or Linux, in Edge   | Click **App available** in the address bar, or open the menu (…) and choose **Apps**, then **Install this site as an app**.                                                  |
-| Mac, in Safari 17 or later       | Choose **File**, then **Add to Dock**.                                                                                                                                       |
-| Firefox                          | On Android, open the menu and choose **Add to Home screen**. On a computer, Firefox may not offer to install it, so use the app in a tab, or install it from Chrome or Edge. |
+| Device and browser                      | How to install                                                                                                                                                               |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Android, in Chrome                      | Open the menu (⋮) and choose **Add to home screen** or **Install app**, then **Install**.                                                                                    |
+| iPhone or iPad, in Safari               | Tap **Share**, which newer versions put under the **⋯** button, then **Add to Home Screen**. Other browsers on iOS 16.4 and later have the same option in their Share menu.  |
+| Windows, Mac or Linux, in Chrome        | Click the install icon at the right end of the address bar, or open the menu (⋮) and look for **Install**.                                                                   |
+| Windows, Mac or Linux, in Edge          | Click **App available** in the address bar, or open the menu (…) and choose **Apps**, then **Install this site as an app**.                                                  |
+| Mac, in Safari on macOS Sonoma or later | Choose **File**, then **Add to Dock**.                                                                                                                                       |
+| Firefox                                 | On Android, open the menu and choose **Add to Home screen**. On a computer, Firefox may not offer to install it, so use the app in a tab, or install it from Chrome or Edge. |
 
 Browsers rename these menus now and then, so the exact words may differ.
 

@@ -65,6 +65,25 @@ const SERIES = [
   },
 ] satisfies ChartRowSeries[];
 
+/** Faint enough to read as "not measured", but still easy to follow. */
+const ESTIMATED_OPACITY = 0.35;
+
+/**
+ * The lines that draw one series. The weight is drawn twice: its estimated
+ * stretches faded underneath, then its logged stretches solid on top.
+ */
+function linesFor(
+  key: keyof ChartRow,
+): { dataKey: keyof ChartRow; opacity: number }[] {
+  if (key === "weight") {
+    return [
+      { dataKey: "estimatedWeight", opacity: ESTIMATED_OPACITY },
+      { dataKey: "realWeight", opacity: 1 },
+    ];
+  }
+  return [{ dataKey: key, opacity: 1 }];
+}
+
 type Props = {
   rows: ChartRow[];
   unit: WeightUnit;
@@ -112,27 +131,33 @@ export function WeightTrendsChart({ rows, unit, dateFormat }: Props) {
           cursor={{ stroke: "var(--chart-axis)" }}
           isAnimationActive={false}
         />
-        {SERIES.map((series) => (
-          <Line
-            key={series.key}
-            dataKey={series.key}
-            name={series.name}
-            // Hidden lines leave the y-axis too, so it rescales to fit the
-            // lines that are left.
-            hide={hidden.has(series.key)}
-            stroke={series.color}
-            strokeWidth={2}
-            strokeDasharray={series.dashed ? "6 4" : undefined}
-            dot={false}
-            activeDot={{ r: 4 }}
-            // Straight lines between days, matching how missed days are
-            // estimated, rather than curves that overshoot the data.
-            type="linear"
-            isAnimationActive={false}
-          />
-        ))}
+        {SERIES.flatMap((series) =>
+          linesFor(series.key).map(({ dataKey, opacity }) => (
+            <Line
+              key={dataKey}
+              dataKey={dataKey}
+              name={series.name}
+              // Hidden lines leave the y-axis too, so it rescales to fit the
+              // lines that are left.
+              hide={hidden.has(series.key)}
+              stroke={series.color}
+              strokeOpacity={opacity}
+              strokeWidth={2}
+              strokeDasharray={series.dashed ? "6 4" : undefined}
+              dot={false}
+              activeDot={{ r: 4 }}
+              // Straight lines between days, matching how missed days are
+              // estimated, rather than curves that overshoot the data.
+              type="linear"
+              isAnimationActive={false}
+            />
+          )),
+        )}
       </LineChart>
       <ChartLegend series={SERIES} hidden={hidden} onToggle={toggle} />
+      <p className={styles.note}>
+        Faded parts of the weight line are estimated days.
+      </p>
     </section>
   );
 }

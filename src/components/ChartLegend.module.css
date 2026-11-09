@@ -1,4 +1,5 @@
-/* A list for screen readers ("list, 6 items"), laid out as a wrapping row. */
+/* A list for screen readers ("list, 6 items"). On a phone it's a wrapping
+   row under the chart. */
 .legend {
   display: flex;
   flex-wrap: wrap;
@@ -8,7 +9,17 @@
   list-style: none;
 }
 
-/* Looks like plain text, but is a full-size button that's easy to tap. */
+/* Beside the chart on wider screens, one item per row. */
+@media (min-width: 48rem) {
+  .legend {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    margin: 0;
+  }
+}
+
+/* As a button, it looks like plain text but is full size, so it's easy to
+   tap. Plain items share the look, so both kinds of legend line up. */
 .item {
   display: flex;
   align-items: center;
@@ -20,13 +31,17 @@
   background: none;
   color: inherit;
   font: inherit;
+  text-align: start;
+}
+
+button.item {
   cursor: pointer;
 }
 
 /* Only where a mouse can hover. A phone treats a tap as a hover that stays
    until the next tap somewhere else, which would leave the item shaded. */
 @media (hover: hover) {
-  .item:hover {
+  button.item:hover {
     background: color-mix(in srgb, currentColor 8%, transparent);
   }
 }

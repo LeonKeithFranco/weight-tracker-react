@@ -5,9 +5,14 @@
   height: 20rem;
 }
 
-/* A short explanation under a chart's legend, quieter than the legend. */
+/* The plot and its legend. On a phone the legend goes underneath. */
+.body {
+  display: grid;
+}
+
+/* A short explanation under the chart, quieter than the legend. */
 .note {
-  margin: 0.25rem 0 0;
+  margin: 0.5rem 0 0;
   font-size: 0.875rem;
   opacity: 0.8;
 }
@@ -24,5 +29,15 @@
 @media (min-width: 48rem) {
   .chart {
     height: 28rem;
+  }
+
+  /* The legend goes in a column on the right. The column is the same width
+     on every chart, so the plots are too, and dates line up down the page.
+     `minmax(0, 1fr)` lets the plot shrink below the SVG's last drawn width
+     when the window narrows, which plain `1fr` wouldn't. */
+  .body {
+    grid-template-columns: minmax(0, 1fr) 13rem;
+    gap: 1rem;
+    align-items: start;
   }
 }

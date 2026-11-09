@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 import { formatChartLabel } from "../lib/dates";
-import { ChartLegend } from "./ChartLegend";
+import { ChartLegend, type LegendItem } from "./ChartLegend";
 import { ChartTooltip, type RowSeries, type TooltipRow } from "./ChartTooltip";
 import styles from "./chart.module.css";
 
@@ -34,8 +34,12 @@ type Props<Row extends TooltipRow> = {
   rows: Row[];
   series: RowSeries<Row>[];
   hidden: ReadonlySet<string>;
-  /** Shows the legend's toggle buttons. Left out for a single series. */
+  /** Makes the legend's items toggle buttons. Left out for a single series,
+   * whose legend is plain text, because hiding it would empty the chart. */
   onToggle?: (key: string) => void;
+  /** What the legend lists, when that isn't one item per series, such as
+   * the two colours of the Weekly change bars. */
+  legendItems?: LegendItem[];
   /** Added after each tooltip value, such as " lb" or "%". */
   suffix: string;
   dateFormat: string;
@@ -60,6 +64,7 @@ export function ChartFrame<Row extends TooltipRow>({
   series,
   hidden,
   onToggle,
+  legendItems = series,
   suffix,
   dateFormat,
   yDomain,
@@ -78,44 +83,44 @@ export function ChartFrame<Row extends TooltipRow>({
   return (
     <section aria-labelledby={headingId}>
       <h2 id={headingId}>{title}</h2>
-      <Chart className={styles.chart} data={rows} responsive>
-        <CartesianGrid stroke="var(--chart-grid)" vertical={false} />
-        <XAxis
-          dataKey="date"
-          tickFormatter={formatChartLabel}
-          stroke="var(--chart-axis)"
-          minTickGap={24}
-        />
-        <YAxis
-          domain={yDomain}
-          tickFormatter={yTickFormatter}
-          stroke="var(--chart-axis)"
-          width={Y_AXIS_WIDTH}
-        />
-        <Tooltip
-          // Recharts works out which day is under the pointer and passes its
-          // data in. Every series shares one row per day, so the first entry's
-          // row is the whole day, whichever series are hidden.
-          content={({ active, payload }) => {
-            const row = payload[0]?.payload as Row | undefined;
-            return active && row ? (
-              <ChartTooltip
-                row={row}
-                series={series}
-                hidden={hidden}
-                suffix={suffix}
-                dateFormat={dateFormat}
-              />
-            ) : null;
-          }}
-          cursor={cursor}
-          isAnimationActive={false}
-        />
-        {children}
-      </Chart>
-      {onToggle && (
-        <ChartLegend series={series} hidden={hidden} onToggle={onToggle} />
-      )}
+      <div className={styles.body}>
+        <Chart className={styles.chart} data={rows} responsive>
+          <CartesianGrid stroke="var(--chart-grid)" vertical={false} />
+          <XAxis
+            dataKey="date"
+            tickFormatter={formatChartLabel}
+            stroke="var(--chart-axis)"
+            minTickGap={24}
+          />
+          <YAxis
+            domain={yDomain}
+            tickFormatter={yTickFormatter}
+            stroke="var(--chart-axis)"
+            width={Y_AXIS_WIDTH}
+          />
+          <Tooltip
+            // Recharts works out which day is under the pointer and passes its
+            // data in. Every series shares one row per day, so the first entry's
+            // row is the whole day, whichever series are hidden.
+            content={({ active, payload }) => {
+              const row = payload[0]?.payload as Row | undefined;
+              return active && row ? (
+                <ChartTooltip
+                  row={row}
+                  series={series}
+                  hidden={hidden}
+                  suffix={suffix}
+                  dateFormat={dateFormat}
+                />
+              ) : null;
+            }}
+            cursor={cursor}
+            isAnimationActive={false}
+          />
+          {children}
+        </Chart>
+        <ChartLegend items={legendItems} hidden={hidden} onToggle={onToggle} />
+      </div>
       {footer}
     </section>
   );

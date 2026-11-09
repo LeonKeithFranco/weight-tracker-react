@@ -27,8 +27,12 @@
 - [x] 9. Data table
 - [ ] 10. Charts
 - [ ] 11. PWA
-- [ ] 12. Containers and deployment
+- [ ] 12. GitHub Pages and the container image
 - [ ] 13. Release
+
+### Phase 4: Optional
+
+- [ ] 14. Homelab
 
 ## Decision log
 
@@ -52,6 +56,11 @@ Record changes to the spec or plan here, with the reason.
 - Milestone 8's check now counts real weigh-ins rather than days. The 309 days in the 2026 sheet include days it filled with estimates, which were pasted in as plain values. A reading counts as real when it fits the scale's 0.2 lb steps, which gave 220 weigh-ins for 2025 and 303 for 2026 on 2026-11-08. The figures can differ near the days the sheet estimated with random values, because the app interpolates in a straight line there.
 - The PWA is tested on the phone through Chrome's USB port forwarding, which makes the dev server count as `localhost`. Service workers need HTTPS or `localhost`, and HTTPS only arrives with deployment.
 - The app requests persistent storage in milestone 11, reversing the spec's non-goal. By default, browser storage is best-effort, and a browser low on space may delete a site's data without asking. The user doesn't want that risk for their weight history, even though it's small for an installed app used daily. It's requested in the PWA milestone because Chrome mostly grants it to installed apps. The browser can refuse, so the app works the same either way, and Settings shows the answer. CSV export stays the backup, because persistent storage doesn't stop clearing site data, uninstalling or changing phones.
+- GitHub Pages is now the main home for the app and for the user's own data, at `<username>.github.io/weight-tracker-react/`. The user wants anyone to be able to use and install it, and Pages is free, has HTTPS and works away from home Wi-Fi. It also removes the hardest homelab steps from the path to 1.0: a root certificate on every device, mDNS on Android, rootless port 443 and stopping the laptop suspending. Milestone 12 becomes "GitHub Pages and the container image", and the user's data moves once by CSV to the Pages address there, as already planned for "the deployed copy".
+- Self-hosting stays, slimmed down to the container image: a multi-stage `Containerfile`, nginx with the route fallback, an image on `ghcr.io` and a README section. It keeps "self-hostable" true and is the way out if Pages changes or ends. It costs about one round of work and still teaches images, registries and nginx.
+- The homelab setup moves to an optional milestone 14 after the release, in a new phase 4. Quadlet, systemd, auto-update, Caddy with its certificate authority and mDNS are still learning goals, but no longer block 1.0 or hold real data. The homelab copy would have its own, separate browser data.
+- No custom domain, because the user doesn't want to pay for anything. Two small risks stay and are in the plan's risks table: all Pages sites on the account share the `<username>.github.io` origin, and a freed username could be taken by someone who then publishes at the same address.
+- One codebase serves from `/weight-tracker-react/` on Pages and from `/` in the container. Vite's base path comes from a build environment variable, React Router's `basename` and the manifest follow it, and the Pages build copies `index.html` to `404.html` because Pages has no route fallback. Milestone 11 already makes the manifest follow the base path.
 
 ### 2026-11-07
 

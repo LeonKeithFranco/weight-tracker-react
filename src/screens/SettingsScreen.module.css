@@ -1,0 +1,24 @@
+/* Phones: one card per row, preferences first, then data. */
+.layout {
+  display: grid;
+  gap: 2rem;
+}
+
+/* Each column stacks its cards at their own heights. */
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Wider screens: preferences on the left and data on the right, since each
+   form is at most 20rem wide and a full-width card would be mostly empty.
+   The columns don't share rows, so a card never stretches to match one
+   beside it, and an import preview only lengthens its own column. `start`
+   keeps the shorter column at its own height too. */
+@media (min-width: 48rem) {
+  .layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}

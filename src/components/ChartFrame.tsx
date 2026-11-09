@@ -14,6 +14,12 @@ import { ChartLegend } from "./ChartLegend";
 import { ChartTooltip, type ChartRowSeries } from "./ChartTooltip";
 import styles from "./chart.module.css";
 
+/**
+ * Every chart's y-axis is this wide, in pixels, whatever its labels are, so
+ * the plots all start at the same point and dates line up down the page.
+ */
+const Y_AXIS_WIDTH = 48;
+
 type Props = {
   title: string;
   /** Which Recharts chart to draw, such as `LineChart`. */
@@ -64,7 +70,11 @@ export function ChartFrame({
           stroke="var(--chart-axis)"
           minTickGap={24}
         />
-        <YAxis domain={yDomain} stroke="var(--chart-axis)" width="auto" />
+        <YAxis
+          domain={yDomain}
+          stroke="var(--chart-axis)"
+          width={Y_AXIS_WIDTH}
+        />
         <Tooltip
           // Recharts works out which day is under the pointer and passes its
           // data in. Every series shares one row per day, so the first entry's

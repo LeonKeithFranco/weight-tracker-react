@@ -2,6 +2,10 @@ import { defineConfig, devices } from "@playwright/test";
 
 const isCi = !!process.env.CI;
 
+// The production build's address. Its own port, so it never clashes with a
+// dev server or a `vite preview` you're running yourself.
+const productionUrl = "http://localhost:4175";
+
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
@@ -15,13 +19,40 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   projects: [
-    { name: "desktop", use: { ...devices["Desktop Chrome"] } },
-    { name: "phone", use: { ...devices["Pixel 7"] } },
+    // Against the dev server, which has no service worker.
+    {
+      name: "desktop",
+      testIgnore: "production/**",
+      use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      name: "phone",
+      testIgnore: "production/**",
+      use: { ...devices["Pixel 7"] },
+    },
+    // Against a production build, for what only it has, such as working
+    // offline.
+    {
+      name: "production",
+      testMatch: "production/**",
+      use: { ...devices["Desktop Chrome"], baseURL: productionUrl },
+    },
   ],
-  webServer: {
-    command: "npm run dev",
-    url: "http://localhost:5173",
-    // Locally, reuses a dev server that's already running.
-    reuseExistingServer: !isCi,
-  },
+  webServer: [
+    {
+      command: "npm run dev",
+      url: "http://localhost:5173",
+      // Locally, reuses a dev server that's already running.
+      reuseExistingServer: !isCi,
+    },
+    {
+      // Builds first, so the tests never run against an old `dist`. Type
+      // checking is left to its own step.
+      command: "npx vite build && npx vite preview --port 4175 --strictPort",
+      url: productionUrl,
+      // Never reused, because a server left running could be serving an
+      // older build.
+      reuseExistingServer: false,
+    },
+  ],
 });

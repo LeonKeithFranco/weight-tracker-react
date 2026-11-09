@@ -78,7 +78,7 @@ test("the date format applies to logging and survives a reload", async ({
   await weightField(page, "lb").fill("203.8");
   await page.getByRole("button", { name: "Save" }).click();
 
-  await expect(page.getByRole("status")).toHaveText(
-    /^Saved 203\.8 lb for \d{1,2} [A-Z][a-z]{2} \d{4}\.$/,
-  );
+  await expect(
+    page.getByRole("form", { name: "Log your weight" }).getByRole("status"),
+  ).toHaveText(/^Saved 203\.8 lb for \d{1,2} [A-Z][a-z]{2} \d{4}\.$/);
 });

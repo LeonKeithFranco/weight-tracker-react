@@ -6,7 +6,9 @@ test("exports logged weights as a CSV file in kg", async ({ page }) => {
   await page.getByLabel("Date").fill("2026-01-05");
   await page.getByLabel("Weight (lb)").fill("203.8");
   await page.getByRole("button", { name: "Save" }).click();
-  await expect(page.getByRole("status")).toContainText("Saved");
+  await expect(
+    page.getByRole("form", { name: "Log your weight" }).getByRole("status"),
+  ).toContainText("Saved");
 
   await page.goto("/settings");
   // Starts waiting before the click, so a download that starts at once

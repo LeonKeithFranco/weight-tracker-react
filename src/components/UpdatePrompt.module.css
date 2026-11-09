@@ -1,0 +1,49 @@
+/* Floats at the bottom of the screen, above the phone's tab bar. */
+.region {
+  position: fixed;
+  right: 1rem;
+  bottom: 4.5rem;
+  left: 1rem;
+  /* Above the tab bar's 10, so the card is never drawn under it. */
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  /* The empty region lets taps through to the page below. */
+  pointer-events: none;
+}
+
+.card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--card-border);
+  border-radius: 0.75rem;
+  background: var(--card-background);
+  box-shadow: 0 0.25rem 1rem rgb(0 0 0 / 0.2);
+  pointer-events: auto;
+}
+
+.message {
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actions button {
+  min-height: 2.75rem;
+  padding: 0 0.75rem;
+  font: inherit;
+}
+
+/* Wider screens have no tab bar, so the card sits in the bottom-right corner. */
+@media (min-width: 48rem) {
+  .region {
+    bottom: 1rem;
+    left: auto;
+  }
+}

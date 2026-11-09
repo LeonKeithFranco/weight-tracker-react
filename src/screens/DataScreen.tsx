@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { DeleteEntryDialog } from "../components/DeleteEntryDialog";
 import { EditEntryDialog } from "../components/EditEntryDialog";
 import { FiguresList } from "../components/FiguresList";
 import { FiguresTable } from "../components/FiguresTable";
@@ -6,14 +7,23 @@ import { useDailyFigures } from "../data/useDailyFigures";
 import type { WeightEntry } from "../lib/types";
 import styles from "./DataScreen.module.css";
 
+/** What the open dialog is doing, and to which entry. */
+type PendingAction = { kind: "edit" | "delete"; entry: WeightEntry };
+
 export function DataScreen() {
   const figures = useDailyFigures();
-  // The entry being edited, if any. Kept here rather than in each row, so
-  // there's only ever one dialog, whichever layout opened it.
-  const [editing, setEditing] = useState<WeightEntry | null>(null);
+  // Kept here rather than in each row, so there's only ever one dialog,
+  // whichever layout opened it. `null` means no dialog is open.
+  const [pending, setPending] = useState<PendingAction | null>(null);
   // Worked out during render rather than kept in state, so it always matches
   // the figures. Reversing a few hundred days is quick enough to redo.
   const newestFirst = figures.toReversed();
+
+  const actions = {
+    onEdit: (entry: WeightEntry) => setPending({ kind: "edit", entry }),
+    onDelete: (entry: WeightEntry) => setPending({ kind: "delete", entry }),
+  };
+  const closeDialog = () => setPending(null);
 
   return (
     <>
@@ -23,16 +33,19 @@ export function DataScreen() {
       ) : (
         <>
           <div className={styles.narrow}>
-            <FiguresList days={newestFirst} onEdit={setEditing} />
+            <FiguresList days={newestFirst} {...actions} />
           </div>
           <div className={styles.wide}>
-            <FiguresTable days={newestFirst} onEdit={setEditing} />
+            <FiguresTable days={newestFirst} {...actions} />
           </div>
         </>
       )}
 
-      {editing && (
-        <EditEntryDialog entry={editing} onClose={() => setEditing(null)} />
+      {pending?.kind === "edit" && (
+        <EditEntryDialog entry={pending.entry} onClose={closeDialog} />
+      )}
+      {pending?.kind === "delete" && (
+        <DeleteEntryDialog entry={pending.entry} onClose={closeDialog} />
       )}
     </>
   );

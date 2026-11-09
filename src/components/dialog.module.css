@@ -19,6 +19,10 @@
   font-size: 1.25rem;
 }
 
+.message {
+  margin: 0 0 1rem;
+}
+
 /* Buttons side by side, each easy to tap. */
 .buttons {
   display: flex;
@@ -29,4 +33,10 @@
   flex: 1;
   min-height: 3rem;
   font: inherit;
+}
+
+/* Marks a button that removes data. */
+.buttons .danger {
+  color: var(--color-error);
+  font-weight: 600;
 }

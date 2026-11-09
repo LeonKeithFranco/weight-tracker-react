@@ -1,12 +1,19 @@
+import { useState } from "react";
+import { RangePresets } from "../components/RangePresets";
 import { WeightTrendsChart } from "../components/WeightTrendsChart";
 import { useData } from "../data/dataContext";
 import { useDailyFigures } from "../data/useDailyFigures";
+import { DEFAULT_RANGE_PRESET, filterByRange } from "../lib/chartRange";
 import { toChartRows } from "../lib/chartRows";
 
 export function ChartsScreen() {
   const figures = useDailyFigures();
   const unit = useData().settings.displayUnit;
-  const rows = toChartRows(figures, unit);
+  // One preset for every chart, so they always cover the same days.
+  const [preset, setPreset] = useState(DEFAULT_RANGE_PRESET);
+  // The figures come from the full history, so running lows and averages are
+  // right before the range cuts them down to what's shown.
+  const rows = filterByRange(toChartRows(figures, unit), preset);
 
   return (
     <>
@@ -14,7 +21,10 @@ export function ChartsScreen() {
       {rows.length === 0 ? (
         <p>No entries yet. Log your first weight on Home.</p>
       ) : (
-        <WeightTrendsChart rows={rows} unit={unit} />
+        <>
+          <RangePresets value={preset} onChange={setPreset} />
+          <WeightTrendsChart rows={rows} unit={unit} />
+        </>
       )}
     </>
   );

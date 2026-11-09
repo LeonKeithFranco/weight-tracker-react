@@ -25,6 +25,8 @@ describe("toChartRows", () => {
         date: "2026-11-05",
         isEstimated: true,
         weight: 90,
+        realWeight: null,
+        estimatedWeight: 90,
         lowestWeight: 89,
         average7: 90.5,
         lowestAverage7: 90.25,
@@ -53,5 +55,33 @@ describe("toChartRows", () => {
     const [row] = toChartRows([{ ...day, weightToLoseKg: null }], "lb");
 
     expect(row.weightToLose).toBeNull();
+  });
+
+  it("splits the weight so estimated stretches reach the logged days beside them", () => {
+    // Logged, logged, estimated, estimated, logged, logged.
+    const days = [false, false, true, true, false, false].map(
+      (isEstimated, index) => ({ ...day, weightKg: 90 - index, isEstimated }),
+    );
+
+    const rows = toChartRows(days, "kg");
+
+    expect(rows.map((row) => row.realWeight)).toEqual([
+      90,
+      89,
+      null,
+      null,
+      86,
+      85,
+    ]);
+    // Days 2 and 5 are logged but border the estimates, so the faded line
+    // joins them up, and the solid line never crosses the gap.
+    expect(rows.map((row) => row.estimatedWeight)).toEqual([
+      null,
+      89,
+      88,
+      87,
+      86,
+      null,
+    ]);
   });
 });

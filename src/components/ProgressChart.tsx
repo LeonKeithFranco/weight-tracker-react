@@ -10,6 +10,7 @@ import {
 } from "recharts";
 import type { ChartRow } from "../lib/chartRows";
 import { formatChartLabel } from "../lib/dates";
+import { FIGURE_LABELS } from "../lib/figureLabels";
 import type { WeightUnit } from "../lib/types";
 import { WEIGHT_DECIMALS } from "../lib/units";
 import { ChartLegend } from "./ChartLegend";
@@ -19,7 +20,7 @@ import { useHiddenSeries } from "./useHiddenSeries";
 
 const TO_LOSE: ChartRowSeries = {
   key: "weightToLose",
-  name: "Left to lose",
+  name: FIGURE_LABELS.weightToLoseKg,
   color: "var(--series-1)",
   dashed: false,
   decimals: WEIGHT_DECIMALS,
@@ -27,7 +28,7 @@ const TO_LOSE: ChartRowSeries = {
 
 const LOST: ChartRowSeries = {
   key: "weightLossSinceStart",
-  name: "Lost since start",
+  name: FIGURE_LABELS.weightLossSinceStartKg,
   color: "var(--series-2)",
   dashed: false,
   decimals: WEIGHT_DECIMALS,
@@ -75,7 +76,7 @@ export function ProgressChart({ rows, unit, dateFormat, hasTarget }: Props) {
         {/* Starts from 0 by default, and stretches below it when a value goes
             negative, such as once you're below the target. */}
         <YAxis stroke="var(--chart-axis)" width="auto" />
-        {/* Marks 0, where "to lose" means the target is reached. */}
+        {/* Marks 0, where "left to lose" means the target is reached. */}
         <ReferenceLine y={0} stroke="var(--chart-axis)" />
         <Tooltip
           content={({ active, payload }) => {

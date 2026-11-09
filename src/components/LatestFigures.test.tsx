@@ -67,7 +67,7 @@ describe("LatestFigures", () => {
     expect(figure("7-day change")).toBe("-1.11%");
     expect(figure("28-day average")).toBe("89.00 kg");
     expect(figure("Lowest weight")).toBe("88.0 kg");
-    expect(figure("To lose")).toBe("8.0 kg");
+    expect(figure("Left to lose")).toBe("8.0 kg");
     expect(figure("Lost since start")).toBe("2.0 kg");
     expect(figure("Loss per week")).toBe("7.00 kg");
   });
@@ -82,14 +82,14 @@ describe("LatestFigures", () => {
     expect(screen.getByText("As of 3 Jan 2026")).toBeVisible();
     expect(figure("Weight")).toBe("194.0 lb");
     expect(figure("7-day average")).toBe("196.21 lb");
-    expect(figure("To lose")).toBe("17.6 lb");
+    expect(figure("Left to lose")).toBe("17.6 lb");
     expect(figure("Loss per week")).toBe("15.43 lb");
   });
 
   it("leaves out the target figures when there's no target", async () => {
     await renderFigures(dailyEntries([90, 89, 88]), { targetWeightKg: null });
 
-    expect(figure("To lose")).toBeNull();
+    expect(figure("Left to lose")).toBeNull();
     expect(figure("Goal date")).toBeNull();
   });
 

@@ -78,7 +78,7 @@ describe("DataScreen", () => {
       "7-day change",
       "28-day average (lb)",
       "Lowest 28-day average (lb)",
-      "To lose (lb)",
+      "Left to lose (lb)",
       "Lost since start (lb)",
       "Loss per week (lb)",
       "Actions",
@@ -91,7 +91,7 @@ describe("DataScreen", () => {
     await renderData({ targetWeightKg: null });
 
     expect(
-      screen.queryByRole("columnheader", { name: /To lose/ }),
+      screen.queryByRole("columnheader", { name: /Left to lose/ }),
     ).not.toBeInTheDocument();
   });
 
@@ -134,7 +134,7 @@ describe("DataScreen", () => {
       )!;
       expect(within(details).getAllByRole("term")).toHaveLength(10);
       expect(
-        within(details).getByText("To lose (kg)").nextSibling,
+        within(details).getByText("Left to lose (kg)").nextSibling,
       ).toHaveTextContent("9.0");
 
       await user.click(newest);

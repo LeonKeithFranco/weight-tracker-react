@@ -29,7 +29,7 @@ describe("figureColumns", () => {
       "7-day change",
       "28-day average",
       "Lowest 28-day average",
-      "To lose",
+      "Left to lose",
       "Lost since start",
       "Loss per week",
     ]);
@@ -39,7 +39,7 @@ describe("figureColumns", () => {
     const labels = figureColumns(false).map((column) => column.label);
 
     expect(labels).toHaveLength(9);
-    expect(labels).not.toContain("To lose");
+    expect(labels).not.toContain("Left to lose");
   });
 
   it("formats weights to 1 decimal, averages to 2 and the change as a percentage", () => {
@@ -51,7 +51,7 @@ describe("figureColumns", () => {
       "7-day change": "-1.06%",
       "28-day average": "89.05",
       "Lowest 28-day average": "89.05",
-      "To lose": "8.1",
+      "Left to lose": "8.1",
       "Lost since start": "1.9",
       "Loss per week": "6.51",
     });

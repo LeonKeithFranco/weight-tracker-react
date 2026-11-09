@@ -23,7 +23,7 @@ const series: ChartRowSeries[] = [
   },
   {
     key: "weightToLose",
-    name: "To lose",
+    name: "Left to lose",
     color: "green",
     dashed: false,
     decimals: 1,

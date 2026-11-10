@@ -1,20 +1,11 @@
-import { lazy, Suspense, useState } from "react";
+import { useState } from "react";
+import { ChartCards } from "../components/ChartCards";
 import { RangePresets } from "../components/RangePresets";
 import { useData } from "../data/dataContext";
 import { useDailyFigures } from "../data/useDailyFigures";
 import { DEFAULT_RANGE_PRESET, filterByRange } from "../lib/chartRange";
 import { toChartRows } from "../lib/chartRows";
 import styles from "./ChartsScreen.module.css";
-
-// The charts load in their own file the first time they're shown, because
-// Recharts is most of the app's JavaScript and no other screen uses it. The
-// rest of this screen loads with the app, so the heading and presets show at
-// once. `lazy` expects a default export, so the named one is renamed.
-const ChartCards = lazy(() =>
-  import("../components/ChartCards").then((module) => ({
-    default: module.ChartCards,
-  })),
-);
 
 export function ChartsScreen() {
   const figures = useDailyFigures();
@@ -34,16 +25,14 @@ export function ChartsScreen() {
         <div className={styles.layout}>
           {/* Outside the cards, because it changes every chart below it. */}
           <RangePresets value={preset} onChange={setPreset} />
-          {/* Nothing shows below the presets for the moment the charts'
-              file takes to load, so nothing above them moves. */}
-          <Suspense fallback={null}>
-            <ChartCards
-              rows={rows}
-              unit={unit}
-              dateFormat={dateFormat}
-              targetWeightKg={targetWeightKg}
-            />
-          </Suspense>
+          {/* The cards show at once, and each plot fills its card when the
+              charts' file has loaded. */}
+          <ChartCards
+            rows={rows}
+            unit={unit}
+            dateFormat={dateFormat}
+            targetWeightKg={targetWeightKg}
+          />
         </div>
       )}
     </>

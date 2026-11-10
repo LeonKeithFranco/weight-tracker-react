@@ -1,15 +1,26 @@
 import { defineConfig, devices } from "@playwright/test";
 
+/** Whether the tests run in CI, which GitHub Actions marks with `CI`. */
 const isCi = !!process.env.CI;
 
-// The production build is served from a subfolder, as on GitHub Pages, so the
-// tests catch a link that ignores the base path. The dev server covers `/`.
+/**
+ * The production build is served from a subfolder, as on GitHub Pages, so the
+ * tests catch a link that ignores the base path. The dev server covers `/`.
+ */
 const productionBasePath = "/weight-tracker-react/";
 
-// The production build's address. Its own port, so it never clashes with a
-// dev server or a `vite preview` you're running yourself.
+/**
+ * The production build's address. Its own port, so it never clashes with a
+ * dev server or a `vite preview` you're running yourself.
+ */
 const productionUrl = `http://localhost:4175${productionBasePath}`;
 
+/**
+ * How Playwright runs the end-to-end tests: the dev server's tests at desktop
+ * and phone sizes, and the offline tests against a production build. See
+ * {@link https://playwright.dev/docs/test-configuration | Playwright's config
+ * guide}.
+ */
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,

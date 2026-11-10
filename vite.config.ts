@@ -4,7 +4,11 @@ import { VitePWA } from "vite-plugin-pwa";
 import { configDefaults, defineConfig } from "vitest/config";
 import packageJson from "./package.json" with { type: "json" };
 
-// https://vite.dev/config/
+/**
+ * How Vite serves and builds the app, and how Vitest runs its tests. See
+ * {@link https://vite.dev/config/ | Vite's config reference} and
+ * {@link https://vitest.dev/config/ | Vitest's}.
+ */
 export default defineConfig({
   // Replaces each `__APP_VERSION__` in the app's code with the version from
   // `package.json`, written as a string, when the app is built or tested.
@@ -60,12 +64,17 @@ export default defineConfig({
   test: {
     // Playwright runs the `e2e` tests, so Vitest leaves them alone.
     exclude: [...configDefaults.exclude, "e2e/**"],
+    // Two sets of tests, run together by `npm test`, each in the environment
+    // it needs.
     projects: [
       {
+        // Starts from this file's settings, such as `define` and `exclude`.
         extends: true,
         test: {
           name: "unit",
           include: ["src/**/*.test.ts"],
+          // Plain Node, because the logic never renders anything, and
+          // starting a simulated browser for each file would slow it down.
           environment: "node",
         },
       },

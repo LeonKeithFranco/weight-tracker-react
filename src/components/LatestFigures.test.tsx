@@ -8,6 +8,7 @@ import { estimateGoalDate } from "../lib/goalDate";
 import type { Settings, WeightEntry } from "../lib/types";
 import { AppStorage, DEFAULT_SETTINGS } from "../storage/appStorage";
 import { InMemoryBackend } from "../storage/inMemoryBackend";
+import { readableText } from "../test/readableText";
 import { LatestFigures } from "./LatestFigures";
 
 /** One entry per day from 2026-01-01, with these weights in kg. */
@@ -41,21 +42,12 @@ describe("LatestFigures", () => {
     await screen.findByRole("heading", { name: "Latest figures" });
   }
 
-  /**
-   * The text a screen reader reads next to a figure's name, or `null` if it
-   * isn't shown. Parts hidden with `aria-hidden`, such as the rolling digits,
-   * are left out.
-   */
+  /** The text a screen reader reads next to a figure's name, or `null` if it isn't shown. */
   function figure(term: string): string | null {
-    const termElement = screen.queryByText(term, { selector: "dt" });
-    const value = termElement?.nextElementSibling?.cloneNode(true);
-    if (!(value instanceof Element)) {
-      return null;
-    }
-    for (const hidden of value.querySelectorAll("[aria-hidden='true']")) {
-      hidden.remove();
-    }
-    return value.textContent;
+    const value = screen.queryByText(term, {
+      selector: "dt",
+    })?.nextElementSibling;
+    return value ? readableText(value) : null;
   }
 
   it("asks for a first entry when there are none", async () => {

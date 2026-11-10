@@ -51,8 +51,9 @@ export function formatNumber(value: number, decimals: number): string {
  * and format it themselves, such as the rolling figures.
  *
  * @remarks
- * Give them this, not the raw value: `Intl.NumberFormat` rounds 199.45 up to
- * 199.5, but `toFixed` rounds the stored value, 199.4499…, down to 199.4.
+ * Give them this, not the raw value: `Intl.NumberFormat` rounds the stored
+ * value's shortest form, 199.45, up to 199.5, but `toFixed` rounds its exact
+ * value, 199.4499…, down to 199.4.
  *
  * @param value - The number to show.
  * @param decimals - How many decimal places to keep.

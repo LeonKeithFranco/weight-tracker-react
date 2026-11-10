@@ -4,8 +4,11 @@ import styles from "./ChartLegend.module.css";
 export type LegendItem = {
   /** A unique name for the item, which is also its React key. */
   key: string;
+  /** The name shown, from the labels every screen shares where it has one. */
   name: string;
+  /** The CSS colour of its sample, such as a chart colour token. */
   color: string;
+  /** Whether its sample line is dashed, to match a dashed line in the chart. */
   dashed: boolean;
   /** A short line by default. A square suits bars, which are filled. */
   marker?: "line" | "square";
@@ -18,10 +21,15 @@ export type ChartSeries = LegendItem & {
 };
 
 type Props = {
+  /** The items to list, in order. */
   items: LegendItem[];
+  /** The keys of the items whose series are hidden. */
   hidden: ReadonlySet<string>;
-  /** Makes each item a button that shows or hides its series. Without it,
-   * the items are plain text, for charts with nothing to hide. */
+  /**
+   * Called with an item's key when it's pressed. Giving it makes each item a
+   * button that shows or hides its series. Without it, the items are plain
+   * text, for charts with nothing to hide.
+   */
   onToggle?: (key: string) => void;
 };
 
@@ -58,8 +66,16 @@ export function ChartLegend({ items, hidden, onToggle }: Props) {
   );
 }
 
-/** Decoration only, since the name says which series it is. */
-function Sample({ item }: { item: LegendItem }) {
+type SampleProps = {
+  /** The item whose colour, dash and marker to draw. */
+  item: LegendItem;
+};
+
+/**
+ * A small picture of how an item looks in the chart. Decoration only, since
+ * the name says which series it is.
+ */
+function Sample({ item }: SampleProps) {
   return (
     <svg className={styles.sample} viewBox="0 0 24 12" aria-hidden>
       {item.marker === "square" ? (

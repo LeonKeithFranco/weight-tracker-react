@@ -2,6 +2,10 @@ import { Area, ComposedChart, Line } from "recharts";
 import type { ProjectionRow } from "../lib/projectionRows";
 import { ChartPlot, type PlotProps } from "./ChartPlot";
 
+/**
+ * The Projection chart's likely range as a band, with the weight, trend and
+ * target lines on top.
+ */
 export function ProjectionPlot(props: PlotProps<ProjectionRow>) {
   const range = props.series.find((item) => item.key === "range");
 

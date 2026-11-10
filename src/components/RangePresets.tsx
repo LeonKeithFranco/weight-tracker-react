@@ -3,7 +3,9 @@ import { RANGE_PRESETS, type RangePreset } from "../lib/chartRange";
 import styles from "./RangePresets.module.css";
 
 type Props = {
+  /** The preset chosen now. */
   value: RangePreset;
+  /** Called with the preset the user chooses. */
   onChange: (preset: RangePreset) => void;
 };
 

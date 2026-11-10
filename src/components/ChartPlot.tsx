@@ -23,15 +23,23 @@ const Y_AXIS_WIDTH = 56;
 
 /** What every chart's card passes to its plot. */
 export type PlotProps<Row extends TooltipRow> = {
+  /** One row per day, in date order. */
   rows: Row[];
+  /** Every series the chart can show, which the tooltip lists. */
   series: RowSeries<Row>[];
+  /** The keys of the series the legend has hidden. */
   hidden: ReadonlySet<string>;
   /** Added after each tooltip value, such as " lb" or "%". */
   suffix: string;
+  /** The date format setting, for the tooltip's date. */
   dateFormat: string;
 };
 
-/** Generic over the row type, so the Projection chart's rows work too. */
+/**
+ * The props for {@link ChartPlot}: what every card passes in, plus what makes
+ * each plot different. Generic over the row type, so the Projection chart's
+ * rows work too.
+ */
 type Props<Row extends TooltipRow> = PlotProps<Row> & {
   /** Which Recharts chart to draw, such as `LineChart`. */
   chart:

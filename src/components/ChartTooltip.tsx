@@ -6,7 +6,12 @@ import type { ChartSeries } from "./ChartLegend";
 import styles from "./ChartTooltip.module.css";
 
 /** What every chart's rows have, whatever else they hold. */
-export type TooltipRow = { date: CalendarDate; isEstimated: boolean };
+export type TooltipRow = {
+  /** The day the row plots. */
+  date: CalendarDate;
+  /** Whether the day's weight was estimated, which the tooltip says. */
+  isEstimated: boolean;
+};
 
 /**
  * A series that plots one of a row type's fields. `& string` drops any
@@ -19,8 +24,12 @@ export type RowSeries<Row> = ChartSeries & { key: keyof Row & string };
 export type ChartRowSeries = RowSeries<ChartRow>;
 
 /**
- * A value as the tooltip shows it: a number rounded, a `[low, high]` range as
- * "low – high", and anything else, such as an empty value, as `null`.
+ * Writes a value as the tooltip shows it.
+ *
+ * @param value - A row's value for one series, of any type.
+ * @param decimals - How many decimal places to round to.
+ * @returns A number rounded, a `[low, high]` range as "low – high", and
+ * anything else, such as an empty value, as `null`.
  */
 function formatValue(value: unknown, decimals: number): string | null {
   if (typeof value === "number") {
@@ -37,11 +46,15 @@ function formatValue(value: unknown, decimals: number): string | null {
 }
 
 type Props<Row extends TooltipRow> = {
+  /** The day under the pointer. */
   row: Row;
+  /** Every series the chart can show, in the order to list them. */
   series: RowSeries<Row>[];
+  /** The keys of the series the legend has hidden, which aren't listed. */
   hidden: ReadonlySet<string>;
   /** Added after each value, such as " lb" or "%". */
   suffix: string;
+  /** The date format setting. */
   dateFormat: string;
 };
 

@@ -6,6 +6,7 @@ import { ChartCard } from "./ChartCard";
 import type { ChartRowSeries } from "./ChartTooltip";
 import { LossRatePlot } from "./lazyPlots";
 
+/** The chart's one line, the loss per week. */
 const SERIES: ChartRowSeries[] = [
   {
     key: "weightLossPerWeek",
@@ -16,12 +17,17 @@ const SERIES: ChartRowSeries[] = [
   },
 ];
 
-/** Nothing is ever hidden, because hiding the only line would empty the chart. */
+/**
+ * Nothing is ever hidden, because hiding the only line would empty the chart.
+ */
 const NONE_HIDDEN: ReadonlySet<string> = new Set();
 
 type Props = {
+  /** The days the range preset shows, in the display unit. */
   rows: ChartRow[];
+  /** The display unit, for the heading and the tooltip. */
   unit: WeightUnit;
+  /** The date format setting, for the tooltip. */
   dateFormat: string;
 };
 

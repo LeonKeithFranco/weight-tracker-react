@@ -2,6 +2,10 @@ import { Bar, BarChart, Cell, ReferenceLine } from "recharts";
 import type { ChartRow } from "../lib/chartRows";
 import { ChartPlot, type PlotProps } from "./ChartPlot";
 
+/**
+ * The Weekly change chart's bars, blue for a loss and red for a gain, with a
+ * line at 0.
+ */
 export function WeeklyChangePlot(props: PlotProps<ChartRow>) {
   const [series] = props.series;
 

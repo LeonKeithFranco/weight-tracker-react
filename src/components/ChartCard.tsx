@@ -18,7 +18,9 @@ type Props = {
   onToggle?: (key: string) => void;
   /** The chart's plot. */
   children: ReactNode;
-  /** Shown under the legend, such as a note on what faded lines mean. */
+  /**
+   * Shown under the plot and legend, such as a note on what faded lines mean.
+   */
   footer?: ReactNode;
 };
 

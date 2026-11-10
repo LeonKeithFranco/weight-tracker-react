@@ -25,6 +25,7 @@ function ScreenErrorFallback({ resetErrorBoundary }: FallbackProps) {
   );
 }
 
+/** The props for {@link ScreenErrorBoundary}. */
 type Props = {
   /** The current screen. */
   children: ReactNode;

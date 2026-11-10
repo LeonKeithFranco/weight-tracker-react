@@ -2,7 +2,9 @@ import { Pencil, Trash2 } from "lucide-react";
 import type { DailyFigures, WeightEntry } from "../lib/types";
 import styles from "./EntryActions.module.css";
 
+/** The props for {@link EntryActions}. */
 type EntryActionsProps = {
+  /** The day the buttons are for. An estimated day gets no buttons. */
   day: DailyFigures;
   /** The date as shown, so each button's name says which day it's for. */
   shownDate: string;
@@ -11,7 +13,9 @@ type EntryActionsProps = {
    * The words stay for screen readers and in a tooltip.
    */
   iconsOnly?: boolean;
+  /** Called with the day's saved entry when Edit is pressed. */
   onEdit(entry: WeightEntry): void;
+  /** Called with the day's saved entry when Delete is pressed. */
   onDelete(entry: WeightEntry): void;
 };
 

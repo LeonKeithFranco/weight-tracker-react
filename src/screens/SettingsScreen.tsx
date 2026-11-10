@@ -12,6 +12,11 @@ import styles from "../components/forms.module.css";
 import { useData } from "../data/dataContext";
 import layoutStyles from "./SettingsScreen.module.css";
 
+/**
+ * The settings, in two columns on wide screens: preferences for how the app
+ * shows things, then the data's export, import, activity log, storage and
+ * the app's version.
+ */
 export function SettingsScreen() {
   const { settings } = useData();
   const id = useId();

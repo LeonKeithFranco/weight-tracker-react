@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import styles from "./Card.module.css";
 
+/** The props for {@link Card}. */
 type Props = {
   /** The section to draw the panel around. */
   children: ReactNode;

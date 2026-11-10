@@ -7,6 +7,10 @@ import { DEFAULT_RANGE_PRESET, filterByRange } from "../lib/chartRange";
 import { toChartRows } from "../lib/chartRows";
 import styles from "./ChartsScreen.module.css";
 
+/**
+ * Every chart, with the range presets that choose how much history they
+ * show. The preset starts at YTD each time the screen opens.
+ */
 export function ChartsScreen() {
   const figures = useDailyFigures();
   const { displayUnit: unit, dateFormat, targetWeightKg } = useData().settings;

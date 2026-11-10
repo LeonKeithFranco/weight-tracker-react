@@ -7,13 +7,18 @@ import styles from "./dialog.module.css";
 import formStyles from "./forms.module.css";
 import { useModal } from "./useModal";
 
+/** The props for {@link DeleteEntryDialog}. */
 type DeleteEntryDialogProps = {
+  /** The saved entry to delete. */
   entry: WeightEntry;
   /** Called once the dialog has closed, however it was closed. */
   onClose(): void;
 };
 
-/** Asks before deleting a saved entry, because deleting can't be undone. */
+/**
+ * Asks before deleting a saved entry, because deleting can't be undone. It's
+ * a modal dialog that opens as soon as it's drawn, with Cancel focused first.
+ */
 export function DeleteEntryDialog({ entry, onClose }: DeleteEntryDialogProps) {
   const { settings, deleteEntry } = useData();
   const dialogRef = useModal();

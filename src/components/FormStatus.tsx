@@ -1,5 +1,6 @@
 import styles from "./forms.module.css";
 
+/** The props for {@link FormStatus}. */
 type Props = {
   /** Shown in the success colour, such as "Target saved." */
   success: string | null;

@@ -21,7 +21,10 @@ export type TooltipRow = {
  * @typeParam Row - The chart's row type, such as `ChartRow`, whose field the
  * series plots.
  */
-export type RowSeries<Row> = ChartSeries & { key: keyof Row & string };
+export type RowSeries<Row> = ChartSeries & {
+  /** The row field the series plots, which is also its legend key. */
+  key: keyof Row & string;
+};
 
 /** A series of the four spreadsheet charts, which share `ChartRow`. */
 export type ChartRowSeries = RowSeries<ChartRow>;

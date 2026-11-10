@@ -3,10 +3,12 @@ import { calculateDailyFigures } from "./dailyFigures";
 import { seriesOf } from "./testSeries";
 import type { DailyPoint } from "./types";
 
-// Falls to 94 on day 7, then rises, so the lows and the weights differ.
+/** Falls to 94 on day 7, then rises, so the lows and the weights differ. */
 const DIP = [100, 99, 98, 97, 96, 95, 94, 95, 96, 97];
 
-// 30 days falling by 1 kg a day, which makes window means easy to work out.
+/**
+ * 30 days falling by 1 kg a day, which makes window means easy to work out.
+ */
 const RAMP = Array.from({ length: 30 }, (_, index) => 100 - index);
 
 describe("calculateDailyFigures", () => {
@@ -22,7 +24,7 @@ describe("calculateDailyFigures", () => {
     expect(calculateDailyFigures(series, null)[0]).toMatchObject(series[0]);
   });
 
-  it("handles a single day", () => {
+  it("gives a single day its weight as every average and low, with no change or loss", () => {
     expect(calculateDailyFigures(seriesOf([80]), 70)[0]).toMatchObject({
       lowestWeightKg: 80,
       average7Kg: 80,

@@ -4,7 +4,13 @@ import type { ProjectedDay } from "./projectedRange";
 import type { DailyPoint } from "./types";
 import { KG_PER_LB } from "./units";
 
-/** Consecutive days from 2026-01-01, the last one estimated. */
+/**
+ * Builds consecutive days from 2026-01-01, the last one estimated, to check
+ * the estimated flag carries over.
+ *
+ * @param weights - One weight a day, in kg.
+ * @returns One point per weight.
+ */
 function seriesOf(weights: number[]): DailyPoint[] {
   return weights.map((weightKg, index) => ({
     date: `2026-01-${String(index + 1).padStart(2, "0")}`,
@@ -13,6 +19,7 @@ function seriesOf(weights: number[]): DailyPoint[] {
   }));
 }
 
+/** Two projected days, following a three-day series. */
 const projected: ProjectedDay[] = [
   { date: "2026-01-04", lowKg: 88, trendKg: 89, highKg: 90 },
   { date: "2026-01-05", lowKg: 87, trendKg: 88.5, highKg: 90 },

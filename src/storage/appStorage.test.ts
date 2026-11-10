@@ -4,6 +4,7 @@ import type { Settings } from "../lib/types";
 import { AppStorage, DEFAULT_SETTINGS, MAX_LOG_ENTRIES } from "./appStorage";
 import { InMemoryBackend } from "./inMemoryBackend";
 
+/** A row with a bad date, for an import's invalid count. */
 const invalidRow: InvalidRow = {
   line: 4,
   date: "not-a-date",

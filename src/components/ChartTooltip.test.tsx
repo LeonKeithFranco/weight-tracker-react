@@ -5,6 +5,10 @@ import { sampleChartRow } from "../test/chartRow";
 import { ChartTooltip, type ChartRowSeries } from "./ChartTooltip";
 
 // Values that need rounding, and no target.
+/**
+ * A day with values that need rounding, and no target, so its weight to lose
+ * is empty.
+ */
 const row: ChartRow = {
   ...sampleChartRow,
   weight: 203.84,
@@ -12,6 +16,10 @@ const row: ChartRow = {
   weightToLose: null,
 };
 
+/**
+ * Three series, rounded to different places, the last of which is empty in
+ * {@link row}.
+ */
 const series: ChartRowSeries[] = [
   { key: "weight", name: "Weight", color: "red", dashed: false, decimals: 1 },
   {
@@ -30,8 +38,16 @@ const series: ChartRowSeries[] = [
   },
 ];
 
-// `typeof ChartTooltip<ChartRow>` fixes the generic to this row type before
-// reading its props, which would otherwise use the bare minimum row.
+/**
+ * Renders the tooltip for {@link row} and {@link series}, in lb with a
+ * `DD/MM/YYYY` date, nothing hidden.
+ *
+ * @remarks
+ * `typeof ChartTooltip<ChartRow>` fixes the generic to this row type before
+ * reading its props, which would otherwise use the bare minimum row.
+ *
+ * @param props - Any props to use instead of those defaults.
+ */
 function renderTooltip(
   props: Partial<Parameters<typeof ChartTooltip<ChartRow>>[0]>,
 ) {

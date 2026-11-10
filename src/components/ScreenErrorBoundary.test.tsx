@@ -7,12 +7,15 @@ import { AppStorage } from "../storage/appStorage";
 import { InMemoryBackend } from "../storage/inMemoryBackend";
 import { ScreenErrorBoundary } from "./ScreenErrorBoundary";
 
+/** A stand-in for a screen that always throws while rendering. */
 function BrokenScreen(): never {
   throw new Error("screen broke");
 }
 
-/** Throws until `fixed` is set, like an error that only happens once. */
+/** Whether {@link FlakyScreen} has stopped throwing. Reset before each test. */
 let fixed = false;
+
+/** Throws until `fixed` is set, like an error that only happens once. */
 function FlakyScreen() {
   if (!fixed) {
     throw new Error("flaky");

@@ -3,9 +3,17 @@ import { formatCsv } from "./csvExport";
 import { parseCsv, type ParsedCsv } from "./csvImport";
 import { toKg } from "./units";
 
+/** The date the tests treat as today, which rows can't be after. */
 const TODAY = "2026-11-06";
 
-/** Parses a file that should be readable, so tests can check its rows. */
+/**
+ * Parses a file that should be readable, so tests can check its rows.
+ *
+ * @param text - The file's contents.
+ * @returns The file's importable and invalid rows.
+ * @throws {@link Error}
+ * When the whole file is rejected.
+ */
 function parseRows(text: string): ParsedCsv {
   const result = parseCsv(text, TODAY);
 
@@ -61,7 +69,7 @@ describe("parseCsv formats", () => {
     ]);
   });
 
-  it("handles a byte order mark, Windows line endings and padding", () => {
+  it("reads a file with a byte order mark, Windows line endings and padded cells", () => {
     const { entries, invalidRows } = parseRows(
       "﻿ date , weight_kg \r\n 2026-01-01 , 90 \r\n",
     );

@@ -5,6 +5,7 @@ import { DexieBackend } from "./dexieBackend";
 import { InMemoryBackend } from "./inMemoryBackend";
 import type { StorageBackend } from "./storageBackend";
 
+/** Settings with a target and a date format, rather than the defaults. */
 const settings: Settings = {
   displayUnit: "lb",
   targetWeightKg: 80,

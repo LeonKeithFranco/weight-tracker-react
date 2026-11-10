@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { parseLogForm } from "./logForm";
 import { KG_PER_LB } from "./units";
 
+/** The date the tests treat as today, which the form's date can't be after. */
 const TODAY = "2026-11-07";
 
 describe("parseLogForm", () => {

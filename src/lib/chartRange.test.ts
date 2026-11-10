@@ -2,13 +2,23 @@ import { describe, expect, it } from "vitest";
 import { filterByRange } from "./chartRange";
 import { addDays, daysBetween } from "./dates";
 
-/** One row per day, from `start` through `end`. */
+/**
+ * Builds rows with only a date, which is all the filter reads.
+ *
+ * @param start - The first row's date.
+ * @param end - The last row's date.
+ * @returns One row per day, from `start` through `end`.
+ */
 function rowsBetween(start: string, end: string) {
   return Array.from({ length: daysBetween(start, end) + 1 }, (_, index) => ({
     date: addDays(start, index),
   }));
 }
 
+/**
+ * Almost two years of rows, so every preset except All, including 1Y and
+ * YTD, cuts some off.
+ */
 const ROWS = rowsBetween("2024-06-01", "2026-03-15");
 
 describe("filterByRange", () => {

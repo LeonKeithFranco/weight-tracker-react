@@ -31,9 +31,11 @@ type DataProviderProps = {
  * show always matches what's stored.
  *
  * @remarks
- * It draws nothing until the data has loaded, and an alert instead of its
- * children if loading fails. While storage is best-effort, it also asks for
- * persistent storage once per visit, as soon as entries are saved.
+ * It draws nothing until the data has loaded and the browser has said whether
+ * storage is persistent, and an alert instead of its children if loading
+ * fails. While storage is best-effort, it also asks for persistent storage
+ * once per visit, as soon as there are entries: at startup if some are saved,
+ * or after the first save or import.
  */
 export function DataProvider({
   storage,

@@ -12,18 +12,26 @@ import { FormStatus } from "./FormStatus";
 import { WEIGHT_MESSAGES } from "./formMessages";
 import styles from "./forms.module.css";
 
+/** The message shown under the date field for each problem with it. */
 const DATE_MESSAGES: Record<NonNullable<LogFormErrors["date"]>, string> = {
   missing: "Enter a date.",
   future: "The date can't be in the future.",
 };
 
+/**
+ * Where saving has got to: not started, under way, saved with the entry the
+ * message describes, or failed.
+ */
 type SaveState =
   | { status: "idle" }
   | { status: "saving" }
   | { status: "saved"; entry: WeightEntry }
   | { status: "failed" };
 
-/** Logs a weight for today or an earlier date. */
+/**
+ * Logs a weight for today or an earlier date. After a save, the weight field
+ * empties and the date stays, so several days can be logged in a row.
+ */
 export function LogForm() {
   const { settings, saveEntry } = useData();
   const today = localToday();

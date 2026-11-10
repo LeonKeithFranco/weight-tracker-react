@@ -4,15 +4,20 @@ import { formatDate, localToday, normalizeDateFormat } from "../lib/dates";
 import { FormStatus } from "./FormStatus";
 import styles from "./forms.module.css";
 
+/** Day.js's list of format tokens, linked from the field's hint. */
 const DAYJS_FORMAT_DOCS = "https://day.js.org/docs/en/display/format";
 
+/** Where saving has got to: not started, under way, saved or failed. */
 type SaveState =
   | { status: "idle" }
   | { status: "saving" }
   | { status: "saved" }
   | { status: "failed" };
 
-/** Sets how dates are shown, with a preview that updates as you type. */
+/**
+ * Sets how dates are shown, with a preview that updates as you type. Saving
+ * an empty field saves the default, `YYYY-MM-DD`.
+ */
 export function DateFormatForm() {
   const { settings, saveSettings } = useData();
   const id = useId();

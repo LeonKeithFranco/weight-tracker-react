@@ -4,6 +4,7 @@ import type { Persistence } from "../storage/persistence";
 import { FormStatus } from "./FormStatus";
 import styles from "./forms.module.css";
 
+/** What each storage state means for the user's data, in plain words. */
 const DESCRIPTIONS: Record<Persistence, string> = {
   persistent:
     "Your browser keeps this data until you clear it or uninstall the app.",

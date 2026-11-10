@@ -4,6 +4,10 @@ import { formatTargetWeight, parseTargetWeight } from "../lib/targetWeight";
 import { FormStatus } from "./FormStatus";
 import styles from "./forms.module.css";
 
+/**
+ * Where saving has got to: not started, under way, saved, with whether the
+ * target was removed, or failed.
+ */
 type SaveState =
   | { status: "idle" }
   | { status: "saving" }

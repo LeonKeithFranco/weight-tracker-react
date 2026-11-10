@@ -5,6 +5,11 @@ import { useData } from "../data/dataContext";
 import { describeError } from "../errors/describeError";
 import styles from "./forms.module.css";
 
+/**
+ * Shown in place of a screen that failed to render. Try again draws the
+ * screen afresh with `resetErrorBoundary`, which react-error-boundary passes
+ * in.
+ */
 function ScreenErrorFallback({ resetErrorBoundary }: FallbackProps) {
   return (
     <div role="alert" className={styles.form}>
@@ -20,12 +25,17 @@ function ScreenErrorFallback({ resetErrorBoundary }: FallbackProps) {
   );
 }
 
+type Props = {
+  /** The current screen. */
+  children: ReactNode;
+};
+
 /**
  * Catches an error while a screen renders, records it, and shows a fallback in
  * place of the screen. The navigation stays usable, and moving to another
  * screen clears the error.
  */
-export function ScreenErrorBoundary({ children }: { children: ReactNode }) {
+export function ScreenErrorBoundary({ children }: Props) {
   const { logError } = useData();
   const { pathname } = useLocation();
 

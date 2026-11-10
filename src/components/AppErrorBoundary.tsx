@@ -4,6 +4,10 @@ import { describeError } from "../errors/describeError";
 import type { WeightStorage } from "../storage/weightStorage";
 import styles from "./forms.module.css";
 
+/**
+ * Shown in place of the whole app after an error outside any screen, with a
+ * button that reloads the page.
+ */
 function AppErrorFallback() {
   return (
     <main role="alert" className={styles.form}>
@@ -20,7 +24,9 @@ function AppErrorFallback() {
 }
 
 type AppErrorBoundaryProps = {
+  /** Where the error is recorded: the app's storage, or a fake in tests. */
   logger: Pick<WeightStorage, "logError">;
+  /** The whole app. */
   children: ReactNode;
 };
 

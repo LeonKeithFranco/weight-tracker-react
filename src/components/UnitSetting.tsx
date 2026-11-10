@@ -3,12 +3,16 @@ import { useData } from "../data/dataContext";
 import type { WeightUnit } from "../lib/types";
 import styles from "./forms.module.css";
 
+/** The units offered, with the label each radio button shows. */
 const UNITS: { unit: WeightUnit; label: string }[] = [
   { unit: "lb", label: "Pounds (lb)" },
   { unit: "kg", label: "Kilograms (kg)" },
 ];
 
-/** Chooses the unit weights are entered and shown in. Saves on each change. */
+/**
+ * Chooses the unit weights are entered and shown in. Saves on each change,
+ * and goes back to the saved unit if saving fails.
+ */
 export function UnitSetting() {
   const { settings, saveSettings } = useData();
   const groupName = useId();

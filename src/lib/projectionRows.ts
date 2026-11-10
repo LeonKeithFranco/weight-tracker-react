@@ -11,7 +11,10 @@ import { fromKg } from "./units";
 export type ProjectionRow = {
   /** The day the row plots. */
   date: CalendarDate;
-  /** Whether a recent day's weight was estimated. Always `false` in future. */
+  /**
+   * Whether a recent day's weight was estimated. Always `false` on future
+   * days.
+   */
   isEstimated: boolean;
   /** The day's weight, or `null` on future days. */
   weight: number | null;
@@ -39,8 +42,8 @@ export type ProjectionRow = {
  * @param unit - The display unit to convert weights to.
  * @param targetWeightKg - The target weight in kg, or `null` when no target is
  * set.
- * @returns The last 90 days of `series`, then the projected days, all in date
- * order.
+ * @returns The last 90 days of `series`, or all of them if there are fewer,
+ * then the projected days, all in date order.
  */
 export function toProjectionRows(
   series: DailyPoint[],

@@ -1,7 +1,10 @@
 import type { CalendarDate, WeightUnit } from "./types";
 import { toKg } from "./units";
 
-/** Plain digits only, because `Number()` also accepts `0x10` and `1e3`. */
+/**
+ * Plain decimals only, such as `203.8`, because `Number()` also accepts `0x10`
+ * and `1e3`.
+ */
 const WEIGHT_PATTERN = /^\d+(\.\d+)?$/;
 
 /**

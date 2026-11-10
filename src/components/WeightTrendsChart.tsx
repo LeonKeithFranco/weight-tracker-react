@@ -5,7 +5,7 @@ import { AVERAGE_DECIMALS, WEIGHT_DECIMALS } from "../lib/units";
 import { ChartCard } from "./ChartCard";
 import type { ChartRowSeries } from "./ChartTooltip";
 import styles from "./chart.module.css";
-import { WeightTrendsPlot } from "./chartPlots";
+import { WeightTrendsPlot } from "./lazyPlots";
 import { useHiddenSeries } from "./useHiddenSeries";
 
 /**

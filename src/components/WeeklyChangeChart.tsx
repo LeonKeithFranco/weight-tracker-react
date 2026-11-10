@@ -5,7 +5,7 @@ import { ChartCard } from "./ChartCard";
 import type { LegendItem } from "./ChartLegend";
 import type { ChartRowSeries } from "./ChartTooltip";
 import styles from "./chart.module.css";
-import { WeeklyChangePlot } from "./chartPlots";
+import { WeeklyChangePlot } from "./lazyPlots";
 
 const SERIES: ChartRowSeries[] = [
   {

@@ -4,7 +4,7 @@ import type { WeightUnit } from "../lib/types";
 import { AVERAGE_DECIMALS } from "../lib/units";
 import { ChartCard } from "./ChartCard";
 import type { ChartRowSeries } from "./ChartTooltip";
-import { LossRatePlot } from "./chartPlots";
+import { LossRatePlot } from "./lazyPlots";
 
 const SERIES: ChartRowSeries[] = [
   {

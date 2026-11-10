@@ -4,7 +4,7 @@ import type { WeightUnit } from "../lib/types";
 import { WEIGHT_DECIMALS } from "../lib/units";
 import { ChartCard } from "./ChartCard";
 import type { ChartRowSeries } from "./ChartTooltip";
-import { ProgressPlot } from "./chartPlots";
+import { ProgressPlot } from "./lazyPlots";
 import { useHiddenSeries } from "./useHiddenSeries";
 
 const TO_LOSE: ChartRowSeries = {

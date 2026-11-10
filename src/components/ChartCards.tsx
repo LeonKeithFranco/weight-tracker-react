@@ -17,9 +17,8 @@ type Props = {
 };
 
 /**
- * Every chart, each in its own card. It's the only part of the Charts screen
- * that uses Recharts, so the screen loads it in a separate file, and the
- * heading and range presets don't wait for it.
+ * Every chart, each in its own card. The cards load with the app, and only
+ * their plots, which use Recharts, load in a separate file.
  */
 export function ChartCards({ rows, unit, dateFormat, targetWeightKg }: Props) {
   const projection = useProjection();

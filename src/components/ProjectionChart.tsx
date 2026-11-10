@@ -7,7 +7,7 @@ import { WEIGHT_DECIMALS } from "../lib/units";
 import { ChartCard } from "./ChartCard";
 import type { RowSeries } from "./ChartTooltip";
 import styles from "./chart.module.css";
-import { ProjectionPlot } from "./chartPlots";
+import { ProjectionPlot } from "./lazyPlots";
 import { useHiddenSeries } from "./useHiddenSeries";
 
 const WEIGHT: RowSeries<ProjectionRow> = {

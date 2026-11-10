@@ -5,7 +5,13 @@ import { InMemoryBackend } from "../storage/inMemoryBackend";
 import { DataProvider } from "./DataProvider";
 import { useProjection } from "./useProjection";
 
-/** Saves one weight a day from 2026-01-01, for as many days as given. */
+/**
+ * Saves one weight a day from 2026-01-01, going down overall but alternating,
+ * so the day-to-day changes have a spread to project.
+ *
+ * @param days - How many days to save.
+ * @returns Storage holding those entries.
+ */
 async function storageWith(days: number): Promise<AppStorage> {
   const storage = new AppStorage(new InMemoryBackend());
   for (let day = 1; day <= days; day++) {

@@ -10,7 +10,16 @@ import type { DailyFigures } from "./types";
 import { seriesOf } from "./testSeries";
 import { toKg } from "./units";
 
-/** Each column's value for the last day, keyed by label. */
+/**
+ * Formats each column's value for the last day of consecutive weights.
+ *
+ * @param weights - One weight a day, in kg, from 2026-01-01.
+ * @param targetWeightKg - The target in kg, or `null` for none, which also
+ * decides whether the "Left to lose" column is included.
+ * @param unit - The display unit.
+ * @returns Each column's formatted value for the last day, keyed by the
+ * column's label.
+ */
 function formattedLastDay(
   weights: number[],
   targetWeightKg: number | null,

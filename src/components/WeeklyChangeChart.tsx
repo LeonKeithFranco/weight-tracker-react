@@ -1,11 +1,11 @@
-import { Bar, BarChart, Cell, ReferenceLine } from "recharts";
 import type { ChartRow } from "../lib/chartRows";
 import { FIGURE_LABELS } from "../lib/figureLabels";
 import { PERCENT_DECIMALS } from "../lib/units";
-import { ChartFrame } from "./ChartFrame";
+import { ChartCard } from "./ChartCard";
 import type { LegendItem } from "./ChartLegend";
 import type { ChartRowSeries } from "./ChartTooltip";
 import styles from "./chart.module.css";
+import { WeeklyChangePlot } from "./chartPlots";
 
 const SERIES: ChartRowSeries[] = [
   {
@@ -50,16 +50,10 @@ type Props = {
  */
 export function WeeklyChangeChart({ rows, dateFormat }: Props) {
   return (
-    <ChartFrame
+    <ChartCard
       title="Weekly change (%)"
-      chart={BarChart}
-      rows={rows}
-      series={SERIES}
-      hidden={NONE_HIDDEN}
       legendItems={LEGEND}
-      suffix="%"
-      dateFormat={dateFormat}
-      yTickFormatter={(value) => `${value}%`}
+      hidden={NONE_HIDDEN}
       footer={
         <p className={styles.note}>
           Blue bars below 0 mean the 7-day average is lower than a week earlier.
@@ -67,25 +61,13 @@ export function WeeklyChangeChart({ rows, dateFormat }: Props) {
         </p>
       }
     >
-      <ReferenceLine y={0} stroke="var(--chart-axis)" />
-      <Bar
-        dataKey="average7ChangePercent"
-        name={SERIES[0].name}
-        isAnimationActive={false}
-      >
-        {/* One cell per row, in the same order, so each bar gets the colour
-            for its own direction. */}
-        {rows.map((row) => (
-          <Cell
-            key={row.date}
-            fill={
-              row.average7ChangePercent > 0
-                ? "var(--chart-gain)"
-                : "var(--chart-loss)"
-            }
-          />
-        ))}
-      </Bar>
-    </ChartFrame>
+      <WeeklyChangePlot
+        rows={rows}
+        series={SERIES}
+        hidden={NONE_HIDDEN}
+        suffix="%"
+        dateFormat={dateFormat}
+      />
+    </ChartCard>
   );
 }

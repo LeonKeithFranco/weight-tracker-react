@@ -2,7 +2,12 @@ import { describe, expect, it } from "vitest";
 import { projectRange, type ProjectedDay } from "./projectedRange";
 import { seriesOf } from "./testSeries";
 
-/** Weights that go down 1.1 kg, then up 0.9 kg, and so on. */
+/**
+ * Builds weights from 100 kg that go down 1.1 kg, then up 0.9 kg, and so on.
+ *
+ * @param days - How many weights to build.
+ * @returns One weight a day, in kg.
+ */
 function zigzag(days: number): number[] {
   const weights = [100];
 
@@ -13,7 +18,14 @@ function zigzag(days: number): number[] {
   return weights;
 }
 
-/** Projects data that is known to have enough days. */
+/**
+ * Projects data that is known to have enough days.
+ *
+ * @param weights - One weight a day, in kg, from 2026-01-01.
+ * @returns The projected days.
+ * @throws {@link Error}
+ * When there's no projection.
+ */
 function project(weights: number[]): ProjectedDay[] {
   const days = projectRange(seriesOf(weights));
 

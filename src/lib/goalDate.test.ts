@@ -15,7 +15,14 @@ function estimate(weights: number[], targetWeightKg: number | null) {
   return estimateGoalDate(figures, targetWeightKg);
 }
 
-/** `days` days on a straight line, changing by `kgPerDay` each day. */
+/**
+ * Builds weights on a straight line.
+ *
+ * @param days - How many weights to build.
+ * @param startKg - The first weight, in kg.
+ * @param kgPerDay - How much the weight changes each day, in kg.
+ * @returns One weight a day.
+ */
 function line(days: number, startKg: number, kgPerDay: number): number[] {
   return Array.from({ length: days }, (_, index) => startKg + index * kgPerDay);
 }

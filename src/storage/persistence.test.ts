@@ -5,7 +5,14 @@ import {
   type PersistenceApi,
 } from "./persistence";
 
-/** A stand-in for `navigator.storage` that answers as given. */
+/**
+ * Builds a stand-in for `navigator.storage` that answers as given.
+ *
+ * @param persisted - What `persisted()` resolves to.
+ * @param granted - What `persist()` resolves to, the same as `persisted` by
+ * default.
+ * @returns A fake whose methods are Vitest mocks.
+ */
 function fakeApi(persisted: boolean, granted = persisted): PersistenceApi {
   return {
     persisted: vi.fn(() => Promise.resolve(persisted)),

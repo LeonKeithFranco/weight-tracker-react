@@ -11,7 +11,12 @@ import { InMemoryBackend } from "../storage/inMemoryBackend";
 import { readableText } from "../test/readableText";
 import { LatestFigures } from "./LatestFigures";
 
-/** One entry per day from 2026-01-01, with these weights in kg. */
+/**
+ * Builds one entry a day, starting on 2026-01-01.
+ *
+ * @param weightsKg - One weight a day, in kg.
+ * @returns One entry per weight.
+ */
 function dailyEntries(weightsKg: number[]): WeightEntry[] {
   return weightsKg.map((weightKg, index) => ({
     date: addDays("2026-01-01", index),
@@ -42,7 +47,12 @@ describe("LatestFigures", () => {
     await screen.findByRole("heading", { name: "Latest figures" });
   }
 
-  /** The text a screen reader reads next to a figure's name, or `null` if it isn't shown. */
+  /**
+   * Reads the text a screen reader reads next to a figure's name.
+   *
+   * @param term - The figure's name.
+   * @returns The figure's readable text, or `null` if it isn't shown.
+   */
   function figure(term: string): string | null {
     const value = screen.queryByText(term, {
       selector: "dt",

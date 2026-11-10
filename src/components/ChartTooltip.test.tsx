@@ -4,7 +4,6 @@ import type { ChartRow } from "../lib/chartRows";
 import { sampleChartRow } from "../test/chartRow";
 import { ChartTooltip, type ChartRowSeries } from "./ChartTooltip";
 
-// Values that need rounding, and no target.
 /**
  * A day with values that need rounding, and no target, so its weight to lose
  * is empty.

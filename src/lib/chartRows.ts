@@ -59,8 +59,8 @@ export type ChartRow = {
   leftToLose: number | null;
   /**
    * How far below the target the weight is, as a negative number, on days past
-   * the target and the days beside them. `null` elsewhere, and when no target
-   * is set. See `leftToLose` for why weight to lose is split.
+   * the target, and 0 on the days beside them. `null` elsewhere, and when no
+   * target is set. See `leftToLose` for why weight to lose is split.
    */
   pastTarget: number | null;
   /** The weight lost since the first day. */

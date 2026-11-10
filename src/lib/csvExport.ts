@@ -1,7 +1,10 @@
 import Papa from "papaparse";
 import type { WeightEntry } from "./types";
 
-/** The date column's header in the app's own CSV format. */
+/**
+ * The date column's header in the app's own CSV format, shared with the
+ * import parser.
+ */
 export const DATE_COLUMN = "date";
 /**
  * The weight column's header in the app's own CSV format, shared with the

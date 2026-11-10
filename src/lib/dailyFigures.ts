@@ -1,11 +1,22 @@
 import { mean } from "simple-statistics";
 import type { DailyFigures, DailyPoint } from "./types";
 
+/** Days in the short average, and how far back its change compares. */
 const SHORT_WINDOW_DAYS = 7;
+/** Days in the long average. */
 const LONG_WINDOW_DAYS = 28;
+/** Used to turn days into weeks for the loss per week. */
 const DAYS_PER_WEEK = 7;
 
-/** Mean of up to `windowDays` values, ending at `index` and including it. */
+/**
+ * Averages the values in a window that ends at one index.
+ *
+ * @param values - Every value in the series, oldest first.
+ * @param index - The position of the last value to include.
+ * @param windowDays - How many values the window holds.
+ * @returns The mean of up to `windowDays` values, ending at `index` and
+ * including it. Near the start, it averages however many values exist.
+ */
 function trailingMean(
   values: number[],
   index: number,
@@ -14,7 +25,15 @@ function trailingMean(
   return mean(values.slice(Math.max(0, index - windowDays + 1), index + 1));
 }
 
-/** Calculates every daily figure. See the table in `docs/SPEC.md`. */
+/**
+ * Calculates every daily figure. See the table in `docs/SPEC.md`.
+ *
+ * @param series - The continuous daily series, oldest first, from
+ * `buildDailySeries`.
+ * @param targetWeightKg - The target weight in kg, or `null` when no target is
+ * set.
+ * @returns The figures for each day of `series`, in the same order.
+ */
 export function calculateDailyFigures(
   series: DailyPoint[],
   targetWeightKg: number | null,

@@ -20,16 +20,37 @@ export type FigureColumn = {
    * under "7-day average". The two together say the same as `label`.
    */
   group?: { label: string; subLabel: string };
-  /** The value as shown, in the display unit with the spec's precision. */
+  /**
+   * Formats the figure for one day.
+   *
+   * @param figures - The day's figures.
+   * @param unit - The display unit.
+   * @returns The value as shown, in the display unit with the spec's
+   * precision, or empty text when the day has no value.
+   */
   format(figures: DailyFigures, unit: WeightUnit): string;
-  /** Whether the value is a loss or a gain, for columns coloured by it. */
+  /**
+   * Says whether the day's value is a loss or a gain, for columns coloured by
+   * it. Only columns that are coloured have one.
+   *
+   * @param figures - The day's figures.
+   * @returns The value's tone.
+   */
   tone?(figures: DailyFigures): Tone;
 };
 
-/** A loss is shown in blue and a gain in red, as in the charts. */
+/**
+ * A loss is shown in blue and a gain in red, as in the charts. `null` is
+ * neither, and is shown in the text colour.
+ */
 export type Tone = "loss" | "gain" | null;
 
-/** Below 0 is a loss and above 0 a gain. Exactly 0 is neither. */
+/**
+ * Says whether a change is a loss or a gain.
+ *
+ * @param change - The change, in any unit.
+ * @returns `"loss"` below 0, `"gain"` above 0, and `null` for exactly 0.
+ */
 export function toneOf(change: number): Tone {
   if (change < 0) return "loss";
   if (change > 0) return "gain";
@@ -107,14 +128,18 @@ const DEFINITIONS: Omit<FigureColumn, "label">[] = [
   },
 ];
 
+/** Every column, with its label from the shared labels. */
 const COLUMNS: FigureColumn[] = DEFINITIONS.map((column) => ({
   ...column,
   label: FIGURE_LABELS[column.key],
 }));
 
 /**
- * The columns to show. "Left to lose" is left out when no target is set, because
- * every value in it would be empty.
+ * Lists the columns to show. "Left to lose" is left out when no target is set,
+ * because every value in it would be empty.
+ *
+ * @param hasTarget - Whether a target weight is set.
+ * @returns The columns in the spec's order.
  */
 export function figureColumns(hasTarget: boolean): FigureColumn[] {
   return hasTarget
@@ -126,12 +151,17 @@ export function figureColumns(hasTarget: boolean): FigureColumn[] {
 export type ColumnGroup = {
   /** The shared heading, or `null` for a column that stands alone. */
   label: string | null;
+  /** The columns in the group, in table order. */
   columns: FigureColumn[];
 };
 
 /**
  * Splits the columns into what the table's top heading row shows: one group
  * for each run of columns sharing a heading, and one per column on its own.
+ *
+ * @param columns - The columns to show, in table order.
+ * @returns The groups in table order. Columns only share a group when they
+ * sit side by side.
  */
 export function columnGroups(columns: FigureColumn[]): ColumnGroup[] {
   const groups: ColumnGroup[] = [];
@@ -147,7 +177,13 @@ export function columnGroups(columns: FigureColumn[]): ColumnGroup[] {
   return groups;
 }
 
-/** The label with the unit when it has one, such as "Weight (lb)". */
+/**
+ * Writes a column's heading for the phone rows, where each label stands alone.
+ *
+ * @param column - The column to name.
+ * @param unit - The display unit.
+ * @returns The label with the unit when it has one, such as "Weight (lb)".
+ */
 export function columnHeading(column: FigureColumn, unit: WeightUnit): string {
   return column.inDisplayUnit ? `${column.label} (${unit})` : column.label;
 }

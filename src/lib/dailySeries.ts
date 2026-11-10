@@ -5,6 +5,10 @@ import type { DailyPoint, WeightEntry } from "./types";
  * Builds a continuous series from the first entry to the latest, filling gaps
  * by linear interpolation. Estimates exist only in this result and are never
  * saved.
+ *
+ * @param entries - The saved entries, in any order.
+ * @returns One point per day from the earliest entry to the latest, oldest
+ * first, or none when there are no entries.
  */
 export function buildDailySeries(entries: WeightEntry[]): DailyPoint[] {
   // `YYYY-MM-DD` strings sort chronologically when compared as text.

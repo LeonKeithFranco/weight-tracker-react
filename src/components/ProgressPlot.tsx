@@ -3,14 +3,21 @@ import type { ChartRow } from "../lib/chartRows";
 import { ChartPlot, type PlotProps } from "./ChartPlot";
 
 /**
- * The fields that draw one series. What's left to lose is drawn in two parts,
- * above and below 0, so neither band jumps across the stack when you pass the
- * target. The legend and tooltip still use the series' own field.
+ * Lists the fields that draw one series. What's left to lose is drawn in two
+ * parts, above and below 0, so neither band jumps across the stack when you
+ * pass the target. The legend and tooltip still use the series' own field.
+ *
+ * @param key - The series' field in the rows.
+ * @returns The fields to draw an area for, in drawing order.
  */
 function areasFor(key: keyof ChartRow): (keyof ChartRow)[] {
   return key === "weightToLose" ? ["leftToLose", "pastTarget"] : [key];
 }
 
+/**
+ * The Progress chart's stacked areas, with a line at 0, where the target is
+ * reached.
+ */
 export function ProgressPlot(props: PlotProps<ChartRow>) {
   return (
     // No `yDomain`: the default starts from 0 and stretches below it when a

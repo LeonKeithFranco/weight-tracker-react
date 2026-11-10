@@ -58,11 +58,19 @@ const SERIES = [
 ] satisfies ChartRowSeries[];
 
 type Props = {
+  /** The days the range preset shows, in the display unit. */
   rows: ChartRow[];
+  /** The display unit, for the heading and the tooltip. */
   unit: WeightUnit;
+  /** The date format setting, for the tooltip. */
   dateFormat: string;
 };
 
+/**
+ * The weight and its 7- and 28-day averages, each with its running low. Every
+ * line can be hidden from the legend, and estimated stretches of the weight
+ * line are faded.
+ */
 export function WeightTrendsChart({ rows, unit, dateFormat }: Props) {
   const { hidden, toggle } = useHiddenSeries();
 

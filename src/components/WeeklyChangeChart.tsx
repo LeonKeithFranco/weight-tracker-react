@@ -7,6 +7,7 @@ import type { ChartRowSeries } from "./ChartTooltip";
 import styles from "./chart.module.css";
 import { WeeklyChangePlot } from "./lazyPlots";
 
+/** The chart's one series, the 7-day change, for the tooltip. */
 const SERIES: ChartRowSeries[] = [
   {
     key: "average7ChangePercent",
@@ -39,7 +40,9 @@ const LEGEND: LegendItem[] = [
 const NONE_HIDDEN: ReadonlySet<string> = new Set();
 
 type Props = {
+  /** The days the range preset shows. */
   rows: ChartRow[];
+  /** The date format setting, for the tooltip. */
   dateFormat: string;
 };
 

@@ -3,12 +3,17 @@ import { ChartLegend, type LegendItem } from "./ChartLegend";
 import styles from "./chart.module.css";
 
 type Props = {
+  /** The chart's heading, which also names its section. */
   title: string;
   /** What the legend lists. */
   legendItems: LegendItem[];
+  /** The keys of the series the legend has hidden. */
   hidden: ReadonlySet<string>;
-  /** Makes the legend's items toggle buttons. Left out for a single series,
-   * whose legend is plain text, because hiding it would empty the chart. */
+  /**
+   * Called with a series' key when its legend item is pressed. Giving it makes
+   * the legend's items toggle buttons. Left out for a single series, whose
+   * legend is plain text, because hiding it would empty the chart.
+   */
   onToggle?: (key: string) => void;
   /** The chart's plot. */
   children: ReactNode;

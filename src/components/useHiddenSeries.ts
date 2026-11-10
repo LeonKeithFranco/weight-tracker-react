@@ -3,6 +3,9 @@ import { useState } from "react";
 /**
  * Which of a chart's series the legend has hidden. Every series starts shown,
  * and the set lives in the chart that calls this, so each chart keeps its own.
+ *
+ * @returns The keys of the hidden series, and a function that hides a shown
+ * series or shows a hidden one, by its key.
  */
 export function useHiddenSeries(): {
   hidden: ReadonlySet<string>;

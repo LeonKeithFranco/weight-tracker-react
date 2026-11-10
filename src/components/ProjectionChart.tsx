@@ -10,6 +10,7 @@ import styles from "./chart.module.css";
 import { ProjectionPlot } from "./lazyPlots";
 import { useHiddenSeries } from "./useHiddenSeries";
 
+/** The recent days' weight, which the projection learned from. */
 const WEIGHT: RowSeries<ProjectionRow> = {
   key: "weight",
   name: FIGURE_LABELS.weightKg,
@@ -18,7 +19,10 @@ const WEIGHT: RowSeries<ProjectionRow> = {
   decimals: WEIGHT_DECIMALS,
 };
 
-// The trend and its range share a colour, so they read as one projection.
+/**
+ * The projected trend. It shares its range's colour, so the two read as one
+ * projection.
+ */
 const TREND: RowSeries<ProjectionRow> = {
   key: "trend",
   name: "Projected trend",
@@ -27,6 +31,7 @@ const TREND: RowSeries<ProjectionRow> = {
   decimals: WEIGHT_DECIMALS,
 };
 
+/** The likely range, drawn as a band around the trend. */
 const RANGE: RowSeries<ProjectionRow> = {
   key: "range",
   name: "Likely range",
@@ -35,6 +40,7 @@ const RANGE: RowSeries<ProjectionRow> = {
   decimals: WEIGHT_DECIMALS,
 };
 
+/** The target weight, as a flat line. Only shown with a target. */
 const TARGET: RowSeries<ProjectionRow> = {
   key: "target",
   name: "Target",
@@ -44,11 +50,18 @@ const TARGET: RowSeries<ProjectionRow> = {
 };
 
 type Props = {
+  /** The whole daily series, oldest first, in kg. */
   series: DailyPoint[];
-  /** `null` when there aren't enough days to project from. */
+  /**
+   * The projected days, or `null` when there aren't enough days to project
+   * from, which shows a message in place of the chart.
+   */
   projected: ProjectedDay[] | null;
+  /** The display unit to convert weights to. */
   unit: WeightUnit;
+  /** The date format setting, for the tooltip. */
   dateFormat: string;
+  /** The target weight in kg, or `null` when none is set. */
   targetWeightKg: number | null;
 };
 

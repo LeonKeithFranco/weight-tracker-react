@@ -11,8 +11,14 @@ import { WeightTrendsChart } from "./WeightTrendsChart";
 type Props = {
   /** The days the range preset shows, already in the display unit. */
   rows: ChartRow[];
+  /** The display unit, for the tooltips' values. */
   unit: WeightUnit;
+  /** The date format setting, for the tooltips' dates. */
   dateFormat: string;
+  /**
+   * The target weight in kg, or `null` when none is set, which hides the
+   * target lines and the Progress chart's weight to lose.
+   */
   targetWeightKg: number | null;
 };
 

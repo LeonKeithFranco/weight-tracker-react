@@ -6,8 +6,12 @@ import { ChartPlot, type PlotProps } from "./ChartPlot";
 const ESTIMATED_OPACITY = 0.35;
 
 /**
- * The lines that draw one series. The weight is drawn twice: its estimated
- * stretches faded underneath, then its logged stretches solid on top.
+ * Lists the lines that draw one series. The weight is drawn twice: its
+ * estimated stretches faded underneath, then its logged stretches solid on
+ * top.
+ *
+ * @param key - The series' field in the rows.
+ * @returns The field and opacity of each line, in drawing order.
  */
 function linesFor(
   key: keyof ChartRow,
@@ -21,6 +25,9 @@ function linesFor(
   return [{ dataKey: key, opacity: 1 }];
 }
 
+/**
+ * The Weight trends chart's lines, with the y-axis fitted to the lines shown.
+ */
 export function WeightTrendsPlot(props: PlotProps<ChartRow>) {
   return (
     <ChartPlot

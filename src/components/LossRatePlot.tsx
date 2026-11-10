@@ -2,6 +2,9 @@ import { Line, LineChart, ReferenceLine } from "recharts";
 import type { ChartRow } from "../lib/chartRows";
 import { ChartPlot, type PlotProps } from "./ChartPlot";
 
+/**
+ * The Loss rate chart's line, with a line at 0 for when the axis reaches it.
+ */
 export function LossRatePlot(props: PlotProps<ChartRow>) {
   const [series] = props.series;
 

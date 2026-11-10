@@ -7,6 +7,7 @@ import type { ChartRowSeries } from "./ChartTooltip";
 import { ProgressPlot } from "./lazyPlots";
 import { useHiddenSeries } from "./useHiddenSeries";
 
+/** The weight still to lose, stacked on top. Only shown with a target. */
 const TO_LOSE: ChartRowSeries = {
   key: "weightToLose",
   name: FIGURE_LABELS.weightToLoseKg,
@@ -15,6 +16,7 @@ const TO_LOSE: ChartRowSeries = {
   decimals: WEIGHT_DECIMALS,
 };
 
+/** The weight lost since the start, at the bottom of the stack. */
 const LOST: ChartRowSeries = {
   key: "weightLossSinceStart",
   name: FIGURE_LABELS.weightLossSinceStartKg,
@@ -24,9 +26,13 @@ const LOST: ChartRowSeries = {
 };
 
 type Props = {
+  /** The days the range preset shows, in the display unit. */
   rows: ChartRow[];
+  /** The display unit, for the heading and the tooltip. */
   unit: WeightUnit;
+  /** The date format setting, for the tooltip. */
   dateFormat: string;
+  /** Whether a target is set. Without one, only the weight lost is shown. */
   hasTarget: boolean;
 };
 

@@ -17,6 +17,9 @@ export type TooltipRow = {
  * A series that plots one of a row type's fields. `& string` drops any
  * number or symbol keys, because a series key is also a React key and a
  * legend id.
+ *
+ * @typeParam Row - The chart's row type, such as `ChartRow`, whose field the
+ * series plots.
  */
 export type RowSeries<Row> = ChartSeries & { key: keyof Row & string };
 
@@ -45,7 +48,11 @@ function formatValue(value: unknown, decimals: number): string | null {
   return null;
 }
 
-/** The props for {@link ChartTooltip}. */
+/**
+ * The props for {@link ChartTooltip}.
+ *
+ * @typeParam Row - The chart's row type, such as `ChartRow`.
+ */
 type Props<Row extends TooltipRow> = {
   /** The day under the pointer. */
   row: Row;
@@ -63,6 +70,8 @@ type Props<Row extends TooltipRow> = {
  * The day under the pointer or finger: its date in the user's own format,
  * whether it was estimated, and each shown series rounded for display.
  * Generic over the row type, so any chart's rows work.
+ *
+ * @typeParam Row - The chart's row type, such as `ChartRow`.
  */
 export function ChartTooltip<Row extends TooltipRow>({
   row,

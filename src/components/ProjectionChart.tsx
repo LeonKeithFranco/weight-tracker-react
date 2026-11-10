@@ -1,13 +1,13 @@
 import { useId } from "react";
-import { Area, ComposedChart, Line } from "recharts";
 import { FIGURE_LABELS } from "../lib/figureLabels";
 import { toProjectionRows, type ProjectionRow } from "../lib/projectionRows";
 import type { ProjectedDay } from "../lib/projectedRange";
 import type { DailyPoint, WeightUnit } from "../lib/types";
 import { WEIGHT_DECIMALS } from "../lib/units";
-import { ChartFrame } from "./ChartFrame";
+import { ChartCard } from "./ChartCard";
 import type { RowSeries } from "./ChartTooltip";
 import styles from "./chart.module.css";
+import { ProjectionPlot } from "./chartPlots";
 import { useHiddenSeries } from "./useHiddenSeries";
 
 const WEIGHT: RowSeries<ProjectionRow> = {
@@ -85,16 +85,11 @@ export function ProjectionChart({
       : [WEIGHT, TREND, RANGE, TARGET];
 
   return (
-    <ChartFrame
+    <ChartCard
       title={title}
-      chart={ComposedChart}
-      rows={rows}
-      series={legend}
+      legendItems={legend}
       hidden={hidden}
       onToggle={toggle}
-      suffix={` ${unit}`}
-      dateFormat={dateFormat}
-      yDomain={["auto", "auto"]}
       footer={
         <p className={styles.note}>
           The last 90 days, then 180 projected days. The trend continues the
@@ -104,36 +99,13 @@ export function ProjectionChart({
         </p>
       }
     >
-      {/* Drawn first, so the lines sit on top of the band. A `[low, high]`
-          value makes Recharts fill between the two. */}
-      <Area
-        dataKey="range"
-        name={RANGE.name}
-        hide={hidden.has("range")}
-        stroke="none"
-        fill={RANGE.color}
-        fillOpacity={0.25}
-        activeDot={false}
-        type="linear"
-        isAnimationActive={false}
+      <ProjectionPlot
+        rows={rows}
+        series={legend}
+        hidden={hidden}
+        suffix={` ${unit}`}
+        dateFormat={dateFormat}
       />
-      {legend
-        .filter((item) => item.key !== "range")
-        .map((item) => (
-          <Line
-            key={item.key}
-            dataKey={item.key}
-            name={item.name}
-            hide={hidden.has(item.key)}
-            stroke={item.color}
-            strokeWidth={2}
-            strokeDasharray={item.dashed ? "6 4" : undefined}
-            dot={false}
-            activeDot={{ r: 4 }}
-            type="linear"
-            isAnimationActive={false}
-          />
-        ))}
-    </ChartFrame>
+    </ChartCard>
   );
 }

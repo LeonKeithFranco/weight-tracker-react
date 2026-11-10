@@ -1,10 +1,10 @@
-import { Line, LineChart, ReferenceLine } from "recharts";
 import type { ChartRow } from "../lib/chartRows";
 import { FIGURE_LABELS } from "../lib/figureLabels";
 import type { WeightUnit } from "../lib/types";
 import { AVERAGE_DECIMALS } from "../lib/units";
-import { ChartFrame } from "./ChartFrame";
+import { ChartCard } from "./ChartCard";
 import type { ChartRowSeries } from "./ChartTooltip";
+import { LossRatePlot } from "./chartPlots";
 
 const SERIES: ChartRowSeries[] = [
   {
@@ -31,31 +31,18 @@ type Props = {
  */
 export function LossRateChart({ rows, unit, dateFormat }: Props) {
   return (
-    <ChartFrame
+    <ChartCard
       title={`Loss rate (${unit} per week)`}
-      chart={LineChart}
-      rows={rows}
-      series={SERIES}
+      legendItems={SERIES}
       hidden={NONE_HIDDEN}
-      suffix={` ${unit}`}
-      dateFormat={dateFormat}
-      // Fits the data, since the rate settles well away from 0 after the
-      // first few weeks.
-      yDomain={["auto", "auto"]}
     >
-      {/* Below 0 means weight gained since the start. Only shows when the axis
-          reaches 0. */}
-      <ReferenceLine y={0} stroke="var(--chart-axis)" />
-      <Line
-        dataKey="weightLossPerWeek"
-        name={SERIES[0].name}
-        stroke={SERIES[0].color}
-        strokeWidth={2}
-        dot={false}
-        activeDot={{ r: 4 }}
-        type="linear"
-        isAnimationActive={false}
+      <LossRatePlot
+        rows={rows}
+        series={SERIES}
+        hidden={NONE_HIDDEN}
+        suffix={` ${unit}`}
+        dateFormat={dateFormat}
       />
-    </ChartFrame>
+    </ChartCard>
   );
 }

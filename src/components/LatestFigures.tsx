@@ -1,11 +1,30 @@
+import NumberFlow, { continuous, NumberFlowGroup } from "@number-flow/react";
 import { useId, useMemo } from "react";
 import { useData } from "../data/dataContext";
 import { useDailyFigures } from "../data/useDailyFigures";
 import { formatDate } from "../lib/dates";
 import { FIGURE_LABELS } from "../lib/figureLabels";
 import { estimateGoalDate, type GoalEstimate } from "../lib/goalDate";
-import { formatAverage, formatPercent, formatWeight } from "../lib/units";
+import {
+  AVERAGE_DECIMALS,
+  formatNumber,
+  fromKg,
+  numberFormatOptions,
+  PERCENT_DECIMALS,
+  WEIGHT_DECIMALS,
+} from "../lib/units";
 import styles from "./LatestFigures.module.css";
+
+/** Counts through the values in between, so the right-hand digits spin fastest. */
+const PLUGINS = [continuous];
+
+/** A figure shown as a rolling number, in the display unit or as a percentage. */
+type NumberRow = {
+  term: string;
+  value: number;
+  decimals: number;
+  suffix: string;
+};
 
 /** The goal date row's text, from the display table in `docs/SPEC.md`. */
 function describeGoal(goal: GoalEstimate, dateFormat: string): string | null {
@@ -46,44 +65,53 @@ export function LatestFigures() {
   const unit = settings.displayUnit;
   const goalText = describeGoal(goal, settings.dateFormat);
 
-  const rows: { term: string; value: string }[] = [
-    {
-      term: FIGURE_LABELS.weightKg,
-      value: `${formatWeight(latest.weightKg, unit)} ${unit}`,
-    },
-    {
-      term: FIGURE_LABELS.average7Kg,
-      value: `${formatAverage(latest.average7Kg, unit)} ${unit}`,
-    },
+  function weightRow(
+    term: string,
+    weightKg: number,
+    decimals: number,
+  ): NumberRow {
+    return {
+      term,
+      value: fromKg(weightKg, unit),
+      decimals,
+      suffix: ` ${unit}`,
+    };
+  }
+
+  const rows: NumberRow[] = [
+    weightRow(FIGURE_LABELS.weightKg, latest.weightKg, WEIGHT_DECIMALS),
+    weightRow(FIGURE_LABELS.average7Kg, latest.average7Kg, AVERAGE_DECIMALS),
     {
       term: FIGURE_LABELS.average7Change,
-      value: formatPercent(latest.average7Change),
+      value: latest.average7Change * 100,
+      decimals: PERCENT_DECIMALS,
+      suffix: "%",
     },
-    {
-      term: FIGURE_LABELS.average28Kg,
-      value: `${formatAverage(latest.average28Kg, unit)} ${unit}`,
-    },
-    {
-      term: FIGURE_LABELS.lowestWeightKg,
-      value: `${formatWeight(latest.lowestWeightKg, unit)} ${unit}`,
-    },
+    weightRow(FIGURE_LABELS.average28Kg, latest.average28Kg, AVERAGE_DECIMALS),
+    weightRow(
+      FIGURE_LABELS.lowestWeightKg,
+      latest.lowestWeightKg,
+      WEIGHT_DECIMALS,
+    ),
     ...(latest.weightToLoseKg === null
       ? []
       : [
-          {
-            term: FIGURE_LABELS.weightToLoseKg,
-            value: `${formatWeight(latest.weightToLoseKg, unit)} ${unit}`,
-          },
+          weightRow(
+            FIGURE_LABELS.weightToLoseKg,
+            latest.weightToLoseKg,
+            WEIGHT_DECIMALS,
+          ),
         ]),
-    {
-      term: FIGURE_LABELS.weightLossSinceStartKg,
-      value: `${formatWeight(latest.weightLossSinceStartKg, unit)} ${unit}`,
-    },
-    {
-      term: FIGURE_LABELS.weightLossPerWeekKg,
-      value: `${formatAverage(latest.weightLossPerWeekKg, unit)} ${unit}`,
-    },
-    ...(goalText === null ? [] : [{ term: "Goal date", value: goalText }]),
+    weightRow(
+      FIGURE_LABELS.weightLossSinceStartKg,
+      latest.weightLossSinceStartKg,
+      WEIGHT_DECIMALS,
+    ),
+    weightRow(
+      FIGURE_LABELS.weightLossPerWeekKg,
+      latest.weightLossPerWeekKg,
+      AVERAGE_DECIMALS,
+    ),
   ];
 
   return (
@@ -92,14 +120,39 @@ export function LatestFigures() {
       <p className={styles.asOf}>
         As of {formatDate(latest.date, settings.dateFormat)}
       </p>
-      <dl className={styles.figures}>
-        {rows.map(({ term, value }) => (
-          <div key={term} className={styles.row}>
-            <dt>{term}</dt>
-            <dd>{value}</dd>
-          </div>
-        ))}
-      </dl>
+      {/* The group keeps the figures' animations in step with each other. */}
+      <NumberFlowGroup>
+        <dl className={styles.figures}>
+          {rows.map(({ term, value, decimals, suffix }) => (
+            <div key={term} className={styles.row}>
+              <dt>{term}</dt>
+              <dd>
+                {/* NumberFlow draws its digits where screen readers and
+                    tests can't reliably read them, so the plain text is
+                    here for them, and the rolling copy is hidden from them. */}
+                <span className="visually-hidden">
+                  {formatNumber(value, decimals)}
+                  {suffix}
+                </span>
+                <NumberFlow
+                  aria-hidden="true"
+                  value={value}
+                  locales="en-US"
+                  format={numberFormatOptions(decimals)}
+                  suffix={suffix}
+                  plugins={PLUGINS}
+                />
+              </dd>
+            </div>
+          ))}
+          {goalText !== null && (
+            <div className={styles.row}>
+              <dt>Goal date</dt>
+              <dd>{goalText}</dd>
+            </div>
+          )}
+        </dl>
+      </NumberFlowGroup>
     </section>
   );
 }

@@ -23,6 +23,26 @@ export function formatNumber(value: number, decimals: number): string {
   return Number(text) === 0 ? (0).toFixed(decimals) : text;
 }
 
+/**
+ * `Intl.NumberFormat` options that format like `formatNumber`, for components
+ * that take a number and format it themselves, such as the rolling figures.
+ * Use them with the `en-US` locale, which writes numbers the way `toFixed` does.
+ * `signDisplay: "negative"` leaves the sign off a value that rounds to 0.
+ */
+export function numberFormatOptions(decimals: number): {
+  minimumFractionDigits: number;
+  maximumFractionDigits: number;
+  useGrouping: false;
+  signDisplay: "negative";
+} {
+  return {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+    useGrouping: false,
+    signDisplay: "negative",
+  };
+}
+
 export function formatWeight(weightKg: number, unit: WeightUnit): string {
   return formatNumber(fromKg(weightKg, unit), WEIGHT_DECIMALS);
 }

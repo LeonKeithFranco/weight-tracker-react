@@ -17,6 +17,7 @@
     "generate-icons": "pwa-assets-generator"
   },
   "dependencies": {
+    "@number-flow/react": "^0.6.2",
     "dayjs": "^1.11.23",
     "dexie": "^4.4.7",
     "lucide-react": "^1.70.0",

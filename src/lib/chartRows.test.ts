@@ -3,7 +3,10 @@ import { toChartRows } from "./chartRows";
 import type { DailyFigures } from "./types";
 import { KG_PER_LB } from "./units";
 
-/** An estimated day with a different value in every figure, in kg. */
+/**
+ * An estimated day with a different value in every figure, with weights in kg
+ * and the 7-day change as a fraction.
+ */
 const day: DailyFigures = {
   date: "2026-11-05",
   weightKg: 90,

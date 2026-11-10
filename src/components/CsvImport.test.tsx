@@ -44,7 +44,7 @@ describe("CsvImport", () => {
    *
    * @param user - The user event session to pick it with.
    * @param text - The file's contents.
-   * @param name - The file's name.
+   * @param name - The file's name, "weights.csv" by default.
    */
   async function chooseFile(
     user: ReturnType<typeof userEvent.setup>,

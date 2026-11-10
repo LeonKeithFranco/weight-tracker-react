@@ -10,7 +10,10 @@ export type LegendItem = {
   color: string;
   /** Whether its sample line is dashed, to match a dashed line in the chart. */
   dashed: boolean;
-  /** A short line by default. A square suits bars, which are filled. */
+  /**
+   * The sample's shape: a short line by default, or a square, which suits
+   * bars because they're filled.
+   */
   marker?: "line" | "square";
 };
 

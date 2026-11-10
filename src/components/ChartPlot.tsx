@@ -50,7 +50,11 @@ type Props<Row extends TooltipRow> = PlotProps<Row> & {
     | typeof AreaChart
     | typeof BarChart
     | typeof ComposedChart;
-  /** Borrowed from `YAxis` itself, so it accepts whatever Recharts does. */
+  /**
+   * The y-axis's range, such as `["auto", "auto"]` to fit the data. Left out,
+   * Recharts' default is used. Typed from `YAxis` itself, so it accepts
+   * whatever Recharts does.
+   */
   yDomain?: ComponentProps<typeof YAxis>["domain"];
   /** Formats y-axis labels, such as adding "%". Plain numbers by default. */
   yTickFormatter?: (value: number) => string;

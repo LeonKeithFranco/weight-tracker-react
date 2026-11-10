@@ -32,29 +32,32 @@ export type DataContextValue = {
    * `entries`.
    *
    * @param entry - The entry to save, with its weight in kg.
-   * @throws The storage's error, when the entry can't be saved.
+   * @throws The storage's error, when the entry can't be saved, or when it was
+   * saved but the entries can't be read back.
    */
   saveEntry(entry: WeightEntry): Promise<void>;
   /**
    * Deletes the entry for a date, then updates `entries`.
    *
    * @param date - The date whose entry to delete.
-   * @throws The storage's error, when the entry can't be deleted.
+   * @throws The storage's error, when the entry can't be deleted, or when it
+   * was deleted but the entries can't be read back.
    */
   deleteEntry(date: CalendarDate): Promise<void>;
   /**
    * Saves a file's valid entries in one step, then updates `entries`.
    *
    * @param parsed - The file's rows, from `parseCsv`.
-   * @throws The storage's error, when the entries can't be saved. Nothing is
-   * saved.
+   * @throws The storage's error, when the entries can't be saved, and then
+   * nothing is saved, or when they were saved but can't be read back.
    */
   importEntries(parsed: ParsedCsv): Promise<void>;
   /**
    * Saves the settings, then updates `settings`.
    *
    * @param settings - The settings to save.
-   * @throws The storage's error, when the settings can't be saved.
+   * @throws The storage's error, when the settings can't be saved, or when
+   * they were saved but can't be read back.
    */
   saveSettings(settings: Settings): Promise<void>;
   /**

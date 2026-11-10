@@ -8,7 +8,8 @@ const WEIGHT_PATTERN = /^\d+(\.\d+)?$/;
  * Checks a weight is one the app can save: a real number above 0.
  *
  * @remarks
- * `NaN` fails the comparison, and `Infinity` fails the finite check.
+ * `Number.isFinite` rejects `NaN` and `Infinity`, and the comparison rejects
+ * 0 and negative weights.
  *
  * @param weightKg - The weight in kg.
  * @returns Whether the weight is allowed.

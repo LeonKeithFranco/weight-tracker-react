@@ -3,7 +3,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { WeightStorage } from "../storage/weightStorage";
 import { AppErrorBoundary } from "./AppErrorBoundary";
 
-/** A stand-in for the app that always throws while rendering. */
+/**
+ * A stand-in for the app that always throws while rendering.
+ *
+ * @throws {@link Error}
+ * Always, while rendering.
+ */
 function BrokenApp(): never {
   throw new Error("app broke");
 }

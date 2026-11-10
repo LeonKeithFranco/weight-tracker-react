@@ -21,7 +21,7 @@ function isControlled(page: Page) {
   return page.evaluate("navigator.serviceWorker?.controller != null");
 }
 
-test.describe("Offline use of the installed build", () => {
+test.describe("Offline use of the production build", () => {
   test("opens every screen and saves a weight with the network off", async ({
     page,
     context,

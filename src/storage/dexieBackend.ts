@@ -35,7 +35,8 @@ export class DexieBackend implements StorageBackend {
   private readonly db: Database;
 
   /**
-   * Opens the database, creating its tables on first use.
+   * Sets up the database and its tables. Dexie opens it, creating the tables
+   * the first time, when the first read or write runs.
    *
    * @param databaseName - The database to open. Tests pass a random name, so
    * each starts with an empty database, or reuse one to reopen it.

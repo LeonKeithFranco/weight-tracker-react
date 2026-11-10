@@ -11,6 +11,7 @@ const PROJECTION_WINDOW_DAYS = 90;
  * Picks the recent days a projection learns from, shared by the goal date and
  * the Projection chart so they agree.
  *
+ * @typeParam T - The kind of day, such as a daily point or a day's figures.
  * @param series - The daily series, oldest first, as points or figures.
  * @returns The last 90 days, or all of them if there are fewer.
  */

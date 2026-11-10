@@ -11,6 +11,9 @@ type Props = {
  * The line under a form or button that says how the last action went.
  * It's always in the page, even when empty, because screen readers only
  * announce changes to a status that's already there.
+ *
+ * @remarks
+ * Give it at most one message. With both `null`, the line is empty.
  */
 export function FormStatus({ success, failure }: Props) {
   return (

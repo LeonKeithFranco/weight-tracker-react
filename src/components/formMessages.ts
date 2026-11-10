@@ -1,6 +1,8 @@
 import type { LogFormErrors } from "../lib/logForm";
 
-/** What to show for each weight problem, in the log form and the edit dialog. */
+/**
+ * What to show for each weight problem, in the log form and the edit dialog.
+ */
 export const WEIGHT_MESSAGES: Record<
   NonNullable<LogFormErrors["weight"]>,
   string

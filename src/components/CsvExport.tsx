@@ -7,12 +7,16 @@ import { localToday } from "../lib/dates";
 import { FormStatus } from "./FormStatus";
 import styles from "./forms.module.css";
 
+/** Whether an export has happened yet, with how many entries it held. */
 type ExportState =
   | { status: "idle" }
   | { status: "exported"; count: number }
   | { status: "failed" };
 
-/** Downloads every real entry as a CSV file, in kg at full precision. */
+/**
+ * Downloads every real entry as a CSV file, in kg at full precision. The
+ * button is disabled until something is saved.
+ */
 export function CsvExport() {
   const { entries, logError } = useData();
   const id = useId();

@@ -14,9 +14,18 @@ import styles from "./CsvImport.module.css";
 import { FormStatus } from "./FormStatus";
 import formStyles from "./forms.module.css";
 
+/**
+ * Why a whole file is turned away: the parser's reasons, or the browser
+ * failing to read the file at all.
+ */
 type RejectReason =
   Extract<CsvParseResult, { status: "failed" }>["reason"] | "unreadable";
 
+/**
+ * Where the import has got to. A file is rejected or previewed. A preview is
+ * confirmed, which imports it, or cancelled. A failed import keeps its
+ * preview, so it can be tried again.
+ */
 type ImportState =
   | { status: "idle" }
   | { status: "rejected"; fileName: string; reason: RejectReason }
@@ -25,6 +34,7 @@ type ImportState =
   | { status: "imported"; counts: ImportPreview }
   | { status: "failed"; fileName: string; parsed: ParsedCsv };
 
+/** The message shown for each reason a file is turned away. */
 const REJECT_MESSAGES: Record<RejectReason, string> = {
   "unknown-columns":
     "This file needs either date and weight_kg columns, or Date and Weight (lbs) columns.",
@@ -32,6 +42,7 @@ const REJECT_MESSAGES: Record<RejectReason, string> = {
   unreadable: "Couldn't read this file. Try choosing it again.",
 };
 
+/** The Problem column's text for each reason a row can't be imported. */
 const INVALID_REASONS: Record<InvalidReason, string> = {
   "invalid-date": "Not a valid date",
   "future-date": "Date is in the future",
@@ -39,6 +50,14 @@ const INVALID_REASONS: Record<InvalidReason, string> = {
   "duplicate-date": "Repeats an earlier date",
 };
 
+/**
+ * Writes a count with the right form of its noun.
+ *
+ * @param count - How many there are.
+ * @param one - The noun for exactly one, such as "entry".
+ * @param many - The noun for any other count, such as "entries".
+ * @returns The count and noun, such as "1 entry" or "0 entries".
+ */
 function plural(count: number, one: string, many: string): string {
   return `${count} ${count === 1 ? one : many}`;
 }
@@ -175,15 +194,24 @@ export function CsvImport() {
 }
 
 type PreviewProps = {
+  /** The chosen file's name, for the heading. */
   fileName: string;
+  /** The file's importable and invalid rows. */
   parsed: ParsedCsv;
+  /** How many rows would be new, overwrite an entry or be skipped. */
   preview: ImportPreview;
+  /** Whether the import is under way, which disables both buttons. */
   importing: boolean;
+  /** Called when the user chooses Import. */
   onConfirm(): void;
+  /** Called when the user chooses Cancel. */
   onCancel(): void;
 };
 
-/** What the import would change, with buttons to go ahead or cancel. */
+/**
+ * What the import would change, with buttons to go ahead or cancel. Import is
+ * disabled when the file has no rows to import.
+ */
 function Preview({
   fileName,
   parsed,
@@ -232,7 +260,16 @@ function Preview({
   );
 }
 
-function InvalidRowsTable({ rows }: { rows: InvalidRow[] }) {
+type InvalidRowsTableProps = {
+  /** The rows that can't be imported, in file order. */
+  rows: InvalidRow[];
+};
+
+/**
+ * Lists the rows an import will skip, with each row's line, text and problem,
+ * so they can be fixed in the file.
+ */
+function InvalidRowsTable({ rows }: InvalidRowsTableProps) {
   return (
     // Scrolls on its own, so a file full of bad rows doesn't push the buttons
     // off the screen. `tabIndex` lets keyboard users scroll it too.

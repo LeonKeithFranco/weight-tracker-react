@@ -3,6 +3,7 @@ import styles from "./AppShell.module.css";
 import { ScreenErrorBoundary } from "./ScreenErrorBoundary";
 import { UpdatePrompt } from "./UpdatePrompt";
 
+/** The screens the navigation links to, in the order it lists them. */
 const screens = [
   { path: "/", label: "Home" },
   { path: "/charts", label: "Charts" },
@@ -10,7 +11,10 @@ const screens = [
   { path: "/settings", label: "Settings" },
 ];
 
-/** The header and navigation that stay in place while screens change. */
+/**
+ * The header and navigation that stay in place while screens change. The
+ * current screen is drawn in its `<main>`, inside its own error boundary.
+ */
 export function AppShell() {
   return (
     <>

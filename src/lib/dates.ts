@@ -68,6 +68,22 @@ export function formatDate(date: CalendarDate, format: string): string {
   return parseDate(date).format(normalizeDateFormat(format));
 }
 
+/** A run of digits or of other characters in a formatted date. */
+export type DatePart = { kind: "digits" | "text"; text: string };
+
+/**
+ * Splits a formatted date into runs of digits and runs of everything else, so
+ * the digits can roll and the rest, such as a month name, can change on its
+ * own. "12 Mar 2027" becomes `12`, ` Mar ` and `2027`. Text with no digits,
+ * such as "No estimate", is one text run.
+ */
+export function splitDateParts(text: string): DatePart[] {
+  return (text.match(/\d+|\D+/g) ?? []).map((run) => ({
+    kind: /^\d/.test(run) ? "digits" : "text",
+    text: run,
+  }));
+}
+
 /**
  * Shows a UTC timestamp, such as a log entry's, in local time: the date in the
  * date format setting, then the time on a 24-hour clock.

@@ -85,8 +85,8 @@ export function addDays(date: CalendarDate, days: number): CalendarDate {
 /**
  * Counts the days from one date to another.
  *
- * @param start - The earlier date.
- * @param end - The later date.
+ * @param start - The date to count from.
+ * @param end - The date to count to.
  * @returns The number of days from `start` to `end`, which is negative when
  * `end` comes first and 0 for the same day.
  */

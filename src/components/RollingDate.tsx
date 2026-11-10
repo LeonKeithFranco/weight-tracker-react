@@ -94,13 +94,15 @@ function SlidingText({ text, slideFrom }: SlidingTextProps) {
       return;
     }
     // Comes in from below when rolling up, as NumberFlow's digits do.
-    ref.current?.animate?.(
+    const animation = ref.current?.animate?.(
       [
         { transform: `translateY(${direction * 0.5}em)`, opacity: 0 },
         { transform: "none", opacity: 1 },
       ],
       { duration: 450, easing: "ease-out" },
     );
+    // Stops the slide if the text goes before it finishes.
+    return () => animation?.cancel();
   }, [direction]);
 
   return (

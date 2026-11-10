@@ -7,7 +7,10 @@ import { localToday } from "../lib/dates";
 import { FormStatus } from "./FormStatus";
 import styles from "./forms.module.css";
 
-/** Whether an export has happened yet, with how many entries it held. */
+/**
+ * Whether an export has happened yet and how it went, with how many entries a
+ * successful one held.
+ */
 type ExportState =
   | { status: "idle" }
   | { status: "exported"; count: number }

@@ -9,18 +9,23 @@ import { fromKg } from "./units";
  * latest day has both, so the projection starts from the last weight.
  */
 export type ProjectionRow = {
+  /** The day the row plots. */
   date: CalendarDate;
+  /** Whether a recent day's weight was estimated. Always `false` in future. */
   isEstimated: boolean;
-  /** `null` on future days. */
+  /** The day's weight, or `null` on future days. */
   weight: number | null;
-  /** `null` on recent days, except the latest. */
+  /** The projected trend, or `null` on recent days, except the latest. */
   trend: number | null;
   /**
    * The likely range as `[low, high]`, which is how Recharts draws a range
    * area. `null` on recent days, except the latest.
    */
   range: [number, number] | null;
-  /** The same on every day, so it draws as a flat line. `null` without one. */
+  /**
+   * The target weight, the same on every day so it draws as a flat line, or
+   * `null` when no target is set.
+   */
   target: number | null;
 };
 
@@ -28,6 +33,14 @@ export type ProjectionRow = {
  * Joins the days the projection learned from to the days it projects. Uses
  * the same recent window as the projection, rather than the range presets,
  * because the presets cover only the past.
+ *
+ * @param series - The daily series, oldest first.
+ * @param projected - The projected days from `projectRange`.
+ * @param unit - The display unit to convert weights to.
+ * @param targetWeightKg - The target weight in kg, or `null` when no target is
+ * set.
+ * @returns The last 90 days of `series`, then the projected days, all in date
+ * order.
  */
 export function toProjectionRows(
   series: DailyPoint[],

@@ -10,7 +10,10 @@ import type { CalendarDate, DailyFigures } from "./types";
  */
 const FLAT_SLOPE_KG_PER_DAY = 0.00001;
 
-/** One member for each row of the display table in `docs/SPEC.md`. */
+/**
+ * The outcome of a goal date estimate, with one member for each row of the
+ * display table in `docs/SPEC.md`. Only `"estimated"` has a date.
+ */
 export type GoalEstimate =
   | { status: "no-target" }
   | { status: "not-enough-data" }
@@ -21,6 +24,12 @@ export type GoalEstimate =
 /**
  * Projects when the target will be reached, by following the slope of the
  * recent trend down from the latest 7-day average.
+ *
+ * @param figures - Every day's figures, oldest first.
+ * @param targetWeightKg - The target weight in kg, or `null` when no target is
+ * set.
+ * @returns The estimated date, or why there isn't one: no target, fewer than
+ * 14 days of data, the target already reached, or a trend that isn't falling.
  */
 export function estimateGoalDate(
   figures: DailyFigures[],

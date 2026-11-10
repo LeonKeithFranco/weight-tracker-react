@@ -3,6 +3,7 @@ import { addDays } from "./dates";
 import { MIN_PROJECTION_DAYS, projectionWindow } from "./projectionWindow";
 import type { CalendarDate, WeightEntry } from "./types";
 
+/** How many days past the latest one the projection reaches. */
 const PROJECTED_DAYS = 180;
 
 /**
@@ -13,17 +14,21 @@ const RANGE_STANDARD_DEVIATIONS = 2;
 
 /** One future day of the projection. All weights are in kg. */
 export type ProjectedDay = {
+  /** The future day. */
   date: CalendarDate;
+  /** The bottom of the likely range, 2 standard deviations below the trend. */
   lowKg: number;
+  /** Where the recent average daily change would take the weight. */
   trendKg: number;
+  /** The top of the likely range, 2 standard deviations above the trend. */
   highKg: number;
 };
 
 /**
  * Projects where the weight is likely to be on each of the next 180 days,
- * from the size of recent day-to-day changes. Returns `null` without enough
- * data.
+ * from the size of recent day-to-day changes.
  *
+ * @remarks
  * It treats each day's change as a random draw from a normal distribution
  * with the recent changes' mean and standard deviation, the same model as
  * the spreadsheet's random walk. Adding up normal draws gives another normal
@@ -32,6 +37,10 @@ export type ProjectedDay = {
  * times the square root of `n`. Calculating that directly gives the answer a
  * simulation of many random paths only approximates, in microseconds rather
  * than a few hundred milliseconds on a phone.
+ *
+ * @param series - The daily series, oldest first, including estimated days.
+ * @returns The 180 days after the latest one, in order, or `null` with fewer
+ * than 14 days of data.
  */
 export function projectRange(series: WeightEntry[]): ProjectedDay[] | null {
   if (series.length < MIN_PROJECTION_DAYS) {

@@ -70,9 +70,14 @@ export function ChartPlot<Row extends TooltipRow>({
     Chart === BarChart
       ? { fill: "var(--chart-grid)" }
       : { stroke: "var(--chart-axis)" };
+  // A new range of days is a new key, so React draws a fresh chart that
+  // draws in from the left. With the same chart, Recharts would morph each
+  // line from its old points to its new ones, which draws stray segments
+  // across the gaps in the estimated weight line.
+  const rangeKey = `${rows.at(0)?.date}-${rows.at(-1)?.date}`;
 
   return (
-    <Chart className={styles.chart} data={rows} responsive>
+    <Chart key={rangeKey} className={styles.chart} data={rows} responsive>
       <CartesianGrid stroke="var(--chart-grid)" vertical={false} />
       <XAxis
         dataKey="date"

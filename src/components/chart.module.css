@@ -5,6 +5,34 @@
   height: 20rem;
 }
 
+/* Each series is uncovered from left to right as it appears: when the plot
+   first shows, when the range changes, which draws a new chart, and when the
+   legend shows a hidden series again. A CSS animation runs whenever its
+   element is added to the page, so nothing has to start it. `view-box`
+   measures the clip against the whole chart rather than each series' own
+   outline, so every series shares the same edge. The axes and grid aren't
+   series, so they show at once. These are Recharts' own class names, which
+   CSS modules leave alone inside `:global`. */
+.chart :global(:is(.recharts-line, .recharts-area, .recharts-bar)) {
+  animation: wipe-in 800ms ease-out;
+}
+
+@keyframes wipe-in {
+  from {
+    clip-path: inset(0 100% 0 0) view-box;
+  }
+
+  to {
+    clip-path: inset(0 0 0 0) view-box;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chart :global(:is(.recharts-line, .recharts-area, .recharts-bar)) {
+    animation: none;
+  }
+}
+
 /* The plot and its legend. On a phone the legend goes underneath. */
 .body {
   display: grid;

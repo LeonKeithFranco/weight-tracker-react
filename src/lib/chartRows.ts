@@ -41,8 +41,9 @@ export type ChartRow = {
   /** The lowest 28-day average so far. */
   lowestAverage28: number;
   /**
-   * The weight left to lose, or `null` when no target is set, which Recharts
-   * leaves out of the chart.
+   * The weight left to lose, for the legend and tooltip, or `null` when no
+   * target is set, which the tooltip leaves out. The chart draws it as
+   * `leftToLose` and `pastTarget`.
    */
   weightToLose: number | null;
   /**

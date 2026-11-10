@@ -46,6 +46,7 @@ function rangeStart(latest: CalendarDate, preset: RangePreset): CalendarDate {
  * must be in date order, and their figures are already calculated from the
  * full history, so filtering changes only what's displayed.
  *
+ * @typeParam T - The kind of row, such as a chart row; anything with a date.
  * @param rows - The rows to filter, in date order.
  * @param preset - The preset chosen.
  * @returns The rows from the preset's start through the latest row, or none

@@ -1,0 +1,6 @@
+/* A transform only moves a block or inline-block, and `pre` keeps the spaces
+   at the ends of a run such as " Mar ", which an inline-block would drop. */
+.text {
+  display: inline-block;
+  white-space: pre;
+}

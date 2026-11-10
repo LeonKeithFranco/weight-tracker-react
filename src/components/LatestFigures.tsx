@@ -14,6 +14,7 @@ import {
   WEIGHT_DECIMALS,
 } from "../lib/units";
 import styles from "./LatestFigures.module.css";
+import { RollingDate } from "./RollingDate";
 
 /** Counts through the values in between, so the right-hand digits spin fastest. */
 const PLUGINS = [continuous];
@@ -64,6 +65,7 @@ export function LatestFigures() {
 
   const unit = settings.displayUnit;
   const goalText = describeGoal(goal, settings.dateFormat);
+  const asOfText = formatDate(latest.date, settings.dateFormat);
 
   function weightRow(
     term: string,
@@ -118,7 +120,10 @@ export function LatestFigures() {
     <section aria-labelledby={headingId}>
       <h2 id={headingId}>Latest figures</h2>
       <p className={styles.asOf}>
-        As of {formatDate(latest.date, settings.dateFormat)}
+        <span className="visually-hidden">As of {asOfText}</span>
+        <span aria-hidden="true">
+          As of <RollingDate text={asOfText} order={latest.date} />
+        </span>
       </p>
       {/* The group keeps the figures' animations in step with each other. */}
       <NumberFlowGroup>
@@ -148,7 +153,13 @@ export function LatestFigures() {
           {goalText !== null && (
             <div className={styles.row}>
               <dt>Goal date</dt>
-              <dd>{goalText}</dd>
+              <dd>
+                <span className="visually-hidden">{goalText}</span>
+                <RollingDate
+                  text={goalText}
+                  order={goal.status === "estimated" ? goal.date : null}
+                />
+              </dd>
             </div>
           )}
         </dl>

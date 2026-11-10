@@ -21,7 +21,11 @@ import styles from "./chart.module.css";
  */
 const Y_AXIS_WIDTH = 56;
 
-/** What every chart's card passes to its plot. */
+/**
+ * What every chart's card passes to its plot.
+ *
+ * @typeParam Row - The chart's row type, such as `ChartRow`.
+ */
 export type PlotProps<Row extends TooltipRow> = {
   /** One row per day, in date order. */
   rows: Row[];
@@ -42,6 +46,8 @@ export type PlotProps<Row extends TooltipRow> = {
  * The props for {@link ChartPlot}: what every card passes in, plus what makes
  * each plot different. Generic over the row type, so the Projection chart's
  * rows work too.
+ *
+ * @typeParam Row - The chart's row type, such as `ChartRow`.
  */
 type Props<Row extends TooltipRow> = PlotProps<Row> & {
   /** Which Recharts chart to draw, such as `LineChart`. */
@@ -67,6 +73,8 @@ type Props<Row extends TooltipRow> = PlotProps<Row> & {
  * tooltip. It's the part that uses Recharts, so it loads in a file of its
  * own, while `ChartCard` around it shows at once. Each plot passes in only
  * what makes it different.
+ *
+ * @typeParam Row - The chart's row type, such as `ChartRow`.
  */
 export function ChartPlot<Row extends TooltipRow>({
   chart: Chart,

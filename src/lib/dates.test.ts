@@ -30,7 +30,7 @@ describe("splitDateParts", () => {
     ]);
   });
 
-  it("handles a date that starts with text", () => {
+  it("splits a date that starts with a month name", () => {
     expect(splitDateParts("Mar 12, 2027")).toEqual([
       { kind: "text", text: "Mar " },
       { kind: "digits", text: "12" },
@@ -98,7 +98,7 @@ describe("addDays", () => {
     expect(addDays("2025-12-31", 1)).toBe("2026-01-01");
   });
 
-  it("handles leap days", () => {
+  it("lands on 29 February only in a leap year", () => {
     expect(addDays("2024-02-28", 1)).toBe("2024-02-29");
     expect(addDays("2025-02-28", 1)).toBe("2025-03-01");
   });

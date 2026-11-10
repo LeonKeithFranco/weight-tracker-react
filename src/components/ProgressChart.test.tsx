@@ -3,6 +3,11 @@ import { describe, expect, it } from "vitest";
 import { sampleChartRow as row } from "../test/chartRow";
 import { ProgressChart } from "./ProgressChart";
 
+/**
+ * Reads the legend's items, which are the only buttons a chart card has.
+ *
+ * @returns Each legend button's text, in order.
+ */
 function legendNames() {
   return screen.getAllByRole("button").map((button) => button.textContent);
 }

@@ -18,6 +18,12 @@ async function storageWith(days: number): Promise<AppStorage> {
   return storage;
 }
 
+/**
+ * Runs the hook inside a `DataProvider` and waits for the entries to load.
+ *
+ * @param storage - The storage to load the entries from.
+ * @returns What the hook returned once the series had loaded.
+ */
 async function renderProjection(storage: AppStorage) {
   const { result } = renderHook(() => useProjection(), {
     wrapper: ({ children }) => (

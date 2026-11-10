@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { InvalidRow } from "./csvImport";
 import { previewImport } from "./importPreview";
 
+/** A row with a bad date, which an import would skip. */
 const invalidRow: InvalidRow = {
   line: 4,
   date: "not-a-date",

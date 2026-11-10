@@ -3,13 +3,26 @@ import type { WeightStorage } from "../storage/weightStorage";
 import { installGlobalErrorHandlers } from "./globalErrorHandlers";
 
 /**
+ * Builds an event shaped like the browser's `ErrorEvent`.
+ *
+ * @remarks
  * Node has `EventTarget` and `Event`, but not the browser's `ErrorEvent` or
- * `PromiseRejectionEvent`, so these build plain events with the same fields.
+ * `PromiseRejectionEvent`, so this and {@link rejectionEvent} build plain
+ * events with the same fields.
+ *
+ * @param fields - The `ErrorEvent` fields to set, such as `message`.
+ * @returns An `error` event with those fields.
  */
 function errorEvent(fields: Record<string, unknown>): Event {
   return Object.assign(new Event("error"), fields);
 }
 
+/**
+ * Builds an event shaped like the browser's `PromiseRejectionEvent`.
+ *
+ * @param reason - What the promise was rejected with.
+ * @returns An `unhandledrejection` event with that `reason`.
+ */
 function rejectionEvent(reason: unknown): Event {
   return Object.assign(new Event("unhandledrejection"), { reason });
 }

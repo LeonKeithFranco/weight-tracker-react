@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { ChartLegend, type LegendItem } from "./ChartLegend";
 
+/** Two legend items, a solid line and a dashed one. */
 const items: LegendItem[] = [
   { key: "weight", name: "Weight", color: "red", dashed: false },
   { key: "lowestWeight", name: "Lowest weight", color: "red", dashed: true },

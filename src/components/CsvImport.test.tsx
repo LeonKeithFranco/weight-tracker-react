@@ -7,7 +7,11 @@ import { AppStorage } from "../storage/appStorage";
 import { InMemoryBackend } from "../storage/inMemoryBackend";
 import { CsvImport } from "./CsvImport";
 
-// A named `section` is a region too, so the Import section itself is one.
+/**
+ * The preview region's name, which starts with "Preview of" and the file's
+ * name. Matching it picks out the preview, because a named `section` is a
+ * region too, so the Import section itself is one.
+ */
 const PREVIEW_NAME = /^Preview of/;
 
 describe("CsvImport", () => {

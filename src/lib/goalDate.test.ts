@@ -3,6 +3,13 @@ import { calculateDailyFigures } from "./dailyFigures";
 import { estimateGoalDate } from "./goalDate";
 import { seriesOf } from "./testSeries";
 
+/**
+ * Estimates the goal date for consecutive days of weights.
+ *
+ * @param weights - One weight a day, in kg, from 2026-01-01.
+ * @param targetWeightKg - The target in kg, or `null` for none.
+ * @returns The goal date estimate.
+ */
 function estimate(weights: number[], targetWeightKg: number | null) {
   const figures = calculateDailyFigures(seriesOf(weights), targetWeightKg);
   return estimateGoalDate(figures, targetWeightKg);
@@ -27,7 +34,7 @@ describe("estimateGoalDate", () => {
     expect(estimate(line(14, 100, -0.5), 80).status).toBe("estimated");
   });
 
-  it("handles having no data at all", () => {
+  it("reports not enough data when there's none at all", () => {
     expect(estimate([], 80)).toEqual({ status: "not-enough-data" });
   });
 

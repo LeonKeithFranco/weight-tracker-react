@@ -81,8 +81,9 @@ function runningWipes(page: Page): Promise<number> {
  * it's checked.
  *
  * @remarks
- * The radio inside is visually hidden, so Playwright won't click it directly.
- * It would wait for the radio to become visible until the test timed out.
+ * The radio inside is visually hidden, clipped to nothing, so its label takes
+ * the pointer. Clicking the radio directly would wait for the label to stop
+ * intercepting the click until the test timed out.
  *
  * @param page - The page showing Charts.
  * @param name - The preset's label, such as "1M".

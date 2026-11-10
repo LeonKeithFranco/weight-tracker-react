@@ -9,7 +9,12 @@ import type { WeightEntry } from "../lib/types";
 import styles from "./DataScreen.module.css";
 
 /** What the open dialog is doing, and to which entry. */
-type PendingAction = { kind: "edit" | "delete"; entry: WeightEntry };
+type PendingAction = {
+  /** Which dialog is open. */
+  kind: "edit" | "delete";
+  /** The saved entry the dialog edits or deletes. */
+  entry: WeightEntry;
+};
 
 /**
  * Every day's figures, newest first: a table on wide screens and rows that

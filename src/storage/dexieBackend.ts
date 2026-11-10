@@ -31,7 +31,7 @@ type Database = Dexie & {
  * comments here too.
  */
 export class DexieBackend implements StorageBackend {
-  /** The open database. */
+  /** The app's database, which Dexie opens on the first read or write. */
   private readonly db: Database;
 
   /**

@@ -23,8 +23,9 @@ export default defineConfig([
       // JavaScript's and TypeScript's recommended rules.
       js.configs.recommended,
       tseslint.configs.recommended,
-      // Checks hooks are called the same way every render, and that effects
-      // list what they depend on.
+      // React's rules for hooks and components: hooks are called the same
+      // way every render, effects list what they depend on, and components
+      // stay pure, with no state set while rendering.
       reactHooks.configs.flat.recommended,
       // Keeps each component file to components, so Vite can update it in
       // place while the dev server runs.

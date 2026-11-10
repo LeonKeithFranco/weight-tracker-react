@@ -8,7 +8,47 @@ import {
   localToday,
   normalizeDateFormat,
   parseImportDate,
+  splitDateParts,
 } from "./dates";
+
+describe("splitDateParts", () => {
+  it("splits an ISO date, keeping leading zeros", () => {
+    expect(splitDateParts("2027-03-05")).toEqual([
+      { kind: "digits", text: "2027" },
+      { kind: "text", text: "-" },
+      { kind: "digits", text: "03" },
+      { kind: "text", text: "-" },
+      { kind: "digits", text: "05" },
+    ]);
+  });
+
+  it("keeps a month name and its spaces as one run", () => {
+    expect(splitDateParts("12 Mar 2027")).toEqual([
+      { kind: "digits", text: "12" },
+      { kind: "text", text: " Mar " },
+      { kind: "digits", text: "2027" },
+    ]);
+  });
+
+  it("handles a date that starts with text", () => {
+    expect(splitDateParts("Mar 12, 2027")).toEqual([
+      { kind: "text", text: "Mar " },
+      { kind: "digits", text: "12" },
+      { kind: "text", text: ", " },
+      { kind: "digits", text: "2027" },
+    ]);
+  });
+
+  it("keeps a status with no digits as one text run", () => {
+    expect(splitDateParts("No estimate")).toEqual([
+      { kind: "text", text: "No estimate" },
+    ]);
+  });
+
+  it("returns no parts for empty text", () => {
+    expect(splitDateParts("")).toEqual([]);
+  });
+});
 
 describe("localToday", () => {
   const originalTimeZone = process.env.TZ;

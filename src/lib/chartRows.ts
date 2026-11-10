@@ -11,7 +11,10 @@ export type ChartRow = {
   date: CalendarDate;
   /** Whether the day's weight was estimated, which the tooltip says. */
   isEstimated: boolean;
-  /** The day's weight, logged or estimated, for the tooltip. */
+  /**
+   * The day's weight, logged or estimated, for the legend and tooltip. The
+   * chart draws it as `realWeight` and `estimatedWeight`.
+   */
   weight: number;
   /**
    * The weight on logged days, or `null` on estimated ones.

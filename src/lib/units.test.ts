@@ -1,11 +1,38 @@
 import { describe, expect, it } from "vitest";
 import {
   formatAverage,
+  formatNumber,
   formatPercent,
   formatWeight,
   fromKg,
+  numberFormatOptions,
+  roundForDisplay,
   toKg,
 } from "./units";
+
+describe("roundForDisplay with numberFormatOptions", () => {
+  it.each([
+    [199.4, 1],
+    [199.45, 1],
+    [1.005, 2],
+    [-0.76, 2],
+    [0, 1],
+    [-0.04, 1],
+    [-0.004, 2],
+    [-0.05, 1],
+    [1234.5, 1],
+    [7, 2],
+  ])("formats %d with %d decimals like formatNumber", (value, decimals) => {
+    const formatter = new Intl.NumberFormat(
+      "en-US",
+      numberFormatOptions(decimals),
+    );
+
+    expect(formatter.format(roundForDisplay(value, decimals))).toBe(
+      formatNumber(value, decimals),
+    );
+  });
+});
 
 describe("toKg and fromKg", () => {
   it("leaves kg values unchanged", () => {

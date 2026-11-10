@@ -9,7 +9,8 @@ import { defineConfig, globalIgnores } from "eslint/config";
 
 /**
  * The rules `npm run lint` checks, which CI runs on every pull request. Each
- * object applies to the files its `files` pattern matches. See
+ * object applies to the files its `files` pattern matches, and one without a
+ * pattern, such as the ignores, applies to every file. See
  * {@link https://eslint.org/docs/latest/use/configure/ | ESLint's guide}.
  */
 export default defineConfig([

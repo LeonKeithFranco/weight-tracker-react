@@ -7,7 +7,7 @@ import type { ChartRowSeries } from "./ChartTooltip";
 import styles from "./chart.module.css";
 import { WeeklyChangePlot } from "./lazyPlots";
 
-/** The chart's one series, the 7-day change, for the tooltip. */
+/** The chart's one series, the 7-day change, for the bars and the tooltip. */
 const SERIES: ChartRowSeries[] = [
   {
     key: "average7ChangePercent",

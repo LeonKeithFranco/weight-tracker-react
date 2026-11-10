@@ -83,9 +83,10 @@ type SlidingTextProps = {
 };
 
 /**
- * A run of a date's text, such as a month name, that slides in when it first
- * appears. Give it a new `key` when the text changes, so the new text mounts
- * and slides. It doesn't move when the device asks for reduced motion.
+ * A run of a date's text, such as a month name, that slides in when it mounts
+ * with a direction. Give it a new `key` when the text changes, so the new
+ * text mounts and slides. It doesn't move when the device asks for reduced
+ * motion.
  */
 function SlidingText({ text, slideFrom }: SlidingTextProps) {
   const ref = useRef<HTMLSpanElement>(null);

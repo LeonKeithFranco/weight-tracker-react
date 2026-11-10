@@ -2,8 +2,13 @@ import { render } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { RollingDate } from "./RollingDate";
 
-/** An animation the component started, and hasn't cancelled. */
-type AnimationCall = { text: string | null; keyframes: Keyframe[] };
+/** A call the component made to `Element.animate`. */
+type AnimationCall = {
+  /** The animated element's text, such as a month name. */
+  text: string | null;
+  /** The keyframes the component asked for. */
+  keyframes: Keyframe[];
+};
 
 describe("RollingDate", () => {
   /** The animations still running. */

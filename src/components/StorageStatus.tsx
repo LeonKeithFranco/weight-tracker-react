@@ -14,8 +14,9 @@ const DESCRIPTIONS: Record<Persistence, string> = {
 };
 
 /**
- * Says whether the browser will keep the app's data, and offers to ask
- * again while it might not.
+ * Says whether the browser will keep the app's data, and offers to ask again
+ * while storage is best-effort, the one state where asking can change the
+ * answer.
  */
 export function StorageStatus() {
   const { persistence, requestPersistence } = useData();

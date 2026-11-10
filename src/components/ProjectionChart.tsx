@@ -58,7 +58,10 @@ type Props = {
    * from, which shows a message in place of the chart.
    */
   projected: ProjectedDay[] | null;
-  /** The display unit to convert weights to. */
+  /**
+   * The display unit, for the heading and the tooltip, and to convert weights
+   * to.
+   */
   unit: WeightUnit;
   /** The date format setting, for the tooltip. */
   dateFormat: string;

@@ -12,6 +12,7 @@ import { lazy } from "react";
  * renamed.
  *
  * @returns The plots' module, once its file has loaded.
+ * @throws The browser's error, when the plots' file can't be fetched.
  */
 const loadPlots = () => import("./chartPlots");
 

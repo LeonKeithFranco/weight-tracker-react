@@ -9,13 +9,19 @@ import { WEIGHT_MESSAGES } from "./formMessages";
 import formStyles from "./forms.module.css";
 import { useModal } from "./useModal";
 
+/** The props for {@link EditEntryDialog}. */
 type EditEntryDialogProps = {
+  /** The saved entry to change. */
   entry: WeightEntry;
   /** Called once the dialog has closed, however it was closed. */
   onClose(): void;
 };
 
-/** Changes the weight of a saved entry. The date stays the same. */
+/**
+ * Changes the weight of a saved entry, in a modal dialog that opens as soon
+ * as it's drawn. The date stays the same. Saving the weight unchanged keeps
+ * the stored value, because the field shows it rounded.
+ */
 export function EditEntryDialog({ entry, onClose }: EditEntryDialogProps) {
   const { settings, saveEntry } = useData();
   const dialogRef = useModal();

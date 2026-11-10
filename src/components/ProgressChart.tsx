@@ -25,6 +25,7 @@ const LOST: ChartRowSeries = {
   decimals: WEIGHT_DECIMALS,
 };
 
+/** The props for {@link ProgressChart}. */
 type Props = {
   /** The days the range preset shows, in the display unit. */
   rows: ChartRow[];

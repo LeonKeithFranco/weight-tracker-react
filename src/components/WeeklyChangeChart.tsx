@@ -39,6 +39,7 @@ const LEGEND: LegendItem[] = [
 /** Nothing is ever hidden, because a single series can't be toggled off. */
 const NONE_HIDDEN: ReadonlySet<string> = new Set();
 
+/** The props for {@link WeeklyChangeChart}. */
 type Props = {
   /** The days the range preset shows. */
   rows: ChartRow[];

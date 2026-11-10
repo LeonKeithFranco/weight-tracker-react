@@ -20,6 +20,7 @@ export type ChartSeries = LegendItem & {
   decimals: number;
 };
 
+/** The props for {@link ChartLegend}. */
 type Props = {
   /** The items to list, in order. */
   items: LegendItem[];
@@ -66,6 +67,7 @@ export function ChartLegend({ items, hidden, onToggle }: Props) {
   );
 }
 
+/** The props for {@link Sample}. */
 type SampleProps = {
   /** The item whose colour, dash and marker to draw. */
   item: LegendItem;

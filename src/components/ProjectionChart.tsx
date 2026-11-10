@@ -49,6 +49,7 @@ const TARGET: RowSeries<ProjectionRow> = {
   decimals: WEIGHT_DECIMALS,
 };
 
+/** The props for {@link ProjectionChart}. */
 type Props = {
   /** The whole daily series, oldest first, in kg. */
   series: DailyPoint[];

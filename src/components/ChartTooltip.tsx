@@ -45,6 +45,7 @@ function formatValue(value: unknown, decimals: number): string | null {
   return null;
 }
 
+/** The props for {@link ChartTooltip}. */
 type Props<Row extends TooltipRow> = {
   /** The day under the pointer. */
   row: Row;

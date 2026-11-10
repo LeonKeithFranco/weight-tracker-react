@@ -193,6 +193,7 @@ export function CsvImport() {
   );
 }
 
+/** The props for {@link Preview}. */
 type PreviewProps = {
   /** The chosen file's name, for the heading. */
   fileName: string;
@@ -260,6 +261,7 @@ function Preview({
   );
 }
 
+/** The props for {@link InvalidRowsTable}. */
 type InvalidRowsTableProps = {
   /** The rows that can't be imported, in file order. */
   rows: InvalidRow[];

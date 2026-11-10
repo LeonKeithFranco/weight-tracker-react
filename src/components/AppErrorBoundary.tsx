@@ -23,6 +23,7 @@ function AppErrorFallback() {
   );
 }
 
+/** The props for {@link AppErrorBoundary}. */
 type AppErrorBoundaryProps = {
   /** Where the error is recorded: the app's storage, or a fake in tests. */
   logger: Pick<WeightStorage, "logError">;

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { splitDateParts } from "../lib/dates";
 import styles from "./RollingDate.module.css";
 
+/** The props for {@link RollingDate}. */
 type RollingDateProps = {
   /** The date as shown, or a status such as "No estimate". */
   text: string;
@@ -73,12 +74,19 @@ export function RollingDate({ text, order }: RollingDateProps) {
   );
 }
 
+/** The props for {@link SlidingText}. */
 type SlidingTextProps = {
+  /** The run of text to show, spaces included. */
   text: string;
   /** Which way to slide in when it mounts, or `null` to just appear. */
   slideFrom: Trend | null;
 };
 
+/**
+ * A run of a date's text, such as a month name, that slides in when it first
+ * appears. Give it a new `key` when the text changes, so the new text mounts
+ * and slides. It doesn't move when the device asks for reduced motion.
+ */
 function SlidingText({ text, slideFrom }: SlidingTextProps) {
   const ref = useRef<HTMLSpanElement>(null);
   // Keeps the direction it mounted with, so only new text slides, not text

@@ -9,14 +9,20 @@ import { EstimatedPill } from "./EstimatedPill";
 import styles from "./FiguresList.module.css";
 import { toneClass } from "./toneClass";
 
+/** The props for {@link FiguresList}. */
 type FiguresListProps = {
   /** The days to show, in the order to show them. */
   days: DailyFigures[];
+  /** Called with a day's saved entry when its Edit button is pressed. */
   onEdit(entry: WeightEntry): void;
+  /** Called with a day's saved entry when its Delete button is pressed. */
   onDelete(entry: WeightEntry): void;
 };
 
-/** A compact row per day for phones. Tapping a row shows every figure. */
+/**
+ * A compact row per day for phones, with the date, weight and 7-day average.
+ * Tapping a row shows every figure, and the buttons for a saved entry.
+ */
 export function FiguresList({ days, onEdit, onDelete }: FiguresListProps) {
   const { settings } = useData();
   const unit = settings.displayUnit;
@@ -47,10 +53,15 @@ export function FiguresList({ days, onEdit, onDelete }: FiguresListProps) {
   );
 }
 
+/** The props for {@link DayRow}. */
 type DayRowProps = {
+  /** The day the row shows. */
   day: DailyFigures;
+  /** The settings, for the unit, date format and whether a target is set. */
   settings: Settings;
+  /** Called with the day's saved entry when Edit is pressed. */
   onEdit(entry: WeightEntry): void;
+  /** Called with the day's saved entry when Delete is pressed. */
   onDelete(entry: WeightEntry): void;
 };
 

@@ -8,6 +8,7 @@ import { ProjectionChart } from "./ProjectionChart";
 import { WeeklyChangeChart } from "./WeeklyChangeChart";
 import { WeightTrendsChart } from "./WeightTrendsChart";
 
+/** The props for {@link ChartCards}. */
 type Props = {
   /** The days the range preset shows, already in the display unit. */
   rows: ChartRow[];

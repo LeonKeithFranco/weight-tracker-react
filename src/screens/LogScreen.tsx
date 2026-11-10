@@ -9,14 +9,19 @@ import { formatTimestamp, localToday } from "../lib/dates";
 import type { LogEntry } from "../lib/types";
 import styles from "./LogScreen.module.css";
 
+/** Whether the log has loaded yet, with its records once it has. */
 type LoadState =
   | { status: "loading" }
   | { status: "loaded"; entries: LogEntry[] }
   | { status: "failed" };
 
+/** Whether an export has happened yet, and how it went. */
 type ExportState = "idle" | "exported" | "failed";
 
-/** The activity log, newest first, within Settings. */
+/**
+ * The activity log, newest first, within Settings. It loads the log when it
+ * opens, and can export it as a JSON file.
+ */
 export function LogScreen() {
   const { settings, getLogEntries, logError } = useData();
   const id = useId();

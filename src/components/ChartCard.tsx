@@ -2,6 +2,7 @@ import { Suspense, useId, type ReactNode } from "react";
 import { ChartLegend, type LegendItem } from "./ChartLegend";
 import styles from "./chart.module.css";
 
+/** The props for {@link ChartCard}. */
 type Props = {
   /** The chart's heading, which also names its section. */
   title: string;

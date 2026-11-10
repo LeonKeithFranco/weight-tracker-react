@@ -11,6 +11,10 @@ import styles from "./DataScreen.module.css";
 /** What the open dialog is doing, and to which entry. */
 type PendingAction = { kind: "edit" | "delete"; entry: WeightEntry };
 
+/**
+ * Every day's figures, newest first: a table on wide screens and rows that
+ * expand on phones, with the dialogs that edit and delete saved entries.
+ */
 export function DataScreen() {
   const figures = useDailyFigures();
   // Kept here rather than in each row, so there's only ever one dialog,

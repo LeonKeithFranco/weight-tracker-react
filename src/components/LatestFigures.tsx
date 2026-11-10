@@ -17,18 +17,34 @@ import {
 import styles from "./LatestFigures.module.css";
 import { RollingDate } from "./RollingDate";
 
-/** Counts through the values in between, so the right-hand digits spin fastest. */
+/**
+ * NumberFlow's plugins for the figures. `continuous` counts through the values
+ * in between, so the right-hand digits spin fastest.
+ */
 const PLUGINS = [continuous];
 
-/** A figure shown as a rolling number, in the display unit or as a percentage. */
+/**
+ * A figure shown as a rolling number, in the display unit or as a percentage.
+ */
 type NumberRow = {
+  /** The figure's name, from the labels every screen shares. */
   term: string;
+  /** The value in the display unit or as a percentage, not rounded. */
   value: number;
+  /** How many decimal places to show. */
   decimals: number;
+  /** Added after the value, such as " lb" or "%". */
   suffix: string;
 };
 
-/** The goal date row's text, from the display table in `docs/SPEC.md`. */
+/**
+ * Writes the goal date row's text, from the display table in `docs/SPEC.md`.
+ *
+ * @param goal - The goal date estimate.
+ * @param dateFormat - The date format setting, for an estimated date.
+ * @returns The date or the status to show, or `null` when no target is set,
+ * which leaves the row out.
+ */
 function describeGoal(goal: GoalEstimate, dateFormat: string): string | null {
   switch (goal.status) {
     case "no-target":
@@ -44,7 +60,10 @@ function describeGoal(goal: GoalEstimate, dateFormat: string): string | null {
   }
 }
 
-/** The latest day's figures and the goal date estimate. */
+/**
+ * The latest day's figures and the goal date estimate, which roll to their
+ * new values when a weight is saved. With no entries, it says how to start.
+ */
 export function LatestFigures() {
   const { settings } = useData();
   const figures = useDailyFigures();

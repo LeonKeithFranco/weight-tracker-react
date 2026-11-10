@@ -2,6 +2,7 @@ import { useId } from "react";
 import { RANGE_PRESETS, type RangePreset } from "../lib/chartRange";
 import styles from "./RangePresets.module.css";
 
+/** The props for {@link RangePresets}. */
 type Props = {
   /** The preset chosen now. */
   value: RangePreset;

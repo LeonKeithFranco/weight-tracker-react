@@ -22,6 +22,7 @@ const SERIES: ChartRowSeries[] = [
  */
 const NONE_HIDDEN: ReadonlySet<string> = new Set();
 
+/** The props for {@link LossRateChart}. */
 type Props = {
   /** The days the range preset shows, in the display unit. */
   rows: ChartRow[];

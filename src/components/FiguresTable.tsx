@@ -7,14 +7,20 @@ import { EstimatedPill } from "./EstimatedPill";
 import styles from "./FiguresTable.module.css";
 import { toneClass } from "./toneClass";
 
+/** The props for {@link FiguresTable}. */
 type FiguresTableProps = {
   /** The days to show, in the order to show them. */
   days: DailyFigures[];
+  /** Called with a day's saved entry when its Edit button is pressed. */
   onEdit(entry: WeightEntry): void;
+  /** Called with a day's saved entry when its Delete button is pressed. */
   onDelete(entry: WeightEntry): void;
 };
 
-/** Every figure for every day, one row per day, for wide screens. */
+/**
+ * Every figure for every day, one row per day, for wide screens. The averages
+ * share grouped headings, and "Left to lose" is left out without a target.
+ */
 export function FiguresTable({ days, onEdit, onDelete }: FiguresTableProps) {
   const { settings } = useData();
   const unit = settings.displayUnit;

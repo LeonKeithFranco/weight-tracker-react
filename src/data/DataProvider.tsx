@@ -15,6 +15,7 @@ import {
 import type { WeightStorage } from "../storage/weightStorage";
 import { DataContext, type DataContextValue } from "./dataContext";
 
+/** The props for {@link DataProvider}. */
 type DataProviderProps = {
   /** Where the data is loaded from and saved to. */
   storage: WeightStorage;

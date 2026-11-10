@@ -41,10 +41,21 @@ describe("LatestFigures", () => {
     await screen.findByRole("heading", { name: "Latest figures" });
   }
 
-  /** The text shown next to a figure's name, or `null` if it isn't shown. */
+  /**
+   * The text a screen reader reads next to a figure's name, or `null` if it
+   * isn't shown. Parts hidden with `aria-hidden`, such as the rolling digits,
+   * are left out.
+   */
   function figure(term: string): string | null {
     const termElement = screen.queryByText(term, { selector: "dt" });
-    return termElement?.nextElementSibling?.textContent ?? null;
+    const value = termElement?.nextElementSibling?.cloneNode(true);
+    if (!(value instanceof Element)) {
+      return null;
+    }
+    for (const hidden of value.querySelectorAll("[aria-hidden='true']")) {
+      hidden.remove();
+    }
+    return value.textContent;
   }
 
   it("asks for a first entry when there are none", async () => {

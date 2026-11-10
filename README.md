@@ -72,7 +72,7 @@ An agent writes code quickly, so the project relies on checks that don't depend 
 
 The tests follow the [testing trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications): static checks, unit tests for pure logic, mostly integration tests, and end-to-end tests for the main journeys.
 
-- **Static checks:** strict TypeScript, ESLint and Prettier. Every module-level item has a [TSDoc](https://tsdoc.org/) comment, and ESLint checks their syntax.
+- **Static checks:** strict TypeScript, ESLint and Prettier. Every module-level item has a [TSDoc](https://tsdoc.org/) comment, and ESLint checks their syntax in the TypeScript files.
 - **Unit tests** in [Vitest](https://vitest.dev/) cover each rule and edge case of the calculations, CSV parsing and storage, next to the code, mostly in [`src/lib`](src/lib) and [`src/storage`](src/storage).
 - **Component tests** use [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) with the real data provider and storage rules, and an in-memory backend in place of IndexedDB.
 - **End-to-end tests** in [Playwright](https://playwright.dev/), in [`e2e`](e2e), run each journey at desktop and phone sizes. A third project builds the app for production and checks it works offline through its service worker.

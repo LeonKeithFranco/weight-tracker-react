@@ -17,7 +17,6 @@ async function storageWith(days: number): Promise<AppStorage> {
   for (let day = 1; day <= days; day++) {
     await storage.saveEntry({
       date: `2026-01-${String(day).padStart(2, "0")}`,
-      // Alternating, so the day-to-day changes have a spread to project.
       weightKg: 90 - day * 0.1 + (day % 2) * 0.3,
     });
   }

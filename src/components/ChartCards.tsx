@@ -12,13 +12,16 @@ import { WeightTrendsChart } from "./WeightTrendsChart";
 type Props = {
   /** The days the range preset shows, already in the display unit. */
   rows: ChartRow[];
-  /** The display unit, for the tooltips' values. */
+  /**
+   * The display unit, for the charts' headings and tooltips, and for converting
+   * the projection's weights.
+   */
   unit: WeightUnit;
   /** The date format setting, for the tooltips' dates. */
   dateFormat: string;
   /**
    * The target weight in kg, or `null` when none is set, which hides the
-   * target lines and the Progress chart's weight to lose.
+   * Projection chart's target line and the Progress chart's weight to lose.
    */
   targetWeightKg: number | null;
 };

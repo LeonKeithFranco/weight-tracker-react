@@ -25,7 +25,10 @@ const Y_AXIS_WIDTH = 56;
 export type PlotProps<Row extends TooltipRow> = {
   /** One row per day, in date order. */
   rows: Row[];
-  /** Every series the chart can show, which the tooltip lists. */
+  /**
+   * Every series the chart can show, which the plot draws and the tooltip
+   * lists.
+   */
   series: RowSeries<Row>[];
   /** The keys of the series the legend has hidden. */
   hidden: ReadonlySet<string>;

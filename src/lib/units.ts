@@ -34,7 +34,8 @@ export function fromKg(weightKg: number, unit: WeightUnit): number {
 
 /**
  * Rounds for display, and avoids showing a small negative as "-0.0". Charts
- * call it directly, because their values are already in the display unit.
+ * and Home's Latest figures call it directly, because their values are
+ * already in the display unit.
  *
  * @param value - The number to show.
  * @param decimals - How many decimal places to show.

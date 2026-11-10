@@ -6,9 +6,18 @@
 const KEEP_URL_MS = 60_000;
 
 /**
- * Saves text as a file in the browser's downloads. Browsers have no function
- * for this, so it puts the text in a `Blob`, gives the blob a temporary URL,
- * and clicks a link to that URL with a `download` attribute.
+ * Saves text as a file in the browser's downloads.
+ *
+ * @remarks
+ * Browsers have no function for this, so it puts the text in a `Blob`, gives
+ * the blob a temporary URL, and clicks a link to that URL with a `download`
+ * attribute.
+ *
+ * @param contents - The file's text.
+ * @param fileName - The name to save it under, such as
+ * `weight-tracker-2026-11-10.csv`.
+ * @param type - The file's media type, such as `text/csv`.
+ * @throws The browser's error, when it can't create the file or its URL.
  */
 export function downloadFile(
   contents: string,

@@ -16,9 +16,11 @@ import type { WeightStorage } from "../storage/weightStorage";
 import { DataContext, type DataContextValue } from "./dataContext";
 
 type DataProviderProps = {
+  /** Where the data is loaded from and saved to. */
   storage: WeightStorage;
   /** The browser's `navigator.storage`. Left out, storage is "unsupported". */
   persistenceApi?: PersistenceApi;
+  /** The components that can read the data with `useData`. */
   children: ReactNode;
 };
 
@@ -26,6 +28,11 @@ type DataProviderProps = {
  * Loads saved data through storage and shares it with every component inside.
  * Each change is saved first, then the data is read back, so what the screens
  * show always matches what's stored.
+ *
+ * @remarks
+ * It draws nothing until the data has loaded, and an alert instead of its
+ * children if loading fails. While storage is best-effort, it also asks for
+ * persistent storage once per visit, as soon as entries are saved.
  */
 export function DataProvider({
   storage,

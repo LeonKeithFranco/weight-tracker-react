@@ -5,8 +5,11 @@ import type { DailyFigures } from "../lib/types";
 import { useData } from "./dataContext";
 
 /**
- * Every daily figure, oldest first, calculated from the saved entries. Kept in
- * memory and never saved, so it can't go stale after an edit.
+ * Calculates every daily figure from the saved entries. Kept in memory and
+ * never saved, so it can't go stale after an edit.
+ *
+ * @returns Every day's figures, oldest first, estimated days included, or
+ * none when nothing is saved.
  */
 export function useDailyFigures(): DailyFigures[] {
   const { entries, settings } = useData();

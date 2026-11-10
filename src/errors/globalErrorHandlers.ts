@@ -1,6 +1,10 @@
 import type { WeightStorage } from "../storage/weightStorage";
 import { describeError } from "./describeError";
 
+/**
+ * The one storage method the handlers need, so tests can pass a fake with
+ * only that.
+ */
 type ErrorLogger = Pick<WeightStorage, "logError">;
 
 /**
@@ -8,10 +12,14 @@ type ErrorLogger = Pick<WeightStorage, "logError">;
  * event handler, or a rejected promise with no `catch`. The browser reports
  * these as events on `window`.
  *
+ * @remarks
  * Errors thrown while React renders are caught by the error boundaries
  * instead, and never reach these handlers.
  *
- * Returns a function that removes the handlers.
+ * @param target - Where the browser reports the errors: `window` in the app,
+ * or a plain `EventTarget` in tests.
+ * @param logger - Where the errors are recorded.
+ * @returns A function that removes the handlers.
  */
 export function installGlobalErrorHandlers(
   target: EventTarget,

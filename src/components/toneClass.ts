@@ -10,7 +10,7 @@ import styles from "./tone.module.css";
  * @param column - The column the value is in.
  * @param day - The day's figures.
  * @returns The loss or gain class, or `undefined` for a column that isn't
- * coloured, a value of 0 or an estimated day.
+ * coloured, a value shown as 0 or an estimated day.
  */
 export function toneClass(
   column: FigureColumn,

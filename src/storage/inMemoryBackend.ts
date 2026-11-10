@@ -10,11 +10,20 @@ import type { NewLogEntry, StorageBackend } from "./storageBackend";
  * Keeps data in plain variables, for tests. Everything is copied on the way in
  * and out, because IndexedDB does the same, so a caller changing an object it
  * holds can't change what's saved.
+ *
+ * @remarks
+ * Its methods are documented on {@link StorageBackend}, and editors show those
+ * comments here too. Unlike Dexie, `putEntries` can't fail partway, so it
+ * needs no transaction.
  */
 export class InMemoryBackend implements StorageBackend {
+  /** The saved entries, keyed by date. */
   private entries = new Map<CalendarDate, WeightEntry>();
+  /** The saved settings, or `undefined` until they're first saved. */
   private settings: Settings | undefined;
+  /** The activity log, oldest first, as records are added. */
   private logEntries: LogEntry[] = [];
+  /** The `id` the next log record gets. */
   private nextLogId = 1;
 
   async getEntries(): Promise<WeightEntry[]> {

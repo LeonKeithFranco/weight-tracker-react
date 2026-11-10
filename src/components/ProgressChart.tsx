@@ -38,9 +38,10 @@ type Props = {
 };
 
 /**
- * How far you've come, with how far there is to go stacked on top. The two
- * add up to the start weight minus the target, so the stack stays the same
- * height and the split between the colours shows the progress.
+ * How far you've come, with how far there is to go stacked on top. Until the
+ * target is reached, the two add up to the start weight minus the target, so
+ * the stack stays the same height and the split between the colours shows the
+ * progress. Past the target, the extra hangs below 0.
  */
 export function ProgressChart({ rows, unit, dateFormat, hasTarget }: Props) {
   const { hidden, toggle } = useHiddenSeries();

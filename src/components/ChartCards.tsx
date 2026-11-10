@@ -21,7 +21,7 @@ type Props = {
   dateFormat: string;
   /**
    * The target weight in kg, or `null` when none is set, which hides the
-   * Projection chart's target line and the Progress chart's weight to lose.
+   * Projection chart's target line and the Progress chart's "Left to lose".
    */
   targetWeightKg: number | null;
 };

@@ -2,6 +2,7 @@ import js from "@eslint/js";
 import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
+import tsdoc from "eslint-plugin-tsdoc";
 import prettier from "eslint-config-prettier/flat";
 import tseslint from "typescript-eslint";
 import { defineConfig, globalIgnores } from "eslint/config";
@@ -19,6 +20,10 @@ export default defineConfig([
     ],
     languageOptions: {
       globals: globals.browser,
+    },
+    plugins: { tsdoc },
+    rules: {
+      "tsdoc/syntax": "error",
     },
   },
 ]);

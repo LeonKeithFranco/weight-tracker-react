@@ -10,8 +10,13 @@ import type {
 import type { StorageBackend } from "./storageBackend";
 import type { WeightStorage } from "./weightStorage";
 
+/**
+ * The most records the activity log keeps. Older ones are deleted as new ones
+ * arrive, so the log can't grow without limit.
+ */
 export const MAX_LOG_ENTRIES = 5000;
 
+/** The settings used until the user saves their own. */
 export const DEFAULT_SETTINGS: Settings = {
   displayUnit: "lb",
   targetWeightKg: null,
@@ -21,10 +26,21 @@ export const DEFAULT_SETTINGS: Settings = {
 /**
  * The rules for saved data, written once. It's given a backend rather than
  * creating one, so the app can pass Dexie and tests can pass the in-memory one.
+ *
+ * @remarks
+ * Its public methods are documented on {@link WeightStorage}, and editors show
+ * those comments here too.
  */
 export class AppStorage implements WeightStorage {
+  /** Where the data is read from and written to. */
   private readonly backend: StorageBackend;
 
+  /**
+   * Creates the storage rules on top of a backend.
+   *
+   * @param backend - Where the data lives: Dexie in the app, or the in-memory
+   * backend in tests.
+   */
   constructor(backend: StorageBackend) {
     this.backend = backend;
   }
@@ -88,7 +104,17 @@ export class AppStorage implements WeightStorage {
     return this.writeLog("error", message, details);
   }
 
-  /** Never rejects, because a log failure must not block a data change. */
+  /**
+   * Adds a record to the activity log, then trims the log to its limit.
+   *
+   * @remarks
+   * Never rejects, because a log failure must not block a data change. A
+   * failure is written to the browser's console instead.
+   *
+   * @param type - Whether the record is a change or an error.
+   * @param message - What happened.
+   * @param details - The facts behind the message.
+   */
   private async writeLog(
     type: LogEntry["type"],
     message: string,

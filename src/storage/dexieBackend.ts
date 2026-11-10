@@ -7,21 +7,39 @@ import type {
 } from "../lib/types";
 import type { NewLogEntry, StorageBackend } from "./storageBackend";
 
+/** The IndexedDB database's name, which the browser keeps per site. */
 const DATABASE_NAME = "weight-tracker";
 
 /** The settings table holds one row, saved under this key. */
 const SETTINGS_KEY = "settings";
 
+/** The Dexie database with the app's three tables, typed. */
 type Database = Dexie & {
+  /** Weight entries, keyed by date. */
   entries: Table<WeightEntry, CalendarDate>;
+  /** The one settings row, under {@link SETTINGS_KEY}. */
   settings: Table<Settings, string>;
+  /** Activity log records, keyed by an `id` that counts up. */
   log: EntityTable<LogEntry, "id">;
 };
 
-/** Keeps data in the browser's IndexedDB, through Dexie. */
+/**
+ * Keeps data in the browser's IndexedDB, through Dexie.
+ *
+ * @remarks
+ * Its methods are documented on {@link StorageBackend}, and editors show those
+ * comments here too.
+ */
 export class DexieBackend implements StorageBackend {
+  /** The open database. */
   private readonly db: Database;
 
+  /**
+   * Opens the database, creating its tables on first use.
+   *
+   * @param databaseName - The database to open. Tests pass a random name, so
+   * each starts with an empty database, or reuse one to reopen it.
+   */
   constructor(databaseName = DATABASE_NAME) {
     this.db = new Dexie(databaseName) as Database;
 

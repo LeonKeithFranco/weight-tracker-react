@@ -15,7 +15,14 @@ describe("StorageStatus", () => {
     storage = new AppStorage(new InMemoryBackend());
   });
 
-  /** A stand-in for `navigator.storage` with the given answers. */
+  /**
+   * Builds a stand-in for `navigator.storage` with the given answers.
+   *
+   * @param persisted - What `persisted()` resolves to.
+   * @param grant - What `persist()` resolves to, the same as `persisted` by
+   * default.
+   * @returns A fake whose methods are Vitest mocks.
+   */
   function fakeBrowser(persisted: boolean, grant = persisted): PersistenceApi {
     return {
       persisted: vi.fn(() => Promise.resolve(persisted)),

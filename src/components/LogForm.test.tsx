@@ -20,7 +20,12 @@ describe("LogForm", () => {
     vi.restoreAllMocks();
   });
 
-  /** Renders the form with saved data, and waits for it to appear. */
+  /**
+   * Renders the form with saved data, and waits for it to appear.
+   *
+   * @param settings - Settings to save over the defaults first.
+   * @returns A user event session for the test.
+   */
   async function renderForm(settings: Partial<Settings> = {}) {
     await storage.saveSettings({ ...DEFAULT_SETTINGS, ...settings });
     const user = userEvent.setup();

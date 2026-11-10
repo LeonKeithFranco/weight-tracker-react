@@ -21,7 +21,12 @@ describe("SettingsScreen", () => {
     vi.restoreAllMocks();
   });
 
-  /** Renders the screen with saved settings, and waits for it to appear. */
+  /**
+   * Renders the screen with saved settings, and waits for it to appear.
+   *
+   * @param settings - Settings to save over the defaults first.
+   * @returns A user event session for the test.
+   */
   async function renderSettings(settings: Partial<Settings> = {}) {
     await storage.saveSettings({ ...DEFAULT_SETTINGS, ...settings });
     const user = userEvent.setup();
@@ -41,7 +46,12 @@ describe("SettingsScreen", () => {
     return screen.getByLabelText(`Target weight (${unit})`);
   }
 
-  /** The Save button inside the form with this name. */
+  /**
+   * Finds the Save button inside a form.
+   *
+   * @param formName - The form's accessible name, such as "Target".
+   * @returns The form's Save button.
+   */
   function saveButton(formName: string) {
     return within(screen.getByRole("form", { name: formName })).getByRole(
       "button",

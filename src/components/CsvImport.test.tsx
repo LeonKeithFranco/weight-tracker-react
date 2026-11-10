@@ -39,7 +39,13 @@ describe("CsvImport", () => {
     return user;
   }
 
-  /** Picks a file in the file input, the way choosing one in the picker does. */
+  /**
+   * Picks a file in the file input, the way choosing one in the picker does.
+   *
+   * @param user - The user event session to pick it with.
+   * @param text - The file's contents.
+   * @param name - The file's name.
+   */
   async function chooseFile(
     user: ReturnType<typeof userEvent.setup>,
     text: string,
@@ -53,7 +59,13 @@ describe("CsvImport", () => {
     return screen.findByRole("region", { name: PREVIEW_NAME });
   }
 
-  /** The number shown next to a count's label in the preview. */
+  /**
+   * Finds the number shown next to a count's label in the preview.
+   *
+   * @param region - The preview.
+   * @param label - The count's label.
+   * @returns The element after the label, which holds the number.
+   */
   function count(region: HTMLElement, label: string) {
     return within(region).getByText(label).nextElementSibling;
   }

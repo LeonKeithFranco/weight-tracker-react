@@ -22,8 +22,13 @@ describe("UpdatePrompt", () => {
   let options: RegisterSWOptions | undefined;
   const updateServiceWorker = vi.fn(() => Promise.resolve());
 
-  // Stands in for `useRegisterSW`. It's a hook itself, so it can keep the
-  // "update waiting" flag in state, as the real one does.
+  /**
+   * Stands in for `useRegisterSW`. It's a hook itself, so it can keep the
+   * "update waiting" flag in state, as the real one does.
+   *
+   * @param given - The options the component passed, kept for the test.
+   * @returns The same fields as the real hook.
+   */
   function useFakeRegisterSW(given?: RegisterSWOptions) {
     options = given;
     const needRefresh = useState(updateWaiting);
@@ -45,8 +50,12 @@ describe("UpdatePrompt", () => {
     updateServiceWorker.mockClear();
   });
 
-  // Waits for the prompt, because `DataProvider` shows nothing until its
-  // first load finishes.
+  /**
+   * Renders the prompt and waits for it, because `DataProvider` shows nothing
+   * until its first load finishes.
+   *
+   * @returns A user event session and the prompt's status region.
+   */
   async function renderPrompt() {
     const user = userEvent.setup();
     render(

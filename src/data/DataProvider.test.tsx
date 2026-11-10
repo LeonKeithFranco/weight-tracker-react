@@ -23,7 +23,13 @@ describe("DataProvider", () => {
     vi.restoreAllMocks();
   });
 
-  /** Renders `useData` inside a provider and waits until the data has loaded. */
+  /**
+   * Renders `useData` inside a provider and waits until the data has loaded.
+   *
+   * @param persistenceApi - The stand-in for `navigator.storage`, or nothing
+   * for a browser without it.
+   * @returns The hook's result, whose `current` holds the latest value.
+   */
   async function renderLoaded(persistenceApi?: PersistenceApi) {
     const { result } = renderHook(() => useData(), {
       wrapper: ({ children }) => (
@@ -137,6 +143,10 @@ describe("DataProvider", () => {
     /**
      * A stand-in for `navigator.storage`. It starts best-effort unless told
      * otherwise, and `persist()` answers with `grant` and remembers it.
+     *
+     * @param options - The answers to give: `persisted`, whether storage
+     * starts persistent, and `grant`, whether `persist()` grants it.
+     * @returns A fake whose methods are Vitest mocks.
      */
     function fakeBrowser({ persisted = false, grant = true } = {}) {
       let current = persisted;

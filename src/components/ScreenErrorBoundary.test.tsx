@@ -40,6 +40,9 @@ describe("ScreenErrorBoundary", () => {
   /**
    * Renders the boundary the way the app shell does: navigation outside it,
    * and the screens inside it.
+   *
+   * @param startAt - The URL to open first, such as "/broken".
+   * @returns A user event session for the test.
    */
   function renderScreens(startAt: string) {
     const user = userEvent.setup();

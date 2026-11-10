@@ -1,4 +1,5 @@
 import react from "@vitejs/plugin-react";
+import { defaultClientConditions } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import { configDefaults, defineConfig } from "vitest/config";
 import packageJson from "./package.json" with { type: "json" };
@@ -76,7 +77,15 @@ export default defineConfig({
           // A simulated browser page, so components can render.
           environment: "jsdom",
           setupFiles: ["./src/test/setup.ts"],
+          // NumberFlow asks `esm-env` whether it's in a browser, and Vitest
+          // answers no, so it renders server markup that crashes when a value
+          // changes. Running these through Vite, with a browser's conditions,
+          // gives the tests the same NumberFlow code as the app.
+          server: {
+            deps: { inline: ["@number-flow/react", "number-flow", "esm-env"] },
+          },
         },
+        resolve: { conditions: [...defaultClientConditions] },
       },
     ],
   },

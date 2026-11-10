@@ -24,10 +24,20 @@ export function formatNumber(value: number, decimals: number): string {
 }
 
 /**
- * `Intl.NumberFormat` options that format like `formatNumber`, for components
- * that take a number and format it themselves, such as the rolling figures.
- * Use them with the `en-US` locale, which writes numbers the way `toFixed` does.
- * `signDisplay: "negative"` leaves the sign off a value that rounds to 0.
+ * Rounds the way `formatNumber` does, for components that take a number and
+ * format it themselves, such as the rolling figures. Give them this, not the
+ * raw value: `Intl.NumberFormat` rounds 199.45 up to 199.5, but `toFixed`
+ * rounds the stored value, 199.4499…, down to 199.4.
+ */
+export function roundForDisplay(value: number, decimals: number): number {
+  return Number(formatNumber(value, decimals));
+}
+
+/**
+ * `Intl.NumberFormat` options that write a `roundForDisplay` value as
+ * `formatNumber` does. Use them with the `en-US` locale, which writes numbers
+ * the way `toFixed` does. `signDisplay: "negative"` leaves the sign off a
+ * value that rounds to 0.
  */
 export function numberFormatOptions(decimals: number): {
   minimumFractionDigits: number;

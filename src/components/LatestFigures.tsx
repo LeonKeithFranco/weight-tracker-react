@@ -11,6 +11,7 @@ import {
   fromKg,
   numberFormatOptions,
   PERCENT_DECIMALS,
+  roundForDisplay,
   WEIGHT_DECIMALS,
 } from "../lib/units";
 import styles from "./LatestFigures.module.css";
@@ -141,7 +142,7 @@ export function LatestFigures() {
                 </span>
                 <NumberFlow
                   aria-hidden="true"
-                  value={value}
+                  value={roundForDisplay(value, decimals)}
                   locales="en-US"
                   format={numberFormatOptions(decimals)}
                   suffix={suffix}

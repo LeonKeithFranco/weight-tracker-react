@@ -1,3 +1,5 @@
+// The browser's types, for the code that runs in the page with `evaluate`.
+/// <reference lib="dom" />
 import { expect, test, type Page } from "@playwright/test";
 
 /**
@@ -55,6 +57,110 @@ test("shows every chart, with the projection once there are 14 days", async ({
   await expect(
     page.getByRole("region", { name: "Projection (lb)" }),
   ).not.toContainText("Not enough data");
+});
+
+const CHART_NAMES = [
+  "Weight trends (lb)",
+  "Progress (lb)",
+  "Loss rate (lb per week)",
+  "Weekly change (%)",
+  "Projection (lb)",
+];
+
+test("shows each card before the charts' code arrives, then fills it without moving", async ({
+  page,
+}) => {
+  await importDays(page, 50);
+  // Holds back the plots' code, which only loads when Charts opens. In
+  // development it's the `chartPlots.ts` module, and in a build its own file.
+  let release!: () => void;
+  const held = new Promise<void>((resolve) => (release = resolve));
+  await page.route(/chartPlots[.-]/, async (route) => {
+    await held;
+    await route.continue();
+  });
+
+  await openCharts(page);
+
+  const plots = page.locator(".recharts-surface");
+  const sizes = [];
+  for (const name of CHART_NAMES) {
+    const card = page.getByRole("region", { name });
+    await expect(card).toBeVisible();
+    sizes.push((await card.boundingBox())!.height);
+  }
+  const trends = page.getByRole("region", { name: "Weight trends (lb)" });
+  await expect(
+    trends.getByRole("button", { name: "Weight", exact: true }),
+  ).toBeVisible();
+  await expect(trends).toContainText(
+    "Faded parts of the weight line are estimated days.",
+  );
+  await expect(
+    page
+      .getByRole("region", { name: "Weekly change (%)" })
+      .getByRole("listitem"),
+  ).toHaveText(["Loss", "Gain"]);
+  await expect(plots).toHaveCount(0);
+
+  release();
+
+  await expect(plots).toHaveCount(CHART_NAMES.length);
+  for (const [index, name] of CHART_NAMES.entries()) {
+    const box = await page.getByRole("region", { name }).boundingBox();
+    expect(box!.height).toBe(sizes[index]);
+  }
+});
+
+/** How many chart wipes are running, from the browser's own list. */
+function runningWipes(page: Page): Promise<number> {
+  return page.evaluate(
+    () =>
+      document.getAnimations().filter(
+        (animation) =>
+          animation instanceof CSSAnimation &&
+          // CSS modules add a hash, and a leading `_` in development.
+          animation.animationName.includes("wipe-in"),
+      ).length,
+  );
+}
+
+test("wipes the charts in when they show, the range changes or a line comes back", async ({
+  page,
+}) => {
+  await importDays(page, 50);
+  await openCharts(page);
+  await expect.poll(() => runningWipes(page)).toBeGreaterThan(0);
+  await expect.poll(() => runningWipes(page)).toBe(0);
+
+  await choosePreset(page, "1M");
+  await expect.poll(() => runningWipes(page)).toBeGreaterThan(0);
+  await expect.poll(() => runningWipes(page)).toBe(0);
+
+  const lowest = page
+    .getByRole("region", { name: "Weight trends (lb)" })
+    .getByRole("button", { name: "Lowest weight" });
+  await lowest.click();
+  await expect(lowest).toHaveAttribute("aria-pressed", "false");
+  expect(await runningWipes(page)).toBe(0);
+  await lowest.click();
+  // Only the line that came back wipes in.
+  await expect.poll(() => runningWipes(page)).toBe(1);
+});
+
+test("shows the charts at once when the device asks for reduced motion", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await importDays(page, 50);
+  await openCharts(page);
+
+  await expect(page.locator(".recharts-surface")).toHaveCount(
+    CHART_NAMES.length,
+  );
+  expect(await runningWipes(page)).toBe(0);
+  await choosePreset(page, "1M");
+  expect(await runningWipes(page)).toBe(0);
 });
 
 test("explains that the projection needs 14 days", async ({ page }) => {

@@ -9,7 +9,10 @@ import { installGlobalErrorHandlers } from "./errors/globalErrorHandlers.ts";
 import { AppStorage } from "./storage/appStorage.ts";
 import { DexieBackend } from "./storage/dexieBackend.ts";
 
-// Created once, when the app starts, and shared by the whole app.
+/**
+ * The app's storage, kept in IndexedDB. Created once, when the app starts, and
+ * shared by the whole app.
+ */
 const storage = new AppStorage(new DexieBackend());
 
 installGlobalErrorHandlers(window, storage);

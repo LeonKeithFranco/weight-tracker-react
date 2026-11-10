@@ -6,6 +6,10 @@ import { HomeScreen } from "./screens/HomeScreen";
 import { LogScreen } from "./screens/LogScreen";
 import { SettingsScreen } from "./screens/SettingsScreen";
 
+/**
+ * Chooses the screen for the current URL: Home, Charts, Data, Settings or the
+ * Log page, each inside the app shell. Any other URL goes to Home.
+ */
 export function App() {
   return (
     <Routes>

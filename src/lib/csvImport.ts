@@ -25,8 +25,8 @@ const CSV_FORMATS: CsvFormat[] = [
 
 /**
  * Why a row can't be imported: its date isn't a real date, its date is after
- * today, its weight isn't a plain number above 0, or an earlier row has the
- * same date.
+ * today, its weight isn't a plain number above 0, or an earlier valid row has
+ * the same date.
  */
 export type InvalidReason =
   "invalid-date" | "future-date" | "invalid-weight" | "duplicate-date";
@@ -105,8 +105,8 @@ function parseRow(
  * @remarks
  * The text comes from a file the app didn't write, so nothing about it is
  * trusted. Rows with no weight, such as blank lines, are skipped rather than
- * listed as invalid. When a date repeats, the first row is kept and later ones
- * are invalid.
+ * listed as invalid. When a date repeats, the first valid row is kept and
+ * later ones are invalid.
  *
  * @param text - The file's contents.
  * @param today - Today's local date, passed in to keep this pure.

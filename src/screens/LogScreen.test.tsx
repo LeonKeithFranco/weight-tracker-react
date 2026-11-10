@@ -43,7 +43,11 @@ describe("LogScreen", () => {
     return user;
   }
 
-  /** Waits for the list, since the log loads after the page appears. */
+  /**
+   * Waits for the list, since the log loads after the page appears.
+   *
+   * @returns Every record in the list, in the order shown.
+   */
   async function logItems() {
     const list = await screen.findByRole("list", { name: "Log entries" });
     return within(list).queryAllByRole("listitem");

@@ -28,7 +28,11 @@ describe("DataScreen", () => {
     await screen.findByRole("heading", { name: "Data" });
   }
 
-  /** Every body row's cell text, top to bottom. */
+  /**
+   * Reads the table's body rows.
+   *
+   * @returns Every body row's cell text, top to bottom.
+   */
   function bodyRows() {
     const table = screen.getByRole("table", { name: /Daily figures/ });
     // `thead` and `tbody` are both row groups, and the body comes last, so
@@ -112,7 +116,11 @@ describe("DataScreen", () => {
   describe("phone rows", () => {
     // jsdom doesn't apply the CSS, so both layouts are in the page here.
     // Playwright checks that each size shows only one.
-    /** The button that opens each row, leaving out the Edit buttons inside. */
+    /**
+     * Finds the button that opens each row.
+     *
+     * @returns Each row's first button, leaving out the Edit buttons inside.
+     */
     function rowButtons() {
       const list = screen.getByRole("list", { name: /Daily figures/ });
       return within(list)
@@ -187,7 +195,12 @@ describe("DataScreen", () => {
       vi.restoreAllMocks();
     });
 
-    /** Saves two days apart, so the day between them is estimated. */
+    /**
+     * Saves two days apart, so the day between them is estimated, then renders
+     * the screen.
+     *
+     * @returns A user event session for the test.
+     */
     async function renderWithGap() {
       await storage.saveEntry({ date: "2026-11-01", weightKg: 90 });
       await storage.saveEntry({ date: "2026-11-03", weightKg: 89.04 });

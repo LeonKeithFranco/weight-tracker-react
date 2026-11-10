@@ -25,8 +25,8 @@ export type FigureColumn = {
    *
    * @param figures - The day's figures.
    * @param unit - The display unit.
-   * @returns The value as shown, in the display unit with the spec's
-   * precision, or empty text when the day has no value.
+   * @returns The value as shown with the spec's precision, in the display
+   * unit for weights, or empty text when the day has no value.
    */
   format(figures: DailyFigures, unit: WeightUnit): string;
   /**

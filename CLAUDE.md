@@ -13,6 +13,7 @@ Current status: @docs/PROGRESS.md
 ## Working style
 
 - Build each milestone on its own branch, in small rounds of about one commit. Each round makes a small set of changes, explains them and the related concepts listed in `docs/PLAN.md`, then stops for the user's questions before continuing.
+- Plan larger pieces of work, such as a new feature or a milestone, in plan mode, and start once the user approves the plan.
 - Commit in small steps as the work goes. Each commit is one logical change that passes the checks by itself, such as one module with its tests.
 - Merge through a pull request once CI passes. The user reviews the code as it's written and asks Claude to merge. Never merge without being asked.
 - Rebase merge by default, so the small commits stay on `main`. Squash only when the commits aren't worth keeping.
@@ -34,7 +35,7 @@ Current status: @docs/PROGRESS.md
 ## Testing
 
 - Write tests after writing the code. The code may need tweaks to get the behaviour exactly right, and the tests then lock that behaviour in to guard against regressions. For a bug fix, write the regression test first and see it fail. Don't use test-driven development, and don't chase coverage numbers.
-- Follow the testing trophy: static checks, unit tests for pure logic, mostly component tests that render the real `DataProvider` and storage rules, and Playwright tests for the main journeys at desktop and phone sizes. Every input variation of a rule stays in unit tests.
+- Follow the testing trophy: static checks, unit tests for pure logic, mostly component tests, which render the real `DataProvider` and storage rules wherever a component reads data, and Playwright tests for the main journeys at desktop and phone sizes. Every input variation of a rule stays in unit tests.
 - Cover every behaviour: each rule, edge case, journey and failure should have a test that would catch it breaking.
 - Test what a user sees, and fake only what a test can't use for real, such as IndexedDB in Node.
 - Find elements by role and label first. Where nothing a user sees identifies an element, such as a chart's plot, use a stable alternative: the tests find plots by Recharts' class names, such as `.recharts-surface`, and no test needs a `data-testid` so far.

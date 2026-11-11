@@ -22,8 +22,34 @@ Current status: @docs/PROGRESS.md
 - Prefer the conventional, idiomatic approach for each language and framework, and point out where it differs from Python, Java or C# habits.
 - Name branches `type/short-description`, describing the work, such as `feat/chart-range-presets`. Never use milestone numbers.
 - Use Conventional Commits for commit messages and PR titles, such as `feat(charts): add range presets`.
-- Write tests after writing the code. The code may need tweaks to get the behaviour exactly right, and the tests then lock that behaviour in to guard against regressions. For a bug fix, write the regression test first and see it fail. Don't use test-driven development, and don't chase coverage numbers.
+- Build each branch in its own git worktree at `../weight-tracker-worktrees/<name>`, made with `git worktree add -b <branch> <path> <base>`, so the main folder stays on `main`. Install the dependencies in the worktree, and give its dev server its own port with `--strictPort`, so Playwright can't test another folder's server. Untracked files such as `CLAUDE.local.md` aren't in the worktree, so read them from the main folder.
+- After a rebase merge, the branch's commits have new SHAs on `main`, so `git branch -d` refuses it. Check that `git cherry origin/main <branch>` lists no `+` lines, then remove the worktree with `git worktree remove` and the branch with `git branch -D`.
+- Stay within the current milestone. Before a check or addition that goes beyond its bullets in `docs/PLAN.md`, such as using a later milestone's tools, say so and ask, with the in-scope option recommended.
+- Ask questions with the question tool rather than a list in the reply. Give the background first, recommend an option by putting it first, and use previews to compare layouts.
+- When a message holds both a task and a question, answer the question before starting the task.
+- Use tried and tested libraries rather than writing general-purpose code, such as statistics or CSV parsing, by hand, and explain each new one. Keep hand-written code for the app's own rules.
+- Use royalty-free art from an open-licensed icon set, such as Tabler Icons or Lucide, rather than drawing graphics, and say which set and licence each piece comes from.
 - Give the user the commands to run on the homelab, and explain each one.
+
+## Testing
+
+- Write tests after writing the code. The code may need tweaks to get the behaviour exactly right, and the tests then lock that behaviour in to guard against regressions. For a bug fix, write the regression test first and see it fail. Don't use test-driven development, and don't chase coverage numbers.
+- Follow the testing trophy: static checks, unit tests for pure logic, mostly component tests that render the real `DataProvider` and storage rules, and Playwright tests for the main journeys at desktop and phone sizes. Every input variation of a rule stays in unit tests.
+- Cover every behaviour: each rule, edge case, journey and failure should have a test that would catch it breaking.
+- Test what a user sees, and fake only what a test can't use for real, such as IndexedDB in Node.
+- Find elements by role and label first, and use `data-testid` only where nothing a user sees identifies the element, such as a chart.
+- Check that a new test can fail by breaking the code on purpose, and say that the edit is temporary before making it.
+
+## Documentation
+
+- Give every module-level item a TSDoc comment, private ones included: functions, components, classes, types, constants, and each field of a type.
+- Follow TSDoc's conventions first: a one-line summary, then `@param name - …`, `@returns`, `@throws {@link Error}`, `@typeParam` and `@remarks`, with types left to the signature. Document a promise's rejections with `@throws`.
+- Describe what a value means, not its type.
+- Components document each prop on their props type, with no `@param props` or `@returns`. Classes that implement `WeightStorage` or `StorageBackend` leave the interface's methods uncommented, so editors show the interface's comment, and never use `{@inheritDoc}`.
+- Use `{@link}` only for names in scope, and backticks otherwise.
+- Tests are described by their names, with no comment above each test. Every test file groups its tests in `describe` blocks named after the unit, screen or journey. Module-level fixtures and helpers get full doc comments.
+- Check every claim a comment makes against the code, and third-party behaviour in the library's docs or source, or by running it. When changing a comment, re-read the comments that describe the same thing.
+- `npm run lint` checks that comments are well formed, with `eslint-plugin-tsdoc`, and complete, with `eslint-plugin-jsdoc`. Prove a change to those checks on a broken and a complete example. Lint can't tell whether a comment is true.
 
 ## Rules
 

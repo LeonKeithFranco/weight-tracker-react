@@ -37,22 +37,23 @@ The code was written with [Claude Code](https://claude.com/claude-code), an AI c
 
 1. **Spec first.** [`docs/SPEC.md`](docs/SPEC.md) defines what the app does, down to how each figure is calculated. Its figure definitions are the source of truth for the calculations, and when a decision changes the spec, the decision log records why.
 2. **Then a plan.** [`docs/PLAN.md`](docs/PLAN.md) sets the stack and splits the work into milestones, each with what it should teach, plus checks that prove the key milestones work. Logic came before UI, so the screens were built on tested code.
-3. **Then small rounds.** Each milestone was built on its own branch. From the storage milestone on, the work went in rounds of about one commit. After each round, the agent explained what it changed and the concepts behind it, then stopped for questions before going on. The lessons below say how this way of working came about.
+3. **Then small rounds.** Each milestone was built on its own branch. From the storage milestone on, the work went in rounds of about one commit. After each round, the agent explained what it changed and the concepts behind it, then stopped for questions before going on. The work stays within the current milestone's plan, and the agent asks before going beyond it, since it once started testing web server configs in containers that a later milestone plans. The lessons below say how this way of working came about.
 4. **Then a pull request.** Every milestone merged through a pull request, and only when the developer asked for the merge. From the second milestone, which added CI, a pull request could only merge once CI passed.
 
 ### Who did what
 
 - **The developer** set the direction: what the app does, what went into the spec and plan, which they approved, and the design and trade-off decisions. They reviewed and questioned each change as it was written, wrote some of the code, such as the project setup and the first CI workflow, and tested the app by hand on a real phone and desktop with real data.
-- **Claude Code** wrote most of the code and tests, ran the tools, explained each change, and proposed options with a recommendation when there was a choice to make.
+- **Claude Code** wrote most of the code and tests, ran the tools, explained each change, and proposed options with a recommendation, as multiple-choice questions, when there was a choice to make. Since the developer stopped some hand-written statistics helpers in the projections milestone, it uses tried and tested libraries for general-purpose code, such as statistics and CSV parsing, and explains each new one.
 
 ### Guard rails
 
 An agent writes code quickly, so the project relies on checks that don't depend on trusting it:
 
-- **Written rules.** [`CLAUDE.md`](CLAUDE.md) holds the project's rules, such as keeping calculations in pure functions, storing weights at full precision and never saving estimated values, plus the working style and commit conventions. The agent reads it at the start of every session.
+- **Written rules.** [`CLAUDE.md`](CLAUDE.md) holds the project's rules, such as keeping calculations in pure functions, storing weights at full precision and never saving estimated values, plus the working style, the testing and documentation standards and the commit conventions. The agent reads it at the start of every session.
+- **Every diff visible.** The agent creates and changes files only with Claude Code's file tools, which show each change as a diff for review, never with shell commands, which don't. A batch of README edits made with a script was dropped and made again that way.
 - **Branch protection.** A ruleset on `main` requires a pull request and a passing `Checks` job, so nothing reaches the live app without passing lint, formatting, type checks, unit, component and end-to-end tests, and a production build. This was proved with [a pull request](https://github.com/leonkeithfranco/weight-tracker-react/pull/3) containing a deliberately failing test, which couldn't be merged.
 - **Tests that are seen to fail.** Bug fixes that a test can catch start with a regression test that fails before the fix. New tests are often checked by breaking the code on purpose, to show they catch it.
-- **Small commits.** Each commit aims to be one logical change that passes the checks by itself, written in [Conventional Commits](https://www.conventionalcommits.org/) style, and pull requests are rebase merged by default so the history stays readable.
+- **Small commits.** Each commit aims to be one logical change that passes the checks by itself, written in [Conventional Commits](https://www.conventionalcommits.org/) style, and pull requests are rebase merged by default so the history stays readable. Since version 1.1, each branch is built in its own git worktree beside the repo, so the main folder stays on `main`.
 
 ### The decision log
 
@@ -63,8 +64,10 @@ An agent writes code quickly, so the project relies on checks that don't depend 
 - **Small reviewed rounds keep a human in control.** An early milestone landed as a single 15-file commit, which was hard to review, so commits became one logical change each. Later, a question partway through the CSV work changed the rule for valid weights before any UI depended on it. That led to building in small rounds with a pause after each, so decisions get caught early.
 - **Check that tests can fail.** A test can pass for the wrong reason. The first regression test for a bug where the Data screen's rows took taps meant for the phone's tab bar passed before the fix, because no rows were under the bar. It only caught the bug once it opened the Data screen directly. The test for links under GitHub Pages' subfolder was checked the same way, by removing the router's base path. Seeing a test fail on broken code is what shows it guards anything.
 - **Write rules down.** Preferences explained only in a chat don't reliably reach the next session. Written into `CLAUDE.md`, the decision log and the agent's own memory files, they mostly carried over without being explained again, and each new correction was written down too.
+- **Rules worth keeping should travel.** The testing approach and the TypeScript documentation standard began in this project, then moved into the developer's global Claude Code rules, so their other projects follow them too. The list of what the developer had already learned moved there as well, merged with another project's, so nothing is taught twice. `CLAUDE.md` keeps the rules that hold only here, such as storing weights in kg, along with the shared rules this project follows.
 - **Measure before optimising, including with a slowed CPU.** The projection's simulation took 49 ms on the desktop but up to 284 ms with the CPU slowed six times, enough to freeze a phone's screen. It was replaced by a direct calculation of the result the simulation only approximated, which takes microseconds. Loading the charts from a separate file came from measured load times too.
 - **Review with a fresh context.** Before the 1.0 release, the README went through four reviews by subagents that hadn't seen it being written, then a final errors-only check. Each review found claims that overstated the record, including one introduced by the previous round's fix, and the final check found none. A reviewer that doesn't share the writer's assumptions catches what the writer can't.
+- **Let tools check what they can.** When every module-level item gained a doc comment, the work went through nine rounds of review by fresh subagents, which found about 60 problems before a round found none. About 25 were missing comments or tags, which a tool can find. ESLint now fails the checks on those, and on its first run it found 3 gaps that all nine rounds had missed. Whether a comment is true is beyond a tool, so that still rests on checking each claim against the code.
 
 ## Technical highlights
 
@@ -72,7 +75,8 @@ An agent writes code quickly, so the project relies on checks that don't depend 
 
 The tests follow the [testing trophy](https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications): static checks, unit tests for pure logic, mostly integration tests, and end-to-end tests for the main journeys.
 
-- **Static checks:** strict TypeScript, ESLint and Prettier. Every module-level item has a [TSDoc](https://tsdoc.org/) comment, and in the TypeScript files ESLint checks that they're complete and well formed.
+- **Static checks:** strict TypeScript, ESLint and Prettier.
+- **Documentation:** every module-level item, private ones included, has a [TSDoc](https://tsdoc.org/) comment covering each parameter, return value and error, and components document each prop on their props type. In the TypeScript files, ESLint fails the checks when a comment is missing or malformed, through `eslint-plugin-jsdoc` and `eslint-plugin-tsdoc`. Tests are documented by their names, grouped in `describe` blocks.
 - **Unit tests** in [Vitest](https://vitest.dev/) cover each rule and edge case of the calculations, CSV parsing and storage, next to the code, mostly in [`src/lib`](src/lib) and [`src/storage`](src/storage).
 - **Component tests** use [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) with the real data provider and storage rules, and an in-memory backend in place of IndexedDB.
 - **End-to-end tests** in [Playwright](https://playwright.dev/), in [`e2e`](e2e), run each journey at desktop and phone sizes. A third project builds the app for production and checks it works offline through its service worker.

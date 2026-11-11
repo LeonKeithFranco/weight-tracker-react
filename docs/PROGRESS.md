@@ -38,6 +38,15 @@
 
 Record changes to the spec or plan here, with the reason.
 
+### 2026-11-11
+
+- `CLAUDE.md` and the README now describe the rules this project followed from the user's global Claude Code rules and from Claude's memory files for the project, at the user's request. Neither is in the repo, so a reader couldn't see them. Which rules this project followed was worked out from the record: this decision log, the git history, the memory files and the project tags in the user's learning log.
+- `CLAUDE.md` gained worktrees and removing merged branches, staying within the current milestone, asking questions with the question tool, answering a question before starting the task, preferring libraries and using royalty-free icon sets. It also gained a Testing section, which the tests-after-code rule moved into, and a Documentation section for the TSDoc standard. Each rule is worded for this repo rather than copied, so it names the parts it applies to, such as `DataProvider` and `WeightStorage`.
+- The global style guide, entering plan mode at each milestone and step, and go-task were left out, because they came from another project and weren't applied here. The code follows much of the style guide by habit, such as named constants and units in names, but no change applied it, and some of it, such as dividing last, the code doesn't follow. Saying it was followed would overstate the record. Bringing the code in line would be a refactor of its own.
+- Of the preferences only in memory, all four went into `CLAUDE.md`, and the README mentions the two that shaped the project most: preferring libraries and staying within the milestone. Using existing art and answering questions first are too small for a reader of the README.
+- The README's Lessons learned gained two lessons, at the user's choice: letting tools check what they can, and rules that travel between projects. Visible diffs, checking a reviewer's claim by running it, and subagent permissions were offered and left out as lessons, though visible diffs is now listed under Guard rails as a practice.
+- No version bump, because only docs changed.
+
 ### 2026-11-10
 
 - When a weight is saved on Home, the Latest figures roll to their new values like an odometer, using `@number-flow/react`, NumberFlow, a new MIT-licensed dependency. Its `continuous` plugin makes the right-hand digits spin fastest, and `NumberFlowGroup` keeps the tiles in step. The user asked for this after using 1.0. Adding it brought no new `npm audit` warnings.

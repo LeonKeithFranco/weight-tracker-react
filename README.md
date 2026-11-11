@@ -43,7 +43,7 @@ The code was written with [Claude Code](https://claude.com/claude-code), an AI c
 ### Who did what
 
 - **The developer** set the direction: what the app does, what went into the spec and plan, which they approved, and the design and trade-off decisions. They reviewed and questioned each change as it was written, wrote some of the code, such as the project setup and the first CI workflow, and tested the app by hand on a real phone and desktop with real data.
-- **Claude Code** wrote most of the code and tests, ran the tools, explained each change, and proposed options with a recommendation, as multiple-choice questions, when there was a choice to make. Since the developer stopped some hand-written statistics helpers in the projections milestone, it uses tried and tested libraries for general-purpose code, such as statistics and CSV parsing, and explains each new one.
+- **Claude Code** wrote most of the code and tests, ran the tools, explained each change, and proposed options with a recommendation when there was a choice to make, from the later milestones mostly as multiple-choice questions. Since the developer stopped some hand-written statistics helpers in the projections milestone, it uses tried and tested libraries for general-purpose code, such as statistics and CSV parsing, and explains each new one.
 
 ### Guard rails
 

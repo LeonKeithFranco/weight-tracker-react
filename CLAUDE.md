@@ -37,7 +37,7 @@ Current status: @docs/PROGRESS.md
 - Follow the testing trophy: static checks, unit tests for pure logic, mostly component tests that render the real `DataProvider` and storage rules, and Playwright tests for the main journeys at desktop and phone sizes. Every input variation of a rule stays in unit tests.
 - Cover every behaviour: each rule, edge case, journey and failure should have a test that would catch it breaking.
 - Test what a user sees, and fake only what a test can't use for real, such as IndexedDB in Node.
-- Find elements by role and label first, and use `data-testid` only where nothing a user sees identifies the element, such as a chart.
+- Find elements by role and label first. Where nothing a user sees identifies an element, such as a chart's plot, use a stable alternative: the tests find plots by Recharts' class names, such as `.recharts-surface`, and no test needs a `data-testid` so far.
 - Check that a new test can fail by breaking the code on purpose, and say that the edit is temporary before making it.
 
 ## Documentation
